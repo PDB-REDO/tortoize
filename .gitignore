@@ -10,3 +10,5 @@ version-info*.txt
 autom4te.cache/
 .vscode/
 GNUmakefile
+rsrc/version.txt
+tortoize

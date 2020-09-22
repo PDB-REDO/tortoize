@@ -77,6 +77,21 @@ AX_BOOST_REGEX
 AX_BOOST_PROGRAM_OPTIONS
 AX_BOOST_DATE_TIME
 
+AC_ARG_WITH([zeep],
+	AS_HELP_STRING([--with-zeep=@<:@location@:>@],
+		[Use the zeep library as specified.]),
+		[
+			CPPFLAGS="$CPPFLAGS -I ${withval}/include"
+			CXXFLAGS="$CXXFLAGS -I ${withval}/include"
+			LDFLAGS="$LDFLAGS -L${withval}/lib"
+		])
+
+AX_CHECK_LIBRARY([LIBZEEP], [zeep/config.hpp], [zeep-xml],
+	[
+		LIBS="$LIBS -lzeep-http -lzeep-json -lzeep-xml"
+	],
+	[AC_MSG_ERROR([libzeep not found - cannot continue])])
+
 AX_CHECK_LIBRARY([LIBZ], [zlib.h], [z],
 				 [ LIBS="$LIBS -lz" ],
                  [AC_MSG_ERROR([libz not found - compressed files not supported])])
