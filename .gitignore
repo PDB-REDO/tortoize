@@ -11,4 +11,5 @@ autom4te.cache/
 .vscode/
 GNUmakefile
 rsrc/version.txt
+src/revision.hpp
 tortoize
