@@ -50,6 +50,8 @@ namespace po = boost::program_options;
 namespace fs = std::filesystem;
 namespace ba = boost::algorithm;
 
+extern std::string VERSION_STRING;
+
 using mmcif::Atom;
 using mmcif::Point;
 using mmcif::Structure;
@@ -1048,7 +1050,7 @@ int pr_main(int argc, char* argv[])
 
 	if (vm.count("version"))
 	{
-		cout << argv[0] << " version " << PACKAGE_VERSION << endl;
+		std::cout << argv[0] << " version " << VERSION_STRING << std::endl;
 		exit(0);
 	}
 
