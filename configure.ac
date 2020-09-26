@@ -2,7 +2,7 @@ AC_PREREQ([2.69])
 
 AC_INIT([tortoize], 2.0, [m.hekkelman@nki.nl])
 
-dnl Switch to a C++ compiler, and check if it works.
+dnl Switch to a decent C++ compiler, and check if it works.
 AC_LANG(C++)
 AX_CXX_COMPILE_STDCXX_17([noext])
 
@@ -65,13 +65,15 @@ AC_TRY_LINK(
 	]
 )
 
-AC_PATH_PROG([PKG_CONFIG], [pkg-config])
-AX_PKG_CHECK_MODULES([ZEEP], [libzeep-json], [], [], [AC_MSG_ERROR([the required package libzeep is not installed])])
-
 AX_BOOST_BASE([1.65.1], [], [AC_MSG_ERROR([Could not find a recent version of boost])])
 AX_BOOST_IOSTREAMS
 AX_BOOST_PROGRAM_OPTIONS
 AX_BOOST_DATE_TIME
+
+CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
+LDFLAGS="$LDFLAGS $BOOST_LDFLAGS"
+
+AC_PATH_PROG([PKG_CONFIG], [pkg-config])
 
 AC_ARG_WITH([cif++],
 	AS_HELP_STRING([--with-cif++=@<:@location@:>@],
@@ -91,7 +93,60 @@ AC_ARG_WITH([cif++],
 		])
 
 AS_IF([test "x$CIFPP_LIBS" = "x"], [
-	AX_PKG_CHECK_MODULES([CIFPP], [libcif++], [], [], [AC_MSG_ERROR([the required package libcif++ is not installed])])
+	if test -x "$PKG_CONFIG"
+	then
+		AX_PKG_CHECK_MODULES([CIFPP], [libcif++], [], [], [AC_MSG_ERROR([the required package libcif++ is not installed])])
+	else
+		AC_CHECK_HEADER(
+	        [cif++/Config.hpp],
+	        [
+				dnl CIFPP_CFLAGS="-I ${withval}/include"
+			],
+			[AC_MSG_ERROR([
+Can't find the libcif++ header, Config.hpp.  Make sure that it
+is installed, and either use the --with-cif++ option or install
+pkg-config.])])
+
+			AX_CHECK_LIBRARY([CIFPP], [cif++/Config.hpp], [cif++],
+				 [ LIBS="-lcif++ $LIBS" ],
+				 [AC_MSG_ERROR([libcif++ not found])])
+	fi
+])
+
+dnl Check for libzeep
+
+AC_ARG_WITH([zeep],
+	AS_HELP_STRING([--with-zeep=@<:@location@:>@],
+		[Use the libzeep library as specified.]),
+		[
+			AS_IF([test -d ${withval}/include], [], [
+				AC_MSG_ERROR(['${withval}'' is not a valid directory for --with-zeep])
+			])
+
+			ZEEP_CFLAGS="-I ${withval}/include"
+			ZEEP_LIBS="-L${withval}/.libs -lzeep-json"
+
+			AC_SUBST([ZEEP_CFLAGS], [$ZEEP_CFLAGS])
+			AC_SUBST([ZEEP_LIBS], [$ZEEP_LIBS])
+		])
+
+AS_IF([test "x$ZEEP_LIBS" = "x"], [
+	if test -x "$PKG_CONFIG"
+	then
+		AX_PKG_CHECK_MODULES([ZEEP], [libzeep-json], [], [], [AC_MSG_ERROR([the required package libzeep is not installed])])
+	else
+		AC_CHECK_HEADER(
+			[zeep/json/element.hpp],
+			[],
+			[AC_MSG_ERROR([
+Can't find the libzeep header, zeep/json/element.hpp.  Make sure that libzeep
+is installed, and either use the --with-zeep option or install
+pkg-config.])])
+
+			AX_CHECK_LIBRARY([ZEEP], [zeep/json/element.hpp], [zeep-json],
+					[ LIBS="-lzeep-json $LIBS" ],
+					[AC_MSG_ERROR([libzeep-json not found])])
+	fi
 ])
 
 AX_CHECK_LIBRARY([LIBZ], [zlib.h], [z],
