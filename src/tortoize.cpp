@@ -848,7 +848,7 @@ float jackknife(const vector<float>& zScorePerResidue)
 
 // --------------------------------------------------------------------
 
-json calculateZScores(const Structure& structure, size_t nShuffles)
+json calculateZScores(const Structure& structure)
 {
 	mmcif::DSSP dssp(structure, 3, false);
 	auto& tbl = DataTable::instance();
@@ -1012,8 +1012,6 @@ int pr_main(int argc, char* argv[])
 		("help,h",										"Display help message")
 		("version",										"Print version")
 
-		("rmsd-shuffles",		po::value<size_t>(),	"Shuffles to use for RMSd")
-		
 		("verbose,v",									"verbose output")
 		;
 	
@@ -1121,10 +1119,6 @@ References:
 	mmcif::File f(vm["xyzin"].as<string>());
 	Structure structure(f);
 	
-	size_t nShuffles = 100;
-	if (vm.count("rmsd-shuffles"))
-		nShuffles = vm["rmsd-shuffles"].as<size_t>();
-
 	// --------------------------------------------------------------------
 	
 	if (vm.count("output"))
@@ -1135,10 +1129,10 @@ References:
 			cerr << "Could not open output file" << endl;
 			exit(1);
 		}
-		of << calculateZScores(structure, nShuffles);
+		of << calculateZScores(structure);
 	}
 	else
-		cout << calculateZScores(structure, nShuffles) << endl;
+		cout << calculateZScores(structure) << endl;
 	
 	return 0;
 }
