@@ -44,8 +44,6 @@
 
 #include <zeep/json/element.hpp>
 
-using namespace std;
-
 namespace po = boost::program_options;
 namespace fs = std::filesystem;
 namespace ba = boost::algorithm;
@@ -56,16 +54,7 @@ using mmcif::Atom;
 using mmcif::Point;
 using mmcif::Structure;
 using mmcif::Monomer;
-// using mmcif::BondMap;
 using mmcif::Polymer;
-// using mmcif::StatsCollector;
-
-// using clipper::Coord_grid;
-// using clipper::Coord_orth;
-// using clipper::Coord_map;
-// using clipper::Coord_frac;
-
-// using MapMaker = mmcif::MapMaker<float>;
 
 using json = zeep::json::element;
 
@@ -75,7 +64,7 @@ using json = zeep::json::element;
 class OBitStream
 {
   public:
-	OBitStream(vector<uint8_t>& buffer)
+	OBitStream(std::vector<uint8_t>& buffer)
 		: m_buffer(buffer)
 	{
 		m_buffer.push_back(0);
@@ -123,10 +112,10 @@ class OBitStream
 	const uint8_t* data() const					{ return m_buffer.data(); }
 	size_t size() const							{ return m_buffer.size(); }
 
-	friend void WriteArray(OBitStream& bs, const vector<uint32_t>& data);
+	friend void WriteArray(OBitStream& bs, const std::vector<uint32_t>& data);
 
   private:
-	vector<uint8_t>& m_buffer;
+	std::vector<uint8_t>& m_buffer;
 	int m_bitOffset = 7;
 };
 
@@ -169,7 +158,7 @@ class IBitStream
 		return result;
 	}
 
-	friend vector<uint32_t> ReadArray(IBitStream& bs);
+	friend std::vector<uint32_t> ReadArray(IBitStream& bs);
 
   private:
 	const uint8_t* m_data;
@@ -211,7 +200,7 @@ inline uint32_t bitWidth(uint32_t v)
 	return result;
 }
 
-void CompressSimpleArraySelector(OBitStream& inBits, const vector<uint32_t>& inArray)
+void CompressSimpleArraySelector(OBitStream& inBits, const std::vector<uint32_t>& inArray)
 {
 	int32_t width = kStartWidth;
 
@@ -301,7 +290,7 @@ void CompressSimpleArraySelector(OBitStream& inBits, const vector<uint32_t>& inA
 	}
 }
 
-void DecompressSimpleArraySelector(IBitStream& inBits, vector<uint32_t>& outArray)
+void DecompressSimpleArraySelector(IBitStream& inBits, std::vector<uint32_t>& outArray)
 {
 	uint32_t width = kStartWidth;
 	uint32_t span = 0;
@@ -343,7 +332,7 @@ enum class SecStrType : char
 	prepro = 'p'
 };
 
-ostream& operator<<(ostream& os, SecStrType ss)
+std::ostream& operator<<(std::ostream& os, SecStrType ss)
 {
 	switch (ss)
 	{
@@ -384,10 +373,10 @@ class Data
 	Data(const Data&) = delete;
 	Data& operator=(const Data&) = delete;
 
-	Data(const char* type, const string& aa, SecStrType ss, istream& is);
+	Data(const char* type, const std::string& aa, SecStrType ss, std::istream& is);
 	Data(bool torsion, const StoredData& data, const uint8_t* bits);
 
-	void store(StoredData& data, vector<uint8_t>& databits);
+	void store(StoredData& data, std::vector<uint8_t>& databits);
 
 	float interpolatedCount(float phi, float a2) const;
 	float zscore(float a1, float a2) const
@@ -400,18 +389,18 @@ class Data
 		for (size_t i = 0; i < counts.size(); ++i)
 		{
 			float a1, a2;
-			tie(a1, a2) = angles(i);
-			cout << a1 << ' ' << a2 << ' ' << counts[i] << endl;
+			std::tie(a1, a2) = angles(i);
+			std::cout << a1 << ' ' << a2 << ' ' << counts[i] << std::endl;
 		}
 	}
 
   private:
 
-	string aa;
+	std::string aa;
 	SecStrType ss;
 	float mean, sd, mean_vs_random, sd_vs_random;
 	float binSpacing;
-	vector<uint32_t> counts;
+	std::vector<uint32_t> counts;
 
 	// calculated
 	size_t dim;
@@ -439,33 +428,33 @@ class Data
 		return x * (360 / binSpacing) + y;
 	}
 
-	tuple<float,float> angles(size_t index) const
+	std::tuple<float,float> angles(size_t index) const
 	{
 		size_t x = index / dim;
 		size_t y = index % dim;
 
-		return make_tuple(x * binSpacing - 180, y * binSpacing - 180);
+		return std::make_tuple(x * binSpacing - 180, y * binSpacing - 180);
 	}
 };
 
-Data::Data(const char* type, const string& aa, SecStrType ss, istream& is)
+Data::Data(const char* type, const std::string& aa, SecStrType ss, std::istream& is)
 	: aa(aa), ss(ss)
 {
 	// example:
 	// 14400 bins, aver 19.2878, sd 15.4453, binspacing 3
 	// torsion vs random: 2.0553 2.8287
-	static const regex
+	static const std::regex
 		kRX1(R"((\d+) bins, aver ([-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?), sd ([-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?), binspacing ([-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?))"),
 		kRX2(R"((torsion|rama) vs random: ([-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?) ([-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?))");
 
-	string line;
+	std::string line;
 	getline(is, line);
 
-	d2 = strcmp(type, "torsion") != 0 or set<string>{"CYS", "SER", "THR", "VAL"}.count(aa) == 0;
+	d2 = strcmp(type, "torsion") != 0 or std::set<std::string>{"CYS", "SER", "THR", "VAL"}.count(aa) == 0;
 
-	smatch m;
-	if (not regex_match(line, m, kRX1))
-		throw runtime_error("Invalid file");
+	std::smatch m;
+	if (not std::regex_match(line, m, kRX1))
+		throw std::runtime_error("Invalid file");
 
 	size_t nBins = stoi(m[1]);
 	mean = stof(m[2]);
@@ -474,14 +463,14 @@ Data::Data(const char* type, const string& aa, SecStrType ss, istream& is)
 
 	dim = static_cast<size_t>(360 / binSpacing);
 	if ((d2 and nBins != dim * dim) or (not d2 and nBins != dim))
-		throw runtime_error("Unexpected number of bins");
+		throw std::runtime_error("Unexpected number of bins");
 
 	counts.resize(nBins);
 
 	getline(is, line);
 
-	if (not regex_match(line, m, kRX2) or m[1] != type)
-		throw runtime_error("Invalid file");
+	if (not std::regex_match(line, m, kRX2) or m[1] != type)
+		throw std::runtime_error("Invalid file");
 	
 	mean_vs_random = stof(m[2]);
 	sd_vs_random = stof(m[3]);
@@ -497,7 +486,7 @@ Data::Data(const char* type, const string& aa, SecStrType ss, istream& is)
 			is >> a1 >> count;
 
 		if (is.eof())
-			throw runtime_error("truncated file?");
+			throw std::runtime_error("truncated file?");
 		
 		counts.at(index(a1, a2)) = count;
 	}
@@ -513,7 +502,7 @@ Data::Data(bool torsion, const StoredData& data, const uint8_t* databits)
 	sd_vs_random = data.sd_vs_random;
 	binSpacing = data.binSpacing;
 	
-	d2 = not torsion or set<string>{"CYS", "SER", "THR", "VAL"}.count(aa) == 0;
+	d2 = not torsion or std::set<std::string>{"CYS", "SER", "THR", "VAL"}.count(aa) == 0;
 
 	size_t nBins = static_cast<size_t>(360 / binSpacing);
 	dim = nBins;
@@ -527,7 +516,7 @@ Data::Data(bool torsion, const StoredData& data, const uint8_t* databits)
 	DecompressSimpleArraySelector(bits, counts);
 }
 
-void Data::store(StoredData& data, vector<uint8_t>& databits)
+void Data::store(StoredData& data, std::vector<uint8_t>& databits)
 {
 	assert(aa.length() == 3);
 	copy(aa.begin(), aa.end(), data.aa);
@@ -590,18 +579,20 @@ float Data::interpolatedCount(float a1, float a2) const
 
 void buildDataFile(fs::path dir)
 {
+	using namespace std::literals;
+
 	// first read the global mean and sd
 
 	float mean_torsion, sd_torsion, mean_ramachandran, sd_ramachandran;
 
 	std::ifstream in(dir / "zscores_proteins.txt");
-	string line;
-	const regex krx(R"((Rama|Rota): average ([-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?), sd ([-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?))");
+	std::string line;
+	const std::regex krx(R"((Rama|Rota): average ([-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?), sd ([-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?))");
 
 	while (getline(in, line))
 	{
-		smatch m;
-		if (not regex_match(line, m, krx))
+		std::smatch m;
+		if (not std::regex_match(line, m, krx))
 			continue;
 
 		if (m[1] == "Rama")
@@ -616,16 +607,16 @@ void buildDataFile(fs::path dir)
 		}
 	}
 
-	vector<StoredData> data;
-	vector<uint8_t> bits;
+	std::vector<StoredData> data;
+	std::vector<uint8_t> bits;
 
 	// first ramachandran counts
 	for (auto aa: mmcif::kAAMap)
 	{
-		for (pair<SecStrType, const char*> ss: {
-				make_pair(SecStrType::helix, "helix"),
-				make_pair(SecStrType::strand, "strand"),
-				make_pair(SecStrType::other, "other") })
+		for (std::pair<SecStrType, const char*> ss: {
+				std::make_pair(SecStrType::helix, "helix"),
+				std::make_pair(SecStrType::strand, "strand"),
+				std::make_pair(SecStrType::other, "other") })
 		{
 			auto p = dir / ("rama_count_"s + ss.second + '_' + aa.first + ".txt");
 			if (not fs::exists(p))
@@ -640,18 +631,18 @@ void buildDataFile(fs::path dir)
 		}
 	}
 
-	for (tuple<SecStrType, const char*, const char*> ss: {
-			make_tuple(SecStrType::cis, "PRO", "cis_PRO"),
-			make_tuple(SecStrType::prepro, "***", "prepro_all_noGIV"),
-			make_tuple(SecStrType::prepro, "GLY", "prepro_GLY"),
-			make_tuple(SecStrType::prepro, "IV_", "prepro_ILEVAL") })
+	for (std::tuple<SecStrType, const char*, const char*> ss: {
+			std::make_tuple(SecStrType::cis, "PRO", "cis_PRO"),
+			std::make_tuple(SecStrType::prepro, "***", "prepro_all_noGIV"),
+			std::make_tuple(SecStrType::prepro, "GLY", "prepro_GLY"),
+			std::make_tuple(SecStrType::prepro, "IV_", "prepro_ILEVAL") })
 	{
-		auto p = dir / ("rama_count_"s + get<2>(ss) + ".txt");
+		auto p = dir / ("rama_count_"s + std::get<2>(ss) + ".txt");
 		if (not fs::exists(p))
 			continue;
 		
 		std::ifstream f(p);
-		Data d("rama", get<1>(ss), get<0>(ss), f);
+		Data d("rama", std::get<1>(ss), std::get<0>(ss), f);
 
 		StoredData sd = { };
 		d.store(sd, bits);
@@ -662,9 +653,9 @@ void buildDataFile(fs::path dir)
 
 	if (fs::exists("rama-data.bin"))
 		fs::remove("rama-data.bin");
-	std::ofstream out("rama-data.bin", ios::binary);
+	std::ofstream out("rama-data.bin", std::ios::binary);
 	if (not out.is_open())
-		throw runtime_error("Could not create rama-data.bin file");
+		throw std::runtime_error("Could not create rama-data.bin file");
 	out.write(reinterpret_cast<char*>(&mean_ramachandran), sizeof(mean_ramachandran));
 	out.write(reinterpret_cast<char*>(&sd_ramachandran), sizeof(sd_ramachandran));
 	out.write(reinterpret_cast<char*>(data.data()), data.size() * sizeof(StoredData));
@@ -677,10 +668,10 @@ void buildDataFile(fs::path dir)
 	// next torsion counts
 	for (auto aa: mmcif::kAAMap)
 	{
-		for (pair<SecStrType, const char*> ss: {
-				make_pair(SecStrType::helix, "helix"),
-				make_pair(SecStrType::strand, "strand"),
-				make_pair(SecStrType::other, "other") })
+		for (std::pair<SecStrType, const char*> ss: {
+				std::make_pair(SecStrType::helix, "helix"),
+				std::make_pair(SecStrType::strand, "strand"),
+				std::make_pair(SecStrType::other, "other") })
 		{
 			auto p = dir / ("torsion_count_"s + ss.second + '_' + aa.first + ".txt");
 			if (not fs::exists(p))
@@ -699,9 +690,9 @@ void buildDataFile(fs::path dir)
 
 	if (fs::exists("torsion-data.bin"))
 		fs::remove("torsion-data.bin");
-	out.open("torsion-data.bin", ios::binary);
+	out.open("torsion-data.bin", std::ios::binary);
 	if (not out.is_open())
-		throw runtime_error("Could not create torsion-data.bin file");
+		throw std::runtime_error("Could not create torsion-data.bin file");
 	out.write(reinterpret_cast<char*>(&mean_torsion), sizeof(mean_torsion));
 	out.write(reinterpret_cast<char*>(&sd_torsion), sizeof(sd_torsion));
 	out.write(reinterpret_cast<char*>(data.data()), data.size() * sizeof(StoredData));
@@ -721,8 +712,8 @@ class DataTable
 		return sInstance;
 	}
 
-	const Data& loadTorsionData(const string& aa, SecStrType ss) const;
-	const Data& loadRamachandranData(const string& aa, SecStrType ss) const;
+	const Data& loadTorsionData(const std::string& aa, SecStrType ss) const;
+	const Data& loadRamachandranData(const std::string& aa, SecStrType ss) const;
 
 	float mean_torsion() const		{ return m_mean_torsion; }
 	float sd_torsion() const		{ return m_sd_torsion; }
@@ -736,9 +727,9 @@ class DataTable
 
 	DataTable();
 
-	void load(const char* name, vector<Data>& table, float& mean, float& sd);
+	void load(const char* name, std::vector<Data>& table, float& mean, float& sd);
 
-	vector<Data>	m_torsion, m_ramachandran;
+	std::vector<Data>	m_torsion, m_ramachandran;
 
 	float m_mean_torsion, m_sd_torsion, m_mean_ramachandran, m_sd_ramachandran;
 };
@@ -749,19 +740,19 @@ DataTable::DataTable()
 	load("rama-data.bin", m_ramachandran, m_mean_ramachandran, m_sd_ramachandran);
 }
 
-const Data& DataTable::loadTorsionData(const string& aa, SecStrType ss) const
+const Data& DataTable::loadTorsionData(const std::string& aa, SecStrType ss) const
 {
 	auto i = find_if(m_torsion.begin(), m_torsion.end(), [aa, ss](auto& d)
 		{ return d.aa == aa and d.ss == ss; });
 	if (i == m_torsion.end())
-		throw runtime_error("Data missing for aa = " + aa + " and ss = '" + static_cast<char>(ss) + '\'');
+		throw std::runtime_error("Data missing for aa = " + aa + " and ss = '" + static_cast<char>(ss) + '\'');
 
 	return *i;
 }
 
-const Data& DataTable::loadRamachandranData(const string& aa, SecStrType ss) const
+const Data& DataTable::loadRamachandranData(const std::string& aa, SecStrType ss) const
 {
-	vector<Data>::const_iterator i;
+	std::vector<Data>::const_iterator i;
 
 	switch (ss)
 	{
@@ -792,16 +783,18 @@ const Data& DataTable::loadRamachandranData(const string& aa, SecStrType ss) con
 	}
 
 	if (i == m_torsion.end())
-		throw runtime_error("Data missing for aa= " + aa + " and ss = '" + static_cast<char>(ss) + '\'');
+		throw std::runtime_error("Data missing for aa= " + aa + " and ss = '" + static_cast<char>(ss) + '\'');
 	
 	return *i;
 }
 
-void DataTable::load(const char* name, vector<Data>& table, float& mean, float& sd)
+void DataTable::load(const char* name, std::vector<Data>& table, float& mean, float& sd)
 {
+	using namespace std::literals;
+
 	auto rd = cif::rsrc_loader::load(name);
 	if (not rd)
-		throw runtime_error("Missing resource "s + name);
+		throw std::runtime_error("Missing resource "s + name);
 
 	const float* fv = reinterpret_cast<const float*>(rd.data());
 	mean = fv[0];
@@ -821,13 +814,13 @@ void DataTable::load(const char* name, vector<Data>& table, float& mean, float& 
 
 // --------------------------------------------------------------------
 
-float jackknife(const vector<float>& zScorePerResidue)
+float jackknife(const std::vector<float>& zScorePerResidue)
 {
 	// jackknife variance estimate, see: https://en.wikipedia.org/wiki/Jackknife_resampling
 
 	const size_t N = zScorePerResidue.size();
 	double zScoreSum = accumulate(zScorePerResidue.begin(), zScorePerResidue.end(), 0.0);
-	vector<double> scores(N);
+	std::vector<double> scores(N);
 
 	DataTable& tbl = DataTable::instance();
 
@@ -859,7 +852,7 @@ json calculateZScores(const Structure& structure)
 	size_t torsZScoreCount = 0;
 
 	json residues;
-	vector<float> ramaZScorePerResidue, torsZScorePerResidue;
+	std::vector<float> ramaZScorePerResidue, torsZScorePerResidue;
 
 	for (auto& poly: structure.polymers())
 	{
@@ -873,33 +866,33 @@ json calculateZScores(const Structure& structure)
 			if (phi == 360 or psi == 360)
 				continue;
 
-			tuple<string,int,string,string> pdbID = structure.MapLabelToPDB(res.asymID(), res.seqID(), res.compoundID(), res.authSeqID());
+			std::tuple<std::string,int,std::string,std::string> pdbID = structure.MapLabelToPDB(res.asymID(), res.seqID(), res.compoundID(), res.authSeqID());
 
 			json residue = {
 				{ "asymID", res.asymID() },
 				{ "seqID", res.seqID() },
 				{ "compID", res.compoundID() },
 				{ "pdb", {
-					{ "strandID", get<0>(pdbID) },
-					{ "seqNum", get<1>(pdbID) },
-					{ "compID", get<2>(pdbID) },
-					{ "insCode", get<3>(pdbID) }
+					{ "strandID", std::get<0>(pdbID) },
+					{ "seqNum", std::get<1>(pdbID) },
+					{ "compID", std::get<2>(pdbID) },
+					{ "insCode", std::get<3>(pdbID) }
 				}}
 			};
 
-			string aa = res.compoundID();
+			std::string aa = res.compoundID();
 
 			// remap some common modified amino acids
 			if (aa == "MSE")
 			{
 				if (cif::VERBOSE > 1)
-					cerr << "Replacing MSE with MET" << endl;
+					std::cerr << "Replacing MSE with MET" << std::endl;
 				aa = "MET";
 			}
 			else if (aa == "HYP")
 			{
 				if (cif::VERBOSE > 1)
-					cerr << "Replacing HYP with PRO" << endl;
+					std::cerr << "Replacing HYP with PRO" << std::endl;
 
 				aa = "PRO";
 			}
@@ -907,7 +900,7 @@ json calculateZScores(const Structure& structure)
 			if (mmcif::kAAMap.find(aa) == mmcif::kAAMap.end())
 			{
 				if (cif::VERBOSE)
-					cerr << "Skipping unrecognized residue " << aa << endl;
+					std::cerr << "Skipping unrecognized residue " << aa << std::endl;
 
 				continue;
 			}
@@ -934,7 +927,7 @@ json calculateZScores(const Structure& structure)
 
 			residue["ramachandran"] =
 			{
-				{ "ss-type", boost::lexical_cast<string>(rama_ss) },
+				{ "ss-type", boost::lexical_cast<std::string>(rama_ss) },
 				{ "z-score", zr }
 			};
 
@@ -964,7 +957,7 @@ json calculateZScores(const Structure& structure)
 
 					residue["torsion"] =
 					{
-						{ "ss-type", boost::lexical_cast<string>(tors_ss) },
+						{ "ss-type", boost::lexical_cast<std::string>(tors_ss) },
 						{ "z-score", zt }
 					};
 				}
@@ -982,7 +975,6 @@ json calculateZScores(const Structure& structure)
 	float ramaVsRand = ramaZScoreSum / ramaZScoreCount;
 	float torsVsRand = torsZScoreSum / torsZScoreCount;
 
-	random_device rd;
 	float jackknifeRama = jackknife(ramaZScorePerResidue);
 	float jackknifeTors = jackknife(torsZScorePerResidue);
 
@@ -1001,12 +993,12 @@ int pr_main(int argc, char* argv[])
 {
 	po::options_description visible_options(fs::path(argv[0]).filename().string() + " options");
 	visible_options.add_options()
-		("xyzin",				po::value<string>(),	"coordinates file")
-		("output",              po::value<string>(),    "Output to this file")
+		("xyzin",				po::value<std::string>(),	"coordinates file")
+		("output",              po::value<std::string>(),    "Output to this file")
 
-		("log",					po::value<string>(),	"Write log to this file")
+		("log",					po::value<std::string>(),	"Write log to this file")
 		
-		("dict",				po::value<vector<string>>(),
+		("dict",				po::value<std::vector<std::string>>(),
 														"Dictionary file containing restraints for residues in this specific target, can be specified multiple times.")
 
 		("help,h",										"Display help message")
@@ -1018,7 +1010,7 @@ int pr_main(int argc, char* argv[])
 	po::options_description hidden_options("hidden options");
 	hidden_options.add_options()
 		("debug,d",				po::value<int>(),		"Debug level (for even more verbose output)")
-		("build",				po::value<string>(),	"Build a binary data table")
+		("build",				po::value<std::string>(),	"Build a binary data table")
 		;
 
 	po::options_description cmdline_options;
@@ -1054,8 +1046,8 @@ int pr_main(int argc, char* argv[])
 
 	if (vm.count("help"))
 	{
-		cout << visible_options << endl
-			 << endl
+		std::cout << visible_options << std::endl
+			 << std::endl
 			 << R"(Tortoize validates protein structure models by checking the 
 Ramachandran plot and side-chain rotamer distributions. Quality
 Z-scores are given at the residue level and at the model level 
@@ -1074,20 +1066,20 @@ References:
 - Hooft et al. Objectively judging the quality of a protein structure
   from a Ramachandran plot, CABIOS (1993),
   DOI: https://doi.org/10.1093/bioinformatics/13.4.425 
-)" << endl
-			 << endl;
+)" << std::endl
+			 << std::endl;
 		exit(0);
 	}
 	
 	if (vm.count("build"))
 	{
-		buildDataFile(vm["build"].as<string>());
+		buildDataFile(vm["build"].as<std::string>());
 		exit(0);
 	}
 
 	if (vm.count("xyzin") == 0)
 	{
-		cerr << "Input file not specified" << endl;
+		std::cerr << "Input file not specified" << std::endl;
 		exit(1);
 	}
 
@@ -1097,12 +1089,12 @@ References:
 
 	if (vm.count("log"))
 	{
-		string logFile = vm["log"].as<string>();
+		std::string logFile = vm["log"].as<std::string>();
 		
 		// open the log file
 		int fd = open(logFile.c_str(), O_CREAT|O_APPEND|O_RDWR, 0644);
 		if (fd < 0)
-			throw runtime_error("Opening log file " + logFile + " failed: " + strerror(errno));
+			throw std::runtime_error("Opening log file " + logFile + " failed: " + strerror(errno));
 	
 		// redirect stdout and stderr to the log file
 		dup2(fd, STDOUT_FILENO);
@@ -1112,27 +1104,56 @@ References:
 
 	if (vm.count("dict"))
 	{
-		for (auto dict: vm["dict"].as<vector<string>>())
+		for (auto dict: vm["dict"].as<std::vector<std::string>>())
 			mmcif::CompoundFactory::instance().pushDictionary(dict);
 	}
 
-	mmcif::File f(vm["xyzin"].as<string>());
-	Structure structure(f);
-	
 	// --------------------------------------------------------------------
 	
+	json data{
+		{ "software",
+			{
+				{ "name", "tortoize" },
+				{ "version", VERSION_STRING },
+				{ "reference", "Sobolev et al. A Global Ramachandran Score Identifies Protein Structures with Unlikely Stereochemistry, Structure (2020)" },
+				{ "reference-doi", "https://doi.org/10.1016/j.str.2020.08.005" }
+			}
+		}
+	};
+
+	// --------------------------------------------------------------------
+
+	mmcif::File f(vm["xyzin"].as<std::string>());
+
+	std::set<uint32_t> models;
+	for (auto r: f.data()["atom_site"])
+	{
+		if (not r["pdbx_PDB_model_num"].empty())
+			models.insert(r["pdbx_PDB_model_num"].as<uint32_t>());
+	}
+
+	if (models.empty())
+		models.insert(0);
+
+	for (auto model: models)
+	{
+		Structure structure(f, model);
+
+		data["model"][std::to_string(model)] = calculateZScores(structure);
+	}
+
 	if (vm.count("output"))
 	{
-		ofstream of(vm["output"].as<string>());
+		std::ofstream of(vm["output"].as<std::string>());
 		if (not of.is_open())
 		{
-			cerr << "Could not open output file" << endl;
+			std::cerr << "Could not open output file" << std::endl;
 			exit(1);
 		}
-		of << calculateZScores(structure);
+		of << data;
 	}
 	else
-		cout << calculateZScores(structure) << endl;
+		std::cout << data << std::endl;
 	
 	return 0;
 }
