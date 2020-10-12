@@ -40,10 +40,10 @@ bindir				= @bindir@
 datarootdir			= @datarootdir@
 datadir				= @datadir@
 
-ifneq "$(CHECK_CONFIG)" ""
-
 GNUmakefile: config.status GNUmakefile.in
 	$(SHELL) ./config.status
+
+ifneq "$(CHECK_CONFIG)" ""
 
 config.status: configure
 	$(SHELL) ./config.status --recheck
@@ -56,9 +56,14 @@ endif
 # main build variables
 CXXFLAGS            += -Wall -Wno-multichar
 
-DATADIR				= $(datadir)/tortoize
+CIFPP_RSRC			= @CIFPP_RSRC@
 
+ifneq "$(CIFPP_RSRC)" ""
+DATADIR				= $(CIFPP_RSRC)
 DEFINES				+= DATADIR='"$(DATADIR)"'
+else
+DATADIR				= $(datadir)/libcifpp
+endif
 
 # Use the DEBUG flag to build debug versions of the code
 DEBUG               = @DEBUG@
@@ -111,6 +116,7 @@ src/revision.hpp: $(REVISION_FILE)
 $(OBJDIR)/pr-main.o: src/revision.hpp
 
 ifneq "$(USE_RSRC)" "0"
+COMMON_RSRC = $(DATADIR)/dictionaries
 
 rsrc:
 	@ mkdir -p $@
@@ -125,8 +131,6 @@ endif
 # disabled for now: centrifuge map-maker
 PROGRAMS = tortoize
 
-tortoize_RSRC = rsrc/
-
 define PROGRAM_template =
 
 $(1)_OBJECTS += $(1).o $(COMMON_OBJECTS)
@@ -134,7 +138,7 @@ $(1)_OBJECTS += $(1).o $(COMMON_OBJECTS)
 ifneq "$(USE_RSRC)" "0"
 $(1)_OBJECTS += $(1).o $(1)_rsrc.o
 
-$$(OBJDIR)/$(1)_rsrc.o: $$($(1)_RSRC)
+$$(OBJDIR)/$(1)_rsrc.o: $$($(1)_RSRC) $$(COMMON_RSRC)
 	$(MRC) -o $$@ $$^
 endif
 
