@@ -30,9 +30,11 @@ LDFLAGS				= @LDFLAGS@ @PTHREAD_CFLAGS@
 LIBS				= @LIBS@ \
 					  @CIFPP_LIBS@ \
 					  @ZEEP_LIBS@ \
+					  -Wl,-Bstatic \
 					  @BOOST_IOSTREAMS_LIB@ \
 					  @BOOST_PROGRAM_OPTIONS_LIB@ \
-					  @BOOST_DATE_TIME_LIB@
+					  @BOOST_DATE_TIME_LIB@ \
+					  -lstdc++ -Wl,-Bdynamic
 
 prefix				= @prefix@
 exec_prefix			= @exec_prefix@
