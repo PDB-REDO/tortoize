@@ -74,8 +74,6 @@ AX_BOOST_DATE_TIME
 CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
 LDFLAGS="$LDFLAGS $BOOST_LDFLAGS"
 
-AC_PATH_PROG([PKG_CONFIG], [pkg-config])
-
 AC_ARG_WITH([cif++],
 	AS_HELP_STRING([--with-cif++=@<:@location@:>@],
 		[Use the cif++ library as specified.]),
@@ -88,12 +86,16 @@ AC_ARG_WITH([cif++],
 
 			CIFPP_CFLAGS="-I ${withval}/include"
 			CIFPP_LIBS="-L${withval}/.libs -lcif++"
+			CIFPP_RSRC="${withval}/rsrc"
 
 			AC_SUBST([CIFPP_CFLAGS], [$CIFPP_CFLAGS])
 			AC_SUBST([CIFPP_LIBS], [$CIFPP_LIBS])
 		])
 
+AC_SUBST([CIFPP_RSRC], [$CIFPP_RSRC])
+
 AS_IF([test "x$CIFPP_LIBS" = "x"], [
+	AC_PATH_PROG([PKG_CONFIG], [pkg-config])
 	if test -x "$PKG_CONFIG"
 	then
 		AX_PKG_CHECK_MODULES([CIFPP], [libcif++], [], [], [AC_MSG_ERROR([the required package libcif++ is not installed])])
@@ -109,8 +111,10 @@ is installed, and either use the --with-cif++ option or install
 pkg-config.])])
 
 			AX_CHECK_LIBRARY([CIFPP], [cif++/Config.hpp], [cif++],
-				 [ LIBS="-lcif++ $LIBS" ],
-				 [AC_MSG_ERROR([libcif++ not found])])
+				 [
+					 LIBS="-lcif++ $LIBS"
+				 ],
+                 [AC_MSG_ERROR([libcif++ not found])])
 	fi
 ])
 
