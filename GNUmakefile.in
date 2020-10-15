@@ -30,11 +30,9 @@ LDFLAGS				= @LDFLAGS@ @PTHREAD_CFLAGS@
 LIBS				= @LIBS@ \
 					  @CIFPP_LIBS@ \
 					  @ZEEP_LIBS@ \
-					  -Wl,-Bstatic \
 					  @BOOST_IOSTREAMS_LIB@ \
 					  @BOOST_PROGRAM_OPTIONS_LIB@ \
 					  @BOOST_DATE_TIME_LIB@ \
-					  -lstdc++ -Wl,-Bdynamic
 
 prefix				= @prefix@
 exec_prefix			= @exec_prefix@
@@ -62,10 +60,10 @@ CIFPP_RSRC			= @CIFPP_RSRC@
 
 ifneq "$(CIFPP_RSRC)" ""
 DATADIR				= $(CIFPP_RSRC)
-DEFINES				+= DATADIR='"$(DATADIR)"'
 else
 DATADIR				= $(datadir)/libcifpp
 endif
+DEFINES				+= DATADIR='"$(DATADIR)"'
 
 # Use the DEBUG flag to build debug versions of the code
 DEBUG               = @DEBUG@
@@ -173,7 +171,6 @@ install: $(PROGRAMS)
 ifeq "$(USE_RSRC)" "0"
 	install -d $(DATADIR)/dictionaries
 	for d in rama-data.bin  torsion-data.bin; do install -m644 rsrc/$$d $(DATADIR)/$$d; done
-	install -m644 rsrc/mmcif_pdbx.dic $(DATADIR)/dictionaries/mmcif_pdbx.dic
 endif
 
 .PHONY: FORCE
