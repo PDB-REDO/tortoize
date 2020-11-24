@@ -6851,7 +6851,7 @@ else
 fi
 
 			CIFPP_CFLAGS="-I ${withval}/include"
-			CIFPP_LIBS="-L${withval}/.libs -lcif++"
+			CIFPP_LIBS="-L${withval}/.libs -lcifpp"
 			CIFPP_RSRC="${withval}/rsrc"
 
 			CIFPP_CFLAGS=$CIFPP_CFLAGS
@@ -7033,7 +7033,7 @@ fi
 
 
 
-    AX_PACKAGE_REQUIRES="$AX_PACKAGE_REQUIRES libcif++"
+    AX_PACKAGE_REQUIRES="$AX_PACKAGE_REQUIRES libcifpp"
     AX_PACKAGE_REQUIRES_PRIVATE="$AX_PACKAGE_REQUIRES_PRIVATE "
 
 
@@ -7045,12 +7045,12 @@ if test -n "$CIFPP_CFLAGS"; then
     pkg_cv_CIFPP_CFLAGS="$CIFPP_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libcif++ \""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libcif++ ") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libcifpp \""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libcifpp ") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_CIFPP_CFLAGS=`$PKG_CONFIG --cflags "libcif++ " 2>/dev/null`
+  pkg_cv_CIFPP_CFLAGS=`$PKG_CONFIG --cflags "libcifpp " 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -7062,12 +7062,12 @@ if test -n "$CIFPP_LIBS"; then
     pkg_cv_CIFPP_LIBS="$CIFPP_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libcif++ \""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libcif++ ") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libcifpp \""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libcifpp ") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_CIFPP_LIBS=`$PKG_CONFIG --libs "libcif++ " 2>/dev/null`
+  pkg_cv_CIFPP_LIBS=`$PKG_CONFIG --libs "libcifpp " 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -7088,9 +7088,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        CIFPP_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libcif++ " 2>&1`
+	        CIFPP_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libcifpp " 2>&1`
         else
-	        CIFPP_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libcif++ " 2>&1`
+	        CIFPP_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libcifpp " 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$CIFPP_PKG_ERRORS" >&5
@@ -7148,13 +7148,13 @@ fi
      ac_fn_cxx_check_header_mongrel "$LINENO" "cif++/Config.hpp" "ac_cv_header_cifpp_Config_hpp" "$ac_includes_default"
 if test "x$ac_cv_header_cifpp_Config_hpp" = xyes; then :
 
-       { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lcif++" >&5
-$as_echo_n "checking for main in -lcif++... " >&6; }
+       { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lcifpp" >&5
+$as_echo_n "checking for main in -lcifpp... " >&6; }
 if ${ac_cv_lib_cifpp_main+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lcif++  $LIBS"
+LIBS="-lcifpp  $LIBS"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -7203,7 +7203,7 @@ fi
 $as_echo "#define HAVE_CIFPP 1" >>confdefs.h
 
 
-					 LIBS="-lcif++ $LIBS"
+					 LIBS="-lcifpp $LIBS"
 
 else
   as_fn_error $? "libcif++ not found" "$LINENO" 5
@@ -7245,7 +7245,7 @@ if test "x$ZEEP_LIBS" = "x"; then :
 
 
 
-    AX_PACKAGE_REQUIRES="$AX_PACKAGE_REQUIRES libzeep-json"
+    AX_PACKAGE_REQUIRES="$AX_PACKAGE_REQUIRES libzeep"
     AX_PACKAGE_REQUIRES_PRIVATE="$AX_PACKAGE_REQUIRES_PRIVATE "
 
 
@@ -7257,12 +7257,12 @@ if test -n "$ZEEP_CFLAGS"; then
     pkg_cv_ZEEP_CFLAGS="$ZEEP_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libzeep-json \""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libzeep-json ") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libzeep \""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libzeep ") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_ZEEP_CFLAGS=`$PKG_CONFIG --cflags "libzeep-json " 2>/dev/null`
+  pkg_cv_ZEEP_CFLAGS=`$PKG_CONFIG --cflags "libzeep " 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -7274,12 +7274,12 @@ if test -n "$ZEEP_LIBS"; then
     pkg_cv_ZEEP_LIBS="$ZEEP_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libzeep-json \""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libzeep-json ") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libzeep \""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libzeep ") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_ZEEP_LIBS=`$PKG_CONFIG --libs "libzeep-json " 2>/dev/null`
+  pkg_cv_ZEEP_LIBS=`$PKG_CONFIG --libs "libzeep " 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -7300,9 +7300,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        ZEEP_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libzeep-json " 2>&1`
+	        ZEEP_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libzeep " 2>&1`
         else
-	        ZEEP_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libzeep-json " 2>&1`
+	        ZEEP_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libzeep " 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$ZEEP_PKG_ERRORS" >&5
@@ -7359,13 +7359,13 @@ fi
      ac_fn_cxx_check_header_mongrel "$LINENO" "zeep/json/element.hpp" "ac_cv_header_zeep_json_element_hpp" "$ac_includes_default"
 if test "x$ac_cv_header_zeep_json_element_hpp" = xyes; then :
 
-       { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lzeep-json" >&5
-$as_echo_n "checking for main in -lzeep-json... " >&6; }
-if ${ac_cv_lib_zeep_json_main+:} false; then :
+       { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lzeep" >&5
+$as_echo_n "checking for main in -lzeep... " >&6; }
+if ${ac_cv_lib_zeep_main+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lzeep-json  $LIBS"
+LIBS="-lzeep  $LIBS"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -7379,17 +7379,17 @@ return main ();
 }
 _ACEOF
 if ac_fn_cxx_try_link "$LINENO"; then :
-  ac_cv_lib_zeep_json_main=yes
+  ac_cv_lib_zeep_main=yes
 else
-  ac_cv_lib_zeep_json_main=no
+  ac_cv_lib_zeep_main=no
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
 LIBS=$ac_check_lib_save_LIBS
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_zeep_json_main" >&5
-$as_echo "$ac_cv_lib_zeep_json_main" >&6; }
-if test "x$ac_cv_lib_zeep_json_main" = xyes; then :
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_zeep_main" >&5
+$as_echo "$ac_cv_lib_zeep_main" >&6; }
+if test "x$ac_cv_lib_zeep_main" = xyes; then :
   ax_cv_have_ZEEP=yes
 else
   ax_cv_have_ZEEP=no
@@ -7415,7 +7415,7 @@ $as_echo "#define HAVE_ZEEP 1" >>confdefs.h
 
      LIBS="-lzeep-json $LIBS"
 else
-  as_fn_error $? "libzeep-json not found" "$LINENO" 5
+  as_fn_error $? "libzeep not found" "$LINENO" 5
 fi
 
 	fi

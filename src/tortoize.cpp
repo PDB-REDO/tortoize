@@ -44,6 +44,10 @@
 
 #include <zeep/json/element.hpp>
 
+#if USE_RSRC
+#include "mrsrc.hpp"
+#endif
+
 namespace po = boost::program_options;
 namespace fs = std::filesystem;
 namespace ba = boost::algorithm;
@@ -792,11 +796,29 @@ void DataTable::load(const char* name, std::vector<Data>& table, float& mean, fl
 {
 	using namespace std::literals;
 
-	auto rd = cif::rsrc_loader::load(name);
+	const float* fv = nullptr;
+
+#if USE_RSRC
+	mrsrc::rsrc rd(name);
+
 	if (not rd)
 		throw std::runtime_error("Missing resource "s + name);
 
-	const float* fv = reinterpret_cast<const float*>(rd.data());
+	fv = reinterpret_cast<const float*>(rd.data());
+#else
+	std::ifstream rdf(fs::path(DATADIR) / name, std::ios::binary);
+	if (not rdf.is_open())
+		throw std::runtime_error("Missing data file "s + name);
+	
+	rdf.seekg(0, rdf.end);
+	auto size = rdf.tellg();
+	rdf.seekg(0, rdf.beg);
+
+	fv = new float[size / sizeof(float) + 1];
+	rdf.read(reinterpret_cast<char*>(const_cast<float*>(fv)), size);
+	rdf.close();
+#endif
+
 	mean = fv[0];
 	sd = fv[1];
 
@@ -991,25 +1013,24 @@ json calculateZScores(const Structure& structure)
 
 int pr_main(int argc, char* argv[])
 {
-	po::options_description visible_options(fs::path(argv[0]).filename().string() + " options");
+	po::options_description visible_options(fs::path(argv[0]).filename().string() + " [options] input [output]");
 	visible_options.add_options()
-		("xyzin",				po::value<std::string>(),	"coordinates file")
-		("output",              po::value<std::string>(),    "Output to this file")
-
-		("log",					po::value<std::string>(),	"Write log to this file")
+		("log",		po::value<std::string>(),	"Write log to this file")
 		
-		("dict",				po::value<std::vector<std::string>>(),
-														"Dictionary file containing restraints for residues in this specific target, can be specified multiple times.")
+		("dict",	po::value<std::vector<std::string>>(),
+												"Dictionary file containing restraints for residues in this specific target, can be specified multiple times.")
 
-		("help,h",										"Display help message")
-		("version",										"Print version")
+		("help,h",								"Display help message")
+		("version",								"Print version")
 
-		("verbose,v",									"verbose output")
+		("verbose,v",							"verbose output")
 		;
 	
 	po::options_description hidden_options("hidden options");
 	hidden_options.add_options()
-		("debug,d",				po::value<int>(),		"Debug level (for even more verbose output)")
+		("xyzin",	po::value<std::string>(),	"coordinates file")
+		("output",	po::value<std::string>(),	"Output to this file")
+		("debug,d",				po::value<int>(),			"Debug level (for even more verbose output)")
 		("build",				po::value<std::string>(),	"Build a binary data table")
 		;
 
@@ -1022,17 +1043,6 @@ int pr_main(int argc, char* argv[])
 	
 	po::variables_map vm;
 	po::store(po::command_line_parser(argc, argv).options(cmdline_options).positional(p).run(), vm);
-
-	fs::path configFile = "tortoize.conf";
-	if (not fs::exists(configFile) and getenv("HOME") != nullptr)
-		configFile = fs::path(getenv("HOME")) / ".config" / "tortoize.conf";
-	
-	if (fs::exists(configFile))
-	{
-		std::ifstream cfgFile(configFile);
-		if (cfgFile.is_open())
-			po::store(po::parse_config_file(cfgFile, visible_options), vm);
-	}
 	
 	po::notify(vm);
 
@@ -1157,3 +1167,165 @@ References:
 	
 	return 0;
 }
+
+// --------------------------------------------------------------------
+
+std::string VERSION_STRING;
+
+// --------------------------------------------------------------------
+
+std::ostream& operator<<(std::ostream& os, const struct timeval& t)
+{
+	uint64_t s = t.tv_sec;
+	if (s > 24 * 60 * 60)
+	{
+		uint32_t days = s / (24 * 60 * 60);
+		os << days << "d ";
+		s %= 24 * 60 * 60;
+	}
+	
+	if (s > 60 * 60)
+	{
+		uint32_t hours = s / (60 * 60);
+		os << hours << "h ";
+		s %= 60 * 60;
+	}
+	
+	if (s > 60)
+	{
+		uint32_t minutes = s / 60;
+		os << minutes << "m ";
+		s %= 60;
+	}
+	
+	double ss = s + 1e-6 * t.tv_usec;
+	
+	os << std::fixed << std::setprecision(1) << ss << 's';
+
+	return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const std::chrono::duration<double>& t)
+{
+	uint64_t s = static_cast<uint64_t>(std::trunc(t.count()));
+	if (s > 24 * 60 * 60)
+	{
+		uint32_t days = s / (24 * 60 * 60);
+		os << days << "d ";
+		s %= 24 * 60 * 60;
+	}
+	
+	if (s > 60 * 60)
+	{
+		uint32_t hours = s / (60 * 60);
+		os << hours << "h ";
+		s %= 60 * 60;
+	}
+	
+	if (s > 60)
+	{
+		uint32_t minutes = s / 60;
+		os << minutes << "m ";
+		s %= 60;
+	}
+	
+	double ss = s + 1e-6 * (t.count() - s);
+	
+	os << std::fixed << std::setprecision(1) << ss << 's';
+
+	return os;
+}
+
+// --------------------------------------------------------------------
+
+namespace {
+	std::string gVersionNr, gVersionDate;
+}
+
+void load_version_info()
+{
+	const std::regex
+		rxVersionNr(R"(build-(\d+)-g[0-9a-f]{7}(-dirty)?)"),
+		rxVersionDate(R"(Date: +(\d{4}-\d{2}-\d{2}).*)");
+
+#include "revision.hpp"
+
+	struct membuf : public std::streambuf
+	{
+		membuf(char* data, size_t length)       { this->setg(data, data, data + length); }
+	} buffer(const_cast<char*>(kRevision), sizeof(kRevision));
+
+	std::istream is(&buffer);
+
+	std::string line;
+
+	while (getline(is, line))
+	{
+		std::smatch m;
+
+		if (std::regex_match(line, m, rxVersionNr))
+		{
+			gVersionNr = m[1];
+			if (m[2].matched)
+				gVersionNr += '*';
+			continue;
+		}
+
+		if (std::regex_match(line, m, rxVersionDate))
+		{
+			gVersionDate = m[1];
+			continue;
+		}
+	}
+
+	if (not VERSION_STRING.empty())
+		VERSION_STRING += "\n";
+	VERSION_STRING += gVersionNr + '.' + cif::get_version_nr() + " " + gVersionDate;
+}
+
+std::string get_version_nr()
+{
+	return gVersionNr + '/' + cif::get_version_nr();
+}
+
+std::string get_version_date()
+{
+	return gVersionDate;
+}
+
+// --------------------------------------------------------------------
+
+// recursively print exception whats:
+void print_what (const std::exception& e)
+{
+	std::cerr << e.what() << std::endl;
+	try
+	{
+		std::rethrow_if_nested(e);
+	}
+	catch (const std::exception& nested)
+	{
+		std::cerr << " >> ";
+		print_what(nested);
+	}
+}
+
+int main(int argc, char* argv[])
+{
+	int result = -1;
+	
+	try
+	{
+		load_version_info();
+		
+		result = pr_main(argc, argv);
+	}
+	catch (std::exception& ex)
+	{
+		print_what(ex);
+		exit(1);
+	}
+
+	return result;
+}
+

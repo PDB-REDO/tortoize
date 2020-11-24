@@ -85,7 +85,7 @@ AC_ARG_WITH([cif++],
 			dnl AC_SUBST([CIFPP_LIBS], ["-L${withval}/.libs -lcif++"])
 
 			CIFPP_CFLAGS="-I ${withval}/include"
-			CIFPP_LIBS="-L${withval}/.libs -lcif++"
+			CIFPP_LIBS="-L${withval}/.libs -lcifpp"
 			CIFPP_RSRC="${withval}/rsrc"
 
 			AC_SUBST([CIFPP_CFLAGS], [$CIFPP_CFLAGS])
@@ -98,7 +98,7 @@ AS_IF([test "x$CIFPP_LIBS" = "x"], [
 	AC_PATH_PROG([PKG_CONFIG], [pkg-config])
 	if test -x "$PKG_CONFIG"
 	then
-		AX_PKG_CHECK_MODULES([CIFPP], [libcif++], [], [], [AC_MSG_ERROR([the required package libcif++ is not installed])])
+		AX_PKG_CHECK_MODULES([CIFPP], [libcifpp], [], [], [AC_MSG_ERROR([the required package libcif++ is not installed])])
 	else
 		AC_CHECK_HEADER(
 	        [cif++/Config.hpp],
@@ -110,9 +110,9 @@ Can't find the libcif++ header, Config.hpp.  Make sure that it
 is installed, and either use the --with-cif++ option or install
 pkg-config.])])
 
-			AX_CHECK_LIBRARY([CIFPP], [cif++/Config.hpp], [cif++],
+			AX_CHECK_LIBRARY([CIFPP], [cif++/Config.hpp], [cifpp],
 				 [
-					 LIBS="-lcif++ $LIBS"
+					 LIBS="-lcifpp $LIBS"
 				 ],
                  [AC_MSG_ERROR([libcif++ not found])])
 	fi
@@ -138,7 +138,7 @@ AC_ARG_WITH([zeep],
 AS_IF([test "x$ZEEP_LIBS" = "x"], [
 	if test -x "$PKG_CONFIG"
 	then
-		AX_PKG_CHECK_MODULES([ZEEP], [libzeep-json], [], [], [AC_MSG_ERROR([the required package libzeep is not installed])])
+		AX_PKG_CHECK_MODULES([ZEEP], [libzeep], [], [], [AC_MSG_ERROR([the required package libzeep is not installed])])
 	else
 		AC_CHECK_HEADER(
 			[zeep/json/element.hpp],
@@ -148,9 +148,9 @@ Can't find the libzeep header, zeep/json/element.hpp.  Make sure that libzeep
 is installed, and either use the --with-zeep option or install
 pkg-config.])])
 
-			AX_CHECK_LIBRARY([ZEEP], [zeep/json/element.hpp], [zeep-json],
+			AX_CHECK_LIBRARY([ZEEP], [zeep/json/element.hpp], [zeep],
 					[ LIBS="-lzeep-json $LIBS" ],
-					[AC_MSG_ERROR([libzeep-json not found])])
+					[AC_MSG_ERROR([libzeep not found])])
 	fi
 ])
 
