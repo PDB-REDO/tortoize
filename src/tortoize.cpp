@@ -1030,8 +1030,8 @@ int pr_main(int argc, char* argv[])
 	hidden_options.add_options()
 		("xyzin",	po::value<std::string>(),	"coordinates file")
 		("output",	po::value<std::string>(),	"Output to this file")
-		("debug,d",				po::value<int>(),			"Debug level (for even more verbose output)")
-		("build",				po::value<std::string>(),	"Build a binary data table")
+		("debug,d",	po::value<int>(),			"Debug level (for even more verbose output)")
+		("build",	po::value<std::string>(),	"Build a binary data table")
 		;
 
 	po::options_description cmdline_options;
@@ -1099,10 +1099,16 @@ References:
 
 	if (vm.count("log"))
 	{
+		if (not vm.count("output"))
+		{
+			std::cerr << "If you specify a log file, you should also specify an output file" << std::endl;
+			exit(1);
+		}
+
 		std::string logFile = vm["log"].as<std::string>();
 		
 		// open the log file
-		int fd = open(logFile.c_str(), O_CREAT|O_APPEND|O_RDWR, 0644);
+		int fd = open(logFile.c_str(), O_CREAT|O_RDWR, 0644);
 		if (fd < 0)
 			throw std::runtime_error("Opening log file " + logFile + " failed: " + strerror(errno));
 	
