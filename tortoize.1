@@ -1,0 +1,52 @@
+.TH tortoize 1 "2020-11-23" "version 1.0.0" "User Commands"
+.if n .ad l
+.nh
+.SH NAME
+tortoize \- Calculate ramachandran z-scores
+.SH SYNOPSIS
+tortoize [OPTION] input [output]
+.SH DESCRIPTION
+Tortoize validates protein structure models by checking the
+Ramachandran plot and side-chain rotamer distributions. Quality
+Z-scores are given at the residue level and at the model level
+(ramachandran-z and torsions-z). Higher scores are better. To compare
+models or to describe the reliability of the model Z-scores jackknife-
+based standard deviations are also reported (ramachandran-jackknife-sd
+and torsion-jackknife-sd).
+.SH OPTIONS
+The input file can be either mmCIF or PDB format and the file may be
+gzip or bzip2 compressed.
+.sp
+The output is a json file, if no file name is specified the output is
+written to \fIstdout\fR.
+.TP
+\fB--dict\fR=<file>
+Specify a dictionary file containing restraints for residues specific to
+this file.
+.TP
+\fB--log\fR=<file>
+Write a log with diagnostic information to this file.
+.SH REFERENCES
+References:
+.TP
+\fBSobolev et al.\fR
+A Global Ramachandran Score Identifies Protein
+Structures with Unlikely Stereochemistry, Structure (2020),
+DOI: \fIhttps://doi.org/10.1016/j.str.2020.08.005\fR
+.TP
+\fBVan Beusekom et al.\fR
+Homology-based loop modeling yields more complete
+crystallographic protein structures, IUCrJ (2018),
+DOI: \fIhttps://doi.org/10.1107/S2052252518010552\fR
+.TP
+\fBHooft et al.\fR
+Objectively judging the quality of a protein structure
+from a Ramachandran plot, CABIOS (1993),
+DOI: \fIhttps://doi.org/10.1093/bioinformatics/13.4.425 \fR
+.SH AUTHOR
+Written by Maarten L. Hekkelman <maarten@hekkelman.com>
+.SH "REPORTING BUGS"
+Report bugs at https://github.com/PDB-REDO/cif-tools/issues
+.SH "SEE ALSO"
+\fBcif-drop\fR, \fBcif-grep\fR, \fBcif-merge\fR, \fBcif-validate\fR, 
+\fBcif2pdb\fR, \fBmmCQL\fR, \fBpdb2cif\fR.
