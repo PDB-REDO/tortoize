@@ -13,3 +13,5 @@ GNUmakefile
 rsrc/version.txt
 src/revision.hpp
 tortoize
+.gdb_history
+src/mrsrc.hpp

@@ -82,6 +82,8 @@ AX_BOOST_IOSTREAMS
 AX_BOOST_PROGRAM_OPTIONS
 AX_BOOST_DATE_TIME
 
+PKG_PROG_PKG_CONFIG
+
 CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
 LDFLAGS="$LDFLAGS $BOOST_LDFLAGS"
 
@@ -106,7 +108,6 @@ AC_ARG_WITH([cif++],
 AC_SUBST([CIFPP_RSRC], [$CIFPP_RSRC])
 
 AS_IF([test "x$CIFPP_LIBS" = "x"], [
-	AC_PATH_PROG([PKG_CONFIG], [pkg-config])
 	if test -x "$PKG_CONFIG"
 	then
 		AX_PKG_CHECK_MODULES([CIFPP], [libcifpp], [], [], [AC_MSG_ERROR([the required package libcif++ is not installed])])
@@ -140,7 +141,7 @@ AC_ARG_WITH([zeep],
 			])
 
 			ZEEP_CFLAGS="-I ${withval}/include"
-			ZEEP_LIBS="-L${withval}/.libs -lzeep-json"
+			ZEEP_LIBS="-L${withval}/.libs -lzeep"
 
 			AC_SUBST([ZEEP_CFLAGS], [$ZEEP_CFLAGS])
 			AC_SUBST([ZEEP_LIBS], [$ZEEP_LIBS])
@@ -160,7 +161,7 @@ is installed, and either use the --with-zeep option or install
 pkg-config.])])
 
 			AX_CHECK_LIBRARY([ZEEP], [zeep/json/element.hpp], [zeep],
-					[ LIBS="-lzeep-json $LIBS" ],
+					[ LIBS="-lzeep $LIBS" ],
 					[AC_MSG_ERROR([libzeep not found])])
 	fi
 ])
