@@ -36,11 +36,17 @@
 #include <boost/program_options.hpp>
 #include <boost/algorithm/string.hpp>
 
+#include <zeep/http/daemon.hpp>
+#include <zeep/http/server.hpp>
+#include <zeep/http/rest-controller.hpp>
+#include <zeep/crypto.hpp>
+
 #include "cif++/Secondary.hpp"
 // #include "cif++/Statistics.hpp"
 #include "cif++/CifUtils.hpp"
 #include "cif++/Cif++.hpp"
 #include "cif++/Structure.hpp"
+#include "cif++/Compound.hpp"
 
 #include <zeep/json/element.hpp>
 
@@ -1011,8 +1017,192 @@ json calculateZScores(const Structure& structure)
 
 // --------------------------------------------------------------------
 
+class tortoize_rest_controller : public zeep::http::rest_controller
+{
+  public:
+	tortoize_rest_controller()
+		: zeep::http::rest_controller("")
+		, m_tempdir(fs::temp_directory_path() / "tortoize-ws")
+	{
+		fs::create_directories(m_tempdir);
+
+		map_post_request("tortoize", &tortoize_rest_controller::calculate, "data", "dict");
+	}
+
+	json calculate(const std::string& file, const std::string& dict)
+	{
+		// First store dictionary, just in case
+
+		fs::path dictFile;
+
+		if (not dict.empty())\
+		{
+			dictFile = m_tempdir / ("dict-" + std::to_string(m_next_dict_nr++));
+			std::ofstream tmpFile(dictFile);
+			tmpFile << dict;
+
+			mmcif::CompoundFactory::instance().pushDictionary(dictFile);
+		}
+
+		try
+		{
+			// --------------------------------------------------------------------
+			
+			json data{
+				{ "software",
+					{
+						{ "name", "tortoize" },
+						{ "version", VERSION_STRING },
+						{ "reference", "Sobolev et al. A Global Ramachandran Score Identifies Protein Structures with Unlikely Stereochemistry, Structure (2020)" },
+						{ "reference-doi", "https://doi.org/10.1016/j.str.2020.08.005" }
+					}
+				}
+			};
+
+			// --------------------------------------------------------------------
+
+			mmcif::File f(file.data(), file.length());
+
+			std::set<uint32_t> models;
+			for (auto r: f.data()["atom_site"])
+			{
+				if (not r["pdbx_PDB_model_num"].empty())
+					models.insert(r["pdbx_PDB_model_num"].as<uint32_t>());
+			}
+
+			if (models.empty())
+				models.insert(0);
+
+			for (auto model: models)
+			{
+				Structure structure(f, model);
+				data["model"][std::to_string(model)] = calculateZScores(structure);
+			}
+
+			mmcif::CompoundFactory::instance().popDictionary();
+
+			if (not dictFile.empty())
+				fs::remove(dictFile);
+
+			return data;
+		}
+		catch (...)
+		{
+			mmcif::CompoundFactory::instance().popDictionary();
+
+			std::error_code ec;
+
+			if (not dictFile.empty())
+				fs::remove(dictFile, ec);
+			throw;
+		}
+	}
+
+	fs::path m_tempdir;
+	size_t m_next_dict_nr = 1;
+};
+
+int start_server(int argc, char* argv[])
+{
+	using namespace std::literals;
+	namespace zh = zeep::http;
+
+	mmcif::CompoundFactory::init(true);
+
+	int result = 0;
+
+	po::options_description visible_options(PACKAGE_NAME " [options] input [output]");
+	visible_options.add_options()
+		("log",		po::value<std::string>(),	"Write log to this file")
+		
+		("help,h",								"Display help message")
+		("version",								"Print version")
+
+		("address",	po::value<std::string>()->default_value("0.0.0.0"),		"External address")
+		("port",	po::value<uint16_t>()->default_value(10350),			"Port to listen to")
+		("user,u",	po::value<std::string>()->default_value("www-data"),	"User to run the daemon")
+
+		("no-daemon,F",							"Do not fork into background" )
+
+		("verbose,v",							"verbose output")
+		;
+	
+	po::options_description hidden_options("hidden options");
+	hidden_options.add_options()
+		("command", po::value<std::string>(),	"The command to execute")
+		("debug,d",	po::value<int>(),			"Debug level (for even more verbose output)")
+		;
+
+	po::options_description cmdline_options;
+	cmdline_options.add(visible_options).add(hidden_options);
+
+	po::positional_options_description p;
+	p.add("command", 1);
+	
+	po::variables_map vm;
+	po::store(po::command_line_parser(argc, argv).options(cmdline_options).positional(p).run(), vm);
+	
+	po::notify(vm);
+	
+	// --------------------------------------------------------------------
+	
+	std::string secret;
+	if (vm.count("secret"))
+		secret = vm["secret"].as<std::string>();
+	else
+	{
+		secret = zeep::encode_base64(zeep::random_hash());
+		std::cerr << "starting with created secret " << secret << std::endl;
+	}
+
+	std::string user = vm["user"].as<std::string>();
+	std::string address = vm["address"].as<std::string>();
+	uint16_t port = vm["port"].as<uint16_t>();
+
+	zh::daemon server([&]()
+	{
+		auto s = new zeep::http::server();
+		s->add_controller(new tortoize_rest_controller());
+		return s;
+	}, PACKAGE_NAME );
+
+	std::string command = vm["command"].as<std::string>();
+
+	if (command == "start")
+	{
+		std::cout << "starting server at http://" << address << ':' << port << '/' << std::endl;
+
+		if (vm.count("no-daemon"))
+			result = server.run_foreground(address, port);
+		else
+			result = server.start(address, port, 2, 2, user);
+		// server.start(vm.count("no-daemon"), address, port, 2, user);
+		// // result = daemon::start(vm.count("no-daemon"), port, user);
+	}
+	else if (command == "stop")
+		result = server.stop();
+	else if (command == "status")
+		result = server.status();
+	else if (command == "reload")
+		result = server.reload();
+	else
+	{
+		std::cerr << "Invalid command" << std::endl;
+		result = 1;
+	}
+
+	return result;
+}
+
+// --------------------------------------------------------------------
+
 int pr_main(int argc, char* argv[])
 {
+	using namespace std::literals;
+
+	if (argc > 2 and argv[1] == "server"s)
+		return start_server(argc - 1, argv + 1);
+
 	po::options_description visible_options(fs::path(argv[0]).filename().string() + " [options] input [output]");
 	visible_options.add_options()
 		("log",		po::value<std::string>(),	"Write log to this file")
