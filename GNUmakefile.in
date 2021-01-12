@@ -156,7 +156,8 @@ RESOURCES = \
 	rsrc/rama-data.bin \
 	rsrc/torsion-data.bin \
 	$(DATADIR)/dictionaries/mmcif_pdbx_v50.dic \
-	$(DATADIR)/dictionaries/mmcif_ddl.dic
+	$(DATADIR)/dictionaries/mmcif_ddl.dic \
+	docroot/
 
 $(OBJDIR)/tortoize_rsrc.o: $(RESOURCES)
 	$(MRC) -o $@ $^

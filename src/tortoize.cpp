@@ -38,6 +38,7 @@
 
 #include <zeep/http/daemon.hpp>
 #include <zeep/http/server.hpp>
+#include <zeep/http/html-controller.hpp>
 #include <zeep/http/rest-controller.hpp>
 #include <zeep/crypto.hpp>
 
@@ -1017,6 +1018,23 @@ json calculateZScores(const Structure& structure)
 
 // --------------------------------------------------------------------
 
+class tortoize_html_controller : public zeep::http::html_controller
+{
+  public:
+	tortoize_html_controller()
+		: zeep::http::html_controller("")
+	{
+		mount("tortoize", &tortoize_html_controller::index);
+	}
+
+	void index(const zeep::http::request& request, const zeep::http::scope& scope, zeep::http::reply& reply)
+	{
+		get_template_processor().create_reply_from_template("index", scope, reply);
+	}
+};
+
+// --------------------------------------------------------------------
+
 class tortoize_rest_controller : public zeep::http::rest_controller
 {
   public:
@@ -1162,7 +1180,10 @@ int start_server(int argc, char* argv[])
 	zh::daemon server([&]()
 	{
 		auto s = new zeep::http::server();
+
+		s->set_template_processor(new zeep::http::rsrc_based_html_template_processor());
 		s->add_controller(new tortoize_rest_controller());
+		s->add_controller(new tortoize_html_controller());
 		return s;
 	}, PACKAGE_NAME );
 
