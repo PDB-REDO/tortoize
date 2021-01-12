@@ -645,6 +645,7 @@ BOOST_IOSTREAMS_LIB
 BOOST_LDFLAGS
 BOOST_CPPFLAGS
 CXXCPP
+WEBSERVICE
 UPDATE_REVISION
 USE_RSRC
 MRC
@@ -723,6 +724,7 @@ ac_user_opts='
 enable_option_checking
 enable_resources
 enable_revision
+enable_webservice
 with_boost
 with_boost_libdir
 with_boost_iostreams
@@ -1383,6 +1385,8 @@ Optional Features:
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --disable-resources     Do not use mrc to store data in resources
   --disable-revision      Create a build number as revision
+  --enable-webservice     Enable the webservice
+
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -5500,6 +5504,23 @@ if test "x$enable_revision" != "xno" ; then :
 fi
 
 UPDATE_REVISION=$UPDATE_REVISION
+
+
+WEBSERVICE=0
+
+# Check whether --enable-webservice was given.
+if test "${enable_webservice+set}" = set; then :
+  enableval=$enable_webservice;
+fi
+
+
+if test "x$enable_webservice" = "xyes" ; then :
+
+	WEBSERVICE=1
+
+fi
+
+WEBSERVICE=$WEBSERVICE
 
 
 ac_ext=cpp

@@ -56,6 +56,20 @@ AS_IF([test "x$enable_revision" != "xno" ], [
 
 AC_SUBST([UPDATE_REVISION], [$UPDATE_REVISION])
 
+dnl Do not build the web service by default
+WEBSERVICE=0
+
+AC_ARG_ENABLE(
+	webservice,
+	[AS_HELP_STRING([--enable-webservice], [Enable the webservice])]
+)
+
+AS_IF([test "x$enable_webservice" = "xyes" ], [
+	WEBSERVICE=1
+])
+
+AC_SUBST([WEBSERVICE], [$WEBSERVICE])
+
 AC_CHECK_HEADER([filesystem], [], [AC_MSG_ERROR([The file <filesystem> is missing, perhaps you should install a more recent libstdc++ implementation.])])
 
 dnl check if we need stdc++fs as library

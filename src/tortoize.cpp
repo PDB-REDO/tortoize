@@ -1017,6 +1017,7 @@ json calculateZScores(const Structure& structure)
 }
 
 // --------------------------------------------------------------------
+#if WEBSERVICE
 
 class tortoize_html_controller : public zeep::http::html_controller
 {
@@ -1214,6 +1215,7 @@ int start_server(int argc, char* argv[])
 
 	return result;
 }
+#endif
 
 // --------------------------------------------------------------------
 
@@ -1221,8 +1223,10 @@ int pr_main(int argc, char* argv[])
 {
 	using namespace std::literals;
 
+#if WEBSERVICE
 	if (argc > 2 and argv[1] == "server"s)
 		return start_server(argc - 1, argv + 1);
+#endif
 
 	po::options_description visible_options(fs::path(argv[0]).filename().string() + " [options] input [output]");
 	visible_options.add_options()

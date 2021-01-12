@@ -71,6 +71,9 @@ DATADIR				= $(datadir)/tortoize
 endif
 DEFINES				+= DATADIR='"$(DATADIR)"'
 
+WEBSERVICE			= @WEBSERVICE@
+DEFINES				+= WEBSERVICE=$(WEBSERVICE)
+
 # Use the DEBUG flag to build debug versions of the code
 DEBUG               = @DEBUG@
 
@@ -156,8 +159,11 @@ RESOURCES = \
 	rsrc/rama-data.bin \
 	rsrc/torsion-data.bin \
 	$(DATADIR)/dictionaries/mmcif_pdbx_v50.dic \
-	$(DATADIR)/dictionaries/mmcif_ddl.dic \
-	docroot/
+	$(DATADIR)/dictionaries/mmcif_ddl.dic
+
+ifeq ($(WEBSERVICE),1)
+RESOURCES += docroot/
+endif
 
 $(OBJDIR)/tortoize_rsrc.o: $(RESOURCES)
 	$(MRC) -o $@ $^
