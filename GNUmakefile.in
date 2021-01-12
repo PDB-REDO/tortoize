@@ -152,7 +152,13 @@ src/mrsrc.hpp:
 
 OBJECTS += $(OBJDIR)/tortoize_rsrc.o
 
-$(OBJDIR)/tortoize_rsrc.o: rsrc/rama-data.bin rsrc/torsion-data.bin
+RESOURCES = \
+	rsrc/rama-data.bin \
+	rsrc/torsion-data.bin \
+	$(DATADIR)/dictionaries/mmcif_pdbx_v50.dic \
+	$(DATADIR)/dictionaries/mmcif_ddl.dic
+
+$(OBJDIR)/tortoize_rsrc.o: $(RESOURCES)
 	$(MRC) -o $@ $^
 
 $(OBJDIR)/tortoize.o: src/mrsrc.hpp
