@@ -1,0 +1,21 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+
+<html xmlns:z="http://www.hekkelman.com/libzeep/m2">
+
+<head>
+	<meta charset="utf8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+	<title>Tortoize web service</title>
+	<link href='css/style.css' z:href="@{/css/style.css}" rel='stylesheet' type="text/css"/>
+</head>
+
+<body>
+	<form action="http://localhost:10350/tortoize" enctype="multipart/form-data" method="POST">
+		<div><input type="file" name="data"/></div>
+		<div><input type="file" name="dict"/></div>
+		<div><button type="submit">Submit</button></div>
+	</form>
+	
+</body>
+</html>
