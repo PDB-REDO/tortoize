@@ -54,10 +54,10 @@ class Tortoize {
 			tdid.textContent = id;
 			row.appendChild(tdid);
 
-			for (const f of ['ramachandran-z', 'ramachandran-jackknife-sd', 'torsion-z', 'torsion-jackknife-sd'])
+			for (const f of ['ramachandran', 'torsion'])
 			{
 				const td = document.createElement('td');
-				td.textContent = (+data[f]).toFixed(2);
+				td.textContent = (+data[`${f}-z`]).toFixed(2) + " ± " + (+data[`${f}-jackknife-sd`]).toFixed(2);
 				row.appendChild(td);
 			}
 
