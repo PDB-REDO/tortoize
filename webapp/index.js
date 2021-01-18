@@ -1,5 +1,6 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+import bsCustomFileInput from 'bs-custom-file-input';
 
 class Tortoize {
 	constructor(form) {
@@ -56,7 +57,7 @@ class Tortoize {
 			for (const f of ['ramachandran-z', 'ramachandran-jackknife-sd', 'torsion-z', 'torsion-jackknife-sd'])
 			{
 				const td = document.createElement('td');
-				td.textContent = data[f];
+				td.textContent = (+data[f]).toFixed(2);
 				row.appendChild(td);
 			}
 
@@ -69,5 +70,7 @@ class Tortoize {
 
 
 window.addEventListener('load', () => {
+	bsCustomFileInput.init();
+
 	new Tortoize();
 });
