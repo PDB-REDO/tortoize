@@ -5,17 +5,94 @@
 <head>
 	<meta charset="utf8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-
 	<title>Tortoize web service</title>
-	<link href='css/style.css' z:href="@{/css/style.css}" rel='stylesheet' type="text/css"/>
+	<link href='css/pdb-redo-style.css' z:href="@{/tortoize/css/pdb-redo-style.css}" rel='stylesheet' type="text/css"/>
+	<script z:src="@{/tortoize/scripts/index.js}"></script>
 </head>
 
 <body>
-	<form action="tortoize" enctype="multipart/form-data" method="POST">
-		<div><input type="file" name="data"/></div>
-		<div><input type="file" name="dict"/></div>
-		<div><button type="submit">Submit</button></div>
-	</form>
+
+	<header>
+
+		<div class="h-left">
+			<a href="https://pdb-redo.eu/" z:href="@{/}"><img z:src="@{/tortoize/images/PDB_logo_rect_medium.svg}"/></a>
+		</div>
+		<div class="h-right">
+			<div class="first">
+				<nav>
+					<a href="http://www.nki.nl" target="_BLANK">NKI Research</a> |
+					<a href="http://www.nki.nl/divisions/biochemistry/" title="BioChemistry Homepage" target="_BLANK">Biochemistry</a>
+					|
+					<a href="http://www.nki.nl/divisions/biochemistry/perrakis-a-group/" target="_BLANK">Perrakis group</a>
+				</nav>
+			</div>
+		</div>
+
+		<nav class="navbar navbar-expand-sm bg-nav-secondary navbar-dark">
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+		
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
 	
+					<li class="nav-item">
+						<a class="nav-link" z:href="@{/}">Home</a>
+					</li>
+
+					<li class="nav-item active">
+						<a class="nav-link" z:href="@{/tortoize}">Tortoize</a>
+					</li>
+	
+				</ul>
+			</div>
+		</nav>
+	</header>
+
+	<div class="container">
+
+		<h6 class="mb-3 mt-5">Tortoize, calculate Ramachandran Z-scores</h6>
+
+		<form id="tortoize-form" action="tortoize" enctype="multipart/form-data" method="POST">
+
+			<div class="custom-file mb-3">
+				<input type="file" class="custom-file-input" aria-describedby="input-group-coordinates-file"
+					name="data" id="coordinates-file" required="required" />
+				<label class="custom-file-label" for="data">Choose coordinates file</label>
+			</div>
+
+			<div class="custom-file mb-3">
+				<input type="file" class="custom-file-input" aria-describedby="input-group-coordinates-file"
+					name="dict" id="coordinates-file" />
+				<label class="custom-file-label" for="dict">Choose custom restraints file (optional)</label>
+			</div>
+
+			<button type="submit" form="tortoize-form" class="btn btn-primary mb-3">Calculate</button>
+		</form>
+
+		<hr/>
+
+		<table id='tortoize-table' class="table table" style="display: none;">
+			<caption>Calculated scores</caption>
+			<thead>
+				<tr>
+					<th>Model</th>
+					<th>Ramachandran z-score</th>
+					<th>Ramachandran sd</th>
+					<th>Torsion z-score</th>
+					<th>Torsion sd</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+
+		<div class="alert alert-danger" role="alert" id="tortoize-alert">
+			The web interface failed to initialize, perhaps Javascript is not working properly?
+		</div>
+
+	</div>
+
 </body>
 </html>
+

@@ -1023,9 +1023,11 @@ class tortoize_html_controller : public zeep::http::html_controller
 {
   public:
 	tortoize_html_controller()
-		: zeep::http::html_controller("")
+		: zeep::http::html_controller("tortoize")
 	{
-		mount("tortoize", &tortoize_html_controller::index);
+		mount("{css,scripts,fonts,images,favicon}/", &tortoize_html_controller::handle_file);
+		mount("{favicon.ico,browserconfig.xml,manifest.json}", &tortoize_html_controller::handle_file);
+		mount("", &tortoize_html_controller::index);
 	}
 
 	void index(const zeep::http::request& request, const zeep::http::scope& scope, zeep::http::reply& reply)
@@ -1098,21 +1100,24 @@ class tortoize_rest_controller : public zeep::http::rest_controller
 				data["model"][std::to_string(model)] = calculateZScores(structure);
 			}
 
-			mmcif::CompoundFactory::instance().popDictionary();
-
 			if (not dictFile.empty())
+			{
+				mmcif::CompoundFactory::instance().popDictionary();
 				fs::remove(dictFile);
+			}
 
 			return data;
 		}
 		catch (...)
 		{
-			mmcif::CompoundFactory::instance().popDictionary();
-
 			std::error_code ec;
 
 			if (not dictFile.empty())
-				fs::remove(dictFile, ec);
+			{
+				mmcif::CompoundFactory::instance().popDictionary();
+				fs::remove(dictFile);
+			}
+
 			throw;
 		}
 	}
@@ -1182,7 +1187,11 @@ int start_server(int argc, char* argv[])
 	{
 		auto s = new zeep::http::server();
 
+#if DEBUG
+		s->set_template_processor(new zeep::http::file_based_html_template_processor("docroot"));
+#else
 		s->set_template_processor(new zeep::http::rsrc_based_html_template_processor());
+#endif
 		s->add_controller(new tortoize_rest_controller());
 		s->add_controller(new tortoize_html_controller());
 		return s;

@@ -15,3 +15,6 @@ src/revision.hpp
 tortoize
 .gdb_history
 src/mrsrc.hpp
+node_modules
+docroot/css
+docroot/scripts
