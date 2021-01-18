@@ -1,6 +1,6 @@
 <!DOCTYPE html SYSTEM "about:legacy-compat">
 
-<html xmlns:z="http://www.hekkelman.com/libzeep/m2">
+<html xmlns:z="http://www.hekkelman.com/libzeep/m2" lang="en">
 
 <head>
 	<meta charset="utf8"/>
@@ -15,7 +15,7 @@
 	<header>
 
 		<div class="h-left">
-			<a href="https://pdb-redo.eu/" z:href="@{/}"><img z:src="@{/tortoize/images/PDB_logo_rect_medium.svg}"/></a>
+			<a href="https://pdb-redo.eu/" z:href="@{/}"><img z:src="@{/tortoize/images/PDB_logo_rect_medium.svg}" alt="PDB-REDO logo" /></a>
 		</div>
 		<div class="h-right">
 			<div class="first">
@@ -59,13 +59,13 @@
 			<div class="custom-file mb-3">
 				<input type="file" class="custom-file-input" aria-describedby="input-group-coordinates-file"
 					name="data" id="coordinates-file" required="required" />
-				<label class="custom-file-label" for="data">Choose coordinates file</label>
+				<label class="custom-file-label" for="coordinates-file">Choose coordinates file</label>
 			</div>
 
 			<div class="custom-file mb-3">
-				<input type="file" class="custom-file-input" aria-describedby="input-group-coordinates-file"
-					name="dict" id="coordinates-file" />
-				<label class="custom-file-label" for="dict">Choose custom restraints file (optional)</label>
+				<input type="file" class="custom-file-input" aria-describedby="input-group-restraints-file"
+					name="dict" id="restraints-file" />
+				<label class="custom-file-label" for="restraints-file">Choose custom restraints file (optional)</label>
 			</div>
 
 			<button type="submit" form="tortoize-form" class="btn btn-primary mb-3">Calculate</button>
