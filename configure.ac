@@ -143,7 +143,7 @@ pkg-config.])])
 				 ],
                  [AC_MSG_ERROR([libcif++ not found])])
 
-		CIFPP_RSRC="/usr/local/share/libcifpp"
+		CIFPP_RSRC="\$(datadir)/libcifpp"
 	fi
 ])
 

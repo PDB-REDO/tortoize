@@ -154,15 +154,17 @@ src/mrsrc.hpp:
 	$(MRC) --header > $@
 
 rsrc/%.dic: $(DATADIR)/%.dic.gz
-	gzcat $^ > $@
+	gzcat -s $^ > $@
+
+rsrc/%.dic: $(DATADIR)/%.dic
+	ln -fs $^ $@
 
 OBJECTS += $(OBJDIR)/tortoize_rsrc.o
 
 RESOURCES = \
 	rsrc/rama-data.bin \
 	rsrc/torsion-data.bin \
-	rsrc/mmcif_pdbx_v50.dic \
-	rsrc/mmcif_ddl.dic
+	rsrc/mmcif_pdbx_v50.dic
 
 ifeq ($(WEBSERVICE),1)
 RESOURCES += docroot/
