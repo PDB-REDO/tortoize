@@ -154,7 +154,7 @@ src/mrsrc.hpp:
 	$(MRC) --header > $@
 
 rsrc/%.dic: $(DATADIR)/%.dic.gz
-	gzcat -s $^ > $@
+	gzcat $^ > $@
 
 rsrc/%.dic: $(DATADIR)/%.dic
 	ln -fs $^ $@
