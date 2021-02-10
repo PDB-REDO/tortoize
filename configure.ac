@@ -95,6 +95,7 @@ AX_BOOST_BASE([1.65.1], [], [AC_MSG_ERROR([Could not find a recent version of bo
 AX_BOOST_IOSTREAMS
 AX_BOOST_PROGRAM_OPTIONS
 AX_BOOST_DATE_TIME
+AX_BOOST_REGEX
 
 PKG_PROG_PKG_CONFIG
 
@@ -141,6 +142,8 @@ pkg-config.])])
 					 LIBS="-lcifpp $LIBS"
 				 ],
                  [AC_MSG_ERROR([libcif++ not found])])
+
+		CIFPP_RSRC="/usr/local/share/libcifpp"
 	fi
 ])
 
