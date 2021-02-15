@@ -36,7 +36,7 @@ LIBS				= @PTHREAD_LIBS@ \
 					  @BOOST_REGEX_LIB@ \
 					  @LIBS@
 
-prefix				= @prefix@
+prefix				= $(DESTDIR)@prefix@
 exec_prefix			= @exec_prefix@
 bindir				= @bindir@
 datarootdir			= @datarootdir@
@@ -138,7 +138,10 @@ endif
 
 ifneq "$(USE_RSRC)" "0"
 
-rsrc/version.txt: $(REVISION_FILE)
+rsrc:
+	@ mkdir -p $@
+
+rsrc/version.txt: $(REVISION_FILE) | rsrc
 	cp $? $@
 
 endif
@@ -153,10 +156,10 @@ ifneq "$(USE_RSRC)" "0"
 src/mrsrc.hpp:
 	$(MRC) --header > $@
 
-rsrc/%.dic: $(DATADIR)/%.dic.gz
+rsrc/%.dic: $(DATADIR)/%.dic.gz | rsrc
 	gzcat $^ > $@
 
-rsrc/%.dic: $(DATADIR)/%.dic
+rsrc/%.dic: $(DATADIR)/%.dic | rsrc
 	ln -fs $^ $@
 
 OBJECTS += $(OBJDIR)/tortoize_rsrc.o

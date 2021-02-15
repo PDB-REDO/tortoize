@@ -16,6 +16,7 @@ AC_CONFIG_HEADERS([src/config.hpp])
 AC_PREFIX_DEFAULT(/usr/local)
 
 AC_PROG_INSTALL
+PKG_PROG_PKG_CONFIG
 
 AX_PTHREAD
 
@@ -23,6 +24,7 @@ AC_ARG_VAR([DEBUG], [Build a debug version of the application])
 
 AC_ARG_VAR([MRC], [Specify a location for the mrc executable])
 
+dnl using resources?
 USE_RSRC=0
 
 if test "x$MRC" = "x"; then
@@ -97,8 +99,6 @@ AX_BOOST_PROGRAM_OPTIONS
 AX_BOOST_DATE_TIME
 AX_BOOST_REGEX
 
-PKG_PROG_PKG_CONFIG
-
 CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
 LDFLAGS="$LDFLAGS $BOOST_LDFLAGS"
 
@@ -110,7 +110,7 @@ AC_ARG_WITH([cif++],
 				AC_MSG_ERROR(['${withval}'' is not a valid directory for --with-cif++])
 			])
 			dnl AC_SUBST([CIFPP_CFLAGS], ["-I ${withval}/include"])
-			dnl AC_SUBST([CIFPP_LIBS], ["-L${withval}/.libs -lcif++"])
+			dnl AC_SUBST([CIFPP_LIBS], ["-L${withval}/.libs -lcifpp"])
 
 			CIFPP_CFLAGS="-I ${withval}/include"
 			CIFPP_LIBS="-L${withval}/.libs -lcifpp"
@@ -125,7 +125,7 @@ AC_SUBST([CIFPP_RSRC], [$CIFPP_RSRC])
 AS_IF([test "x$CIFPP_LIBS" = "x"], [
 	if test -x "$PKG_CONFIG"
 	then
-		AX_PKG_CHECK_MODULES([CIFPP], [libcifpp], [], [], [AC_MSG_ERROR([the required package libcif++ is not installed])])
+		AX_PKG_CHECK_MODULES([CIFPP], [libcifpp], [], [], [AC_MSG_ERROR([the required package libcifpp is not installed])])
 	else
 		AC_CHECK_HEADER(
 	        [cif++/Cif++.hpp],
@@ -182,6 +182,16 @@ pkg-config.])])
 					[AC_MSG_ERROR([libzeep not found])])
 	fi
 ])
+
+dnl These are still needed outside the Debian environment
+AX_CHECK_LIBRARY([LIBZ], [zlib.h], [z],
+				 [ LIBS="$LIBS -lz" ],
+                 [AC_MSG_ERROR([libz not found - compressed files not supported])])
+AX_CHECK_LIBRARY([LIBBZ2], [bzlib.h], [bz2],
+				 [ LIBS="$LIBS -lbz2"],
+                 [AC_MSG_ERROR([libbz2 not found - compressed files not supported])])
+
+AC_SUBST([LIBS], [$LIBS])
 
 dnl Process Makefile.in to create Makefile
 AC_OUTPUT([GNUmakefile])
