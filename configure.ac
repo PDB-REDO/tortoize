@@ -102,6 +102,8 @@ AX_BOOST_REGEX
 CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
 LDFLAGS="$LDFLAGS $BOOST_LDFLAGS"
 
+dnl Check for libcifpp
+
 AC_ARG_WITH([cif++],
 	AS_HELP_STRING([--with-cif++=@<:@location@:>@],
 		[Use the cif++ library as specified.]),
@@ -110,22 +112,21 @@ AC_ARG_WITH([cif++],
 				AC_MSG_ERROR(['${withval}'' is not a valid directory for --with-cif++])
 			])
 			dnl AC_SUBST([CIFPP_CFLAGS], ["-I ${withval}/include"])
-			dnl AC_SUBST([CIFPP_LIBS], ["-L${withval}/.libs -lcifpp"])
+			dnl AC_SUBST([CIFPP_LIBS], ["-L${withval}/.libs -lcif++"])
 
 			CIFPP_CFLAGS="-I ${withval}/include"
 			CIFPP_LIBS="-L${withval}/.libs -lcifpp"
-			CIFPP_RSRC="${withval}/rsrc"
+			LIBCIFPP_DATA_DIR="${withval}/rsrc"
 
 			AC_SUBST([CIFPP_CFLAGS], [$CIFPP_CFLAGS])
 			AC_SUBST([CIFPP_LIBS], [$CIFPP_LIBS])
 		])
 
-AC_SUBST([CIFPP_RSRC], [$CIFPP_RSRC])
-
 AS_IF([test "x$CIFPP_LIBS" = "x"], [
 	if test -x "$PKG_CONFIG"
 	then
-		AX_PKG_CHECK_MODULES([CIFPP], [libcifpp], [], [], [AC_MSG_ERROR([the required package libcifpp is not installed])])
+		AX_PKG_CHECK_MODULES([CIFPP], [libcifpp], [], [], [AC_MSG_ERROR([the required package libcif++ is not installed])])
+		LIBCIFPP_DATA_DIR=$(pkg-config --variable=datalibdir libcifpp)
 	else
 		AC_CHECK_HEADER(
 	        [cif++/Cif++.hpp],
@@ -133,19 +134,22 @@ AS_IF([test "x$CIFPP_LIBS" = "x"], [
 				dnl CIFPP_CFLAGS="-I ${withval}/include"
 			],
 			[AC_MSG_ERROR([
-Can't find the libcif++ header, Cif++.hpp.  Make sure that it
+Can't find the libcif++ header, Config.hpp.  Make sure that it
 is installed, and either use the --with-cif++ option or install
 pkg-config.])])
 
-			AX_CHECK_LIBRARY([CIFPP], [cif++/Cif++.hpp], [cifpp],
-				 [
-					 LIBS="-lcifpp $LIBS"
-				 ],
-                 [AC_MSG_ERROR([libcif++ not found])])
-
-		CIFPP_RSRC="\$(datadir)/libcifpp"
+		AX_CHECK_LIBRARY([CIFPP], [cif++/Cif++.hpp], [cifpp],
+			[
+				LIBS="-lcifpp $LIBS"
+			],
+			[AC_MSG_ERROR([libcif++ not found])])
+		AS_IF([ test -f /usr/local/share/libcifpp/mmcif_pdbx_v50.dic.gz ], [LIBCIFPP_DATA_DIR=/usr/local/share/libcifpp/ ])
+		AS_IF([ test -f /var/cache/libcifpp/mmcif_pdbx_v50.dic.gz ], [LIBCIFPP_DATA_DIR=/var/cache/libcifpp ])
 	fi
 ])
+
+AC_ARG_VAR([LIBCIFPP_DATA_DIR], [Directory containing mmcif_pdbx_v50.dic file])
+AC_SUBST([LIBCIFPP_DATA_DIR], [$LIBCIFPP_DATA_DIR])
 
 dnl Check for libzeep
 
@@ -177,9 +181,9 @@ Can't find the libzeep header, zeep/json/element.hpp.  Make sure that libzeep
 is installed, and either use the --with-zeep option or install
 pkg-config.])])
 
-			AX_CHECK_LIBRARY([ZEEP], [zeep/json/element.hpp], [zeep],
-					[ LIBS="-lzeep $LIBS" ],
-					[AC_MSG_ERROR([libzeep not found])])
+		AX_CHECK_LIBRARY([ZEEP], [zeep/json/element.hpp], [zeep],
+			[ LIBS="-lzeep $LIBS" ],
+			[AC_MSG_ERROR([libzeep not found])])
 	fi
 ])
 

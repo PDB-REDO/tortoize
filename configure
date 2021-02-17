@@ -633,11 +633,11 @@ ZEEP_LDFLAGS
 ZEEP_CPPFLAGS
 ZEEP_LIBS
 ZEEP_CFLAGS
+LIBCIFPP_DATA_DIR
 CIFPP_LDFLAGS
 CIFPP_CPPFLAGS
 AX_PACKAGE_REQUIRES_PRIVATE
 AX_PACKAGE_REQUIRES
-CIFPP_RSRC
 CIFPP_LIBS
 CIFPP_CFLAGS
 BOOST_REGEX_LIB
@@ -761,6 +761,7 @@ CIFPP_CFLAGS
 CIFPP_LIBS
 CIFPP_CPPFLAGS
 CIFPP_LDFLAGS
+LIBCIFPP_DATA_DIR
 ZEEP_CFLAGS
 ZEEP_LIBS
 ZEEP_CPPFLAGS
@@ -1458,6 +1459,8 @@ Some influential environment variables:
               C preprocessor flags for CIFPP headers
   CIFPP_LDFLAGS
               linker flags for CIFPP libraries
+  LIBCIFPP_DATA_DIR
+              Directory containing mmcif_pdbx_v50.dic file
   ZEEP_CFLAGS C compiler flags for ZEEP, overriding pkg-config
   ZEEP_LIBS   linker flags for ZEEP, overriding pkg-config
   ZEEP_CPPFLAGS
@@ -7231,6 +7234,7 @@ CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
 LDFLAGS="$LDFLAGS $BOOST_LDFLAGS"
 
 
+
 # Check whether --with-cif++ was given.
 if test "${with_cif__+set}" = set; then :
   withval=$with_cif__;
@@ -7244,7 +7248,7 @@ fi
 
 			CIFPP_CFLAGS="-I ${withval}/include"
 			CIFPP_LIBS="-L${withval}/.libs -lcifpp"
-			CIFPP_RSRC="${withval}/rsrc"
+			LIBCIFPP_DATA_DIR="${withval}/rsrc"
 
 			CIFPP_CFLAGS=$CIFPP_CFLAGS
 
@@ -7252,9 +7256,6 @@ fi
 
 
 fi
-
-
-CIFPP_RSRC=$CIFPP_RSRC
 
 
 if test "x$CIFPP_LIBS" = "x"; then :
@@ -7327,11 +7328,11 @@ fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$CIFPP_PKG_ERRORS" >&5
 
-	as_fn_error $? "the required package libcifpp is not installed" "$LINENO" 5
+	as_fn_error $? "the required package libcif++ is not installed" "$LINENO" 5
 elif test $pkg_failed = untried; then
      	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-	as_fn_error $? "the required package libcifpp is not installed" "$LINENO" 5
+	as_fn_error $? "the required package libcif++ is not installed" "$LINENO" 5
 else
 	CIFPP_CFLAGS=$pkg_cv_CIFPP_CFLAGS
 	CIFPP_LIBS=$pkg_cv_CIFPP_LIBS
@@ -7344,6 +7345,7 @@ fi
 
 
 
+		LIBCIFPP_DATA_DIR=$(pkg-config --variable=datalibdir libcifpp)
 	else
 		ac_fn_cxx_check_header_mongrel "$LINENO" "cif++/Cif++.hpp" "ac_cv_header_cifpp_Cifpp_hpp" "$ac_includes_default"
 if test "x$ac_cv_header_cifpp_Cifpp_hpp" = xyes; then :
@@ -7351,7 +7353,7 @@ if test "x$ac_cv_header_cifpp_Cifpp_hpp" = xyes; then :
 
 else
   as_fn_error $? "
-Can't find the libcif++ header, Cif++.hpp.  Make sure that it
+Can't find the libcif++ header, Config.hpp.  Make sure that it
 is installed, and either use the --with-cif++ option or install
 pkg-config." "$LINENO" 5
 fi
@@ -7435,17 +7437,25 @@ fi
 $as_echo "#define HAVE_CIFPP 1" >>confdefs.h
 
 
-					 LIBS="-lcifpp $LIBS"
+				LIBS="-lcifpp $LIBS"
 
 else
   as_fn_error $? "libcif++ not found" "$LINENO" 5
 fi
 
-
-		CIFPP_RSRC="\$(datadir)/libcifpp"
+		if  test -f /usr/local/share/libcifpp/mmcif_pdbx_v50.dic.gz ; then :
+  LIBCIFPP_DATA_DIR=/usr/local/share/libcifpp/
+fi
+		if  test -f /var/cache/libcifpp/mmcif_pdbx_v50.dic.gz ; then :
+  LIBCIFPP_DATA_DIR=/var/cache/libcifpp
+fi
 	fi
 
 fi
+
+
+LIBCIFPP_DATA_DIR=$LIBCIFPP_DATA_DIR
+
 
 
 

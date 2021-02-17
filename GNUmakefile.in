@@ -64,12 +64,7 @@ CXXFLAGS            += -Wall -Wno-multichar
 
 CIFPP_RSRC			= @CIFPP_RSRC@
 
-ifneq "$(CIFPP_RSRC)" ""
-DATADIR				= $(CIFPP_RSRC)
-else
-DATADIR				= $(datadir)/tortoize
-endif
-DEFINES				+= DATADIR='"$(DATADIR)"'
+LIBCIFPP_DATA_DIR	= @LIBCIFPP_DATA_DIR@
 
 WEBSERVICE			= @WEBSERVICE@
 DEFINES				+= WEBSERVICE=$(WEBSERVICE)
@@ -138,10 +133,7 @@ endif
 
 ifneq "$(USE_RSRC)" "0"
 
-rsrc:
-	@ mkdir -p $@
-
-rsrc/version.txt: $(REVISION_FILE) | rsrc
+rsrc/version.txt: $(REVISION_FILE)
 	cp $? $@
 
 endif
@@ -153,16 +145,19 @@ OBJECTS = \
 
 ifneq "$(USE_RSRC)" "0"
 
+OBJECTS += $(OBJDIR)/tortoize_rsrc.o
+
 src/mrsrc.hpp:
 	$(MRC) --header > $@
 
-rsrc/%.dic: $(DATADIR)/%.dic.gz | rsrc
+rsrc:
+	@ mkdir -p $@
+
+rsrc/%.dic: $(LIBCIFPP_DATA_DIR)/%.dic.gz | rsrc
 	gzcat $^ > $@
 
-rsrc/%.dic: $(DATADIR)/%.dic | rsrc
+rsrc/%.dic: $(LIBCIFPP_DATA_DIR)/%.dic | rsrc
 	ln -fs $^ $@
-
-OBJECTS += $(OBJDIR)/tortoize_rsrc.o
 
 RESOURCES = \
 	rsrc/rama-data.bin \
