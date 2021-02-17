@@ -25,10 +25,10 @@
 firstTarget: all
 
 CXX					= @CXX@
-CXXFLAGS			= @CXXFLAGS@ @CPPFLAGS@ @PTHREAD_CFLAGS@ @CIFPP_CFLAGS@ @ZEEP_CFLAGS@
-LDFLAGS				= @LDFLAGS@ @PTHREAD_CFLAGS@
-LIBS				= @PTHREAD_LIBS@ \
-					  @CIFPP_LIBS@ \
+CXXFLAGS			= @BOOST_CPPFLAGS@ @CXXFLAGS@ @CPPFLAGS@ @PTHREAD_CFLAGS@ @CIFPP_CFLAGS@ @ZEEP_CFLAGS@
+LDFLAGS				= @BOOST_LDFLAGS@ @LDFLAGS@ @PTHREAD_CFLAGS@
+LIBS				= @CIFPP_LIBS@ \
+					  @PTHREAD_LIBS@ \
 					  @ZEEP_LIBS@ \
 					  @BOOST_IOSTREAMS_LIB@ \
 					  @BOOST_PROGRAM_OPTIONS_LIB@ \
@@ -157,7 +157,7 @@ rsrc/%.dic: $(LIBCIFPP_DATA_DIR)/%.dic.gz | rsrc
 	zcat $^ > $@
 
 rsrc/%.dic: $(LIBCIFPP_DATA_DIR)/%.dic | rsrc
-	ln -fs $^ $@
+	ln -fs $(realpath $^) $@
 
 RESOURCES = \
 	rsrc/rama-data.bin \
