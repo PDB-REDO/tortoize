@@ -1,6 +1,12 @@
 AC_PREREQ([2.69])
 
-AC_INIT([tortoize], 2.0, [m.hekkelman@nki.nl])
+m4_define([tortoize_version_major],[2])
+m4_define([tortoize_version_minor],[0])
+m4_define([tortoize_version_micro],[0])
+m4_define([tortoize_version_extra],[])
+m4_define([tortoize_version],[tortoize_version_major().tortoize_version_minor().tortoize_version_micro()tortoize_version_extra])
+
+AC_INIT([tortoize], [tortoize_version], [m.hekkelman@nki.nl])
 
 dnl Switch to a decent C++ compiler, and check if it works.
 AC_LANG(C++)

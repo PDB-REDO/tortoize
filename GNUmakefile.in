@@ -23,10 +23,17 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 firstTarget: all
+empty =
+space = $(empty) $(empty)
 
 CXX					= @CXX@
-CXXFLAGS			= @CXXFLAGS@ @CPPFLAGS@ @PTHREAD_CFLAGS@ @CIFPP_CFLAGS@ @ZEEP_CFLAGS@
-LDFLAGS				= @LDFLAGS@ @PTHREAD_CFLAGS@
+CXXFLAGS			= @CXXFLAGS@ \
+					  @CPPFLAGS@ \
+					  @PTHREAD_CFLAGS@ \
+					  @CIFPP_CFLAGS@ \
+					  @ZEEP_CFLAGS@
+LDFLAGS				= @LDFLAGS@ \
+					  @PTHREAD_CFLAGS@
 LIBS				= @PTHREAD_LIBS@ \
 					  @CIFPP_LIBS@ \
 					  @ZEEP_LIBS@ \
@@ -46,31 +53,28 @@ mandir				= @mandir@
 GNUmakefile: config.status GNUmakefile.in
 	$(SHELL) ./config.status
 
-ifneq "$(CHECK_CONFIG)" ""
-
-config.status: configure
-	$(SHELL) ./config.status --recheck
-
-configure: configure.ac
-	autoconf
-
-endif
-
 # main build variables
-VERSION				= @PACKAGE_VERSION@.0
-DEFINES				+= VERSION='"$(VERSION)"'
+PROGRAM				= @PACKAGE_NAME@
 
-CXXFLAGS            += -Wall -Wno-multichar
+VERSION				= @PACKAGE_VERSION@
 
-CIFPP_RSRC			= @CIFPP_RSRC@
+SEARCH_PATHS		= src test rsrc @LIBCIFPP_DATA_DIR@ @LIBPDB_REDO_DATA_DIR@
 
-LIBCIFPP_DATA_DIR	= @LIBCIFPP_DATA_DIR@
+OBJECTS				= $(PROGRAM).o
+
+RESOURCES			= rama-data.bin \
+					  torsion-data.bin \
+					  mmcif_pdbx_v50.dic
 
 WEBSERVICE			= @WEBSERVICE@
+
+ifeq ($(WEBSERVICE),1)
 DEFINES				+= WEBSERVICE=$(WEBSERVICE)
+RESOURCES			+= docroot/
+endif
 
 # Use the DEBUG flag to build debug versions of the code
-DEBUG               = @DEBUG@
+DEBUG				= @DEBUG@
 
 ifeq "$(DEBUG)" "1"
 DEFINES				+= DEBUG
@@ -84,10 +88,9 @@ endif
 MRC					= @MRC@
 USE_RSRC			= @USE_RSRC@
 
-# targets
+VPATH += $(subst $(space),:,$(SEARCH_PATHS))
 
-VPATH += src:test
-
+CXXFLAGS            += -Wall -Wno-multichar
 CXXFLAGS			+= $(DEFINES:%=-D%)
 
 OBJDIR = obj
@@ -112,7 +115,7 @@ REVISION_FILE = version-info-$(REVISION).txt
 
 $(REVISION_FILE):
 	rm -f version-info-*.txt
-	@ echo tortoize-version: $(VERSION) > $@
+	@ echo $(PROGRAM)-version: $(VERSION) > $@
 	@ git describe --match=build --dirty >> $@
 	@ git log --pretty=medium --date=iso8601 -1 >> $@
 
@@ -125,59 +128,26 @@ else
 
 src/revision.hpp:
 	@ echo 'const char kRevision[] = R"(' > $@
-	@ echo tortoize-version: $(VERSION) >> $@
+	@ echo $(PROGRAM)-version: $(VERSION) >> $@
 	@ echo Date:   $$(date --iso-8601) >> $@
 	@ echo ')";' >> $@
 
 endif
 
-ifneq "$(USE_RSRC)" "0"
-
-rsrc/version.txt: $(REVISION_FILE)
-	cp $? $@
-
-endif
-
 # The program rules
 
-OBJECTS = \
-	$(OBJDIR)/tortoize.o
-
 ifneq "$(USE_RSRC)" "0"
 
-OBJECTS += $(OBJDIR)/tortoize_rsrc.o
+OBJECTS += $(PROGRAM)_rsrc.o
 
-src/mrsrc.hpp:
-	$(MRC) --header > $@
-
-rsrc:
-	@ mkdir -p $@
-
-rsrc/%.dic: $(LIBCIFPP_DATA_DIR)/%.dic.gz | rsrc
-	zcat $^ > $@
-
-rsrc/%.dic: $(LIBCIFPP_DATA_DIR)/%.dic | rsrc
-	ln -fs $^ $@
-
-RESOURCES = \
-	rsrc/rama-data.bin \
-	rsrc/torsion-data.bin \
-	rsrc/mmcif_pdbx_v50.dic
-
-ifeq ($(WEBSERVICE),1)
-RESOURCES += docroot/
-endif
-
-$(OBJDIR)/tortoize_rsrc.o: $(RESOURCES)
+$(OBJDIR)/$(PROGRAM)_rsrc.o: $(RESOURCES)
 	$(MRC) -o $@ $^
 
-$(OBJDIR)/tortoize.o: src/mrsrc.hpp
-
 endif
 
-$(OBJDIR)/tortoize.o: src/revision.hpp
+$(OBJDIR)/$(PROGRAM).o: src/revision.hpp
 
-tortoize: $(OBJECTS)
+$(PROGRAM): $(OBJECTS:%.o=$(OBJDIR)/%.o)
 	@ echo '->' $@
 	@ $(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS) $(LIBS)
 
@@ -187,21 +157,17 @@ $(OBJDIR)/%.d: $(OBJDIR)/%.o
 
 .PHONY: clean all
 clean:
-	rm -rf tortoize $(OBJDIR)/* src/revision.hpp
+	rm -rf $(PROGRAM) $(OBJDIR)/* src/revision.hpp
 
-all: tortoize
+all: $(PROGRAM)
 
 .PHONY: install
-install: tortoize
+install: $(PROGRAM)
 	install -d $(bindir)
-	install tortoize $(bindir)/tortoize
+	install $(PROGRAM) $(bindir)/$(PROGRAM)
 	install -d $(mandir)/man1
-	install -m 644 tortoize.1 $(mandir)/man1/tortoize.1;
-	gzip $(mandir)/man1/tortoize.1;
-ifeq "$(USE_RSRC)" "0"
-	install -d $(DATADIR)
-	for d in rama-data.bin  torsion-data.bin; do install -m644 rsrc/$$d $(DATADIR)/$$d; done
-endif
+	install -m 644 doc/$(PROGRAM).1 $(mandir)/man1/$(PROGRAM).1;
+	gzip $(mandir)/man1/$(PROGRAM).1;
 
 .PHONY: FORCE
 FORCE:
