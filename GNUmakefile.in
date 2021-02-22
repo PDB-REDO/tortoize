@@ -140,6 +140,9 @@ endif
 
 ifneq "$(USE_RSRC)" "0"
 
+src/mrsrc.hpp:
+	$(MRC) --header > $@
+
 OBJECTS += $(PROGRAM)_rsrc.o
 
 # dictionaries may be found compressed
@@ -148,6 +151,8 @@ OBJECTS += $(PROGRAM)_rsrc.o
 
 $(OBJDIR)/$(PROGRAM)_rsrc.o: $(RESOURCES)
 	$(MRC) -o $@ $^
+
+$(OBJDIR)/$(PROGRAM).o: src/mrsrc.hpp
 
 endif
 
