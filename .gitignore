@@ -19,3 +19,6 @@ node_modules
 docroot/css
 docroot/scripts
 rsrc/mmcif_*.dic*aclocal.m4
+aclocal.m4
+rsrc/mmcif_*
+mmcif_pdbx_v50.dic

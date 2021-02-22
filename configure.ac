@@ -12,7 +12,10 @@ dnl Switch to a decent C++ compiler, and check if it works.
 AC_LANG(C++)
 AX_CXX_COMPILE_STDCXX_17([noext])
 
-AX_CHECK_COMPILE_FLAG([-fstandalone-debug], [ CXXFLAGS="$CXXFLAGS -fstandalone-debug" ], , [-Werror])
+AX_CHECK_COMPILE_FLAG([-fstandalone-debug],
+	[
+		CXXFLAGS="$CXXFLAGS -fstandalone-debug"
+	] , , [-Werror])
 
 AC_CONFIG_SRCDIR([src/tortoize.cpp])
 AC_CONFIG_AUX_DIR(config)
@@ -28,30 +31,7 @@ AX_PTHREAD
 
 AC_ARG_VAR([DEBUG], [Build a debug version of the application])
 
-AC_ARG_VAR([MRC], [Specify a location for the mrc executable])
-
-dnl using resources?
-USE_RSRC=0
-
-if test "x$MRC" = "x"; then
-	AC_PATH_PROG([MRC], [mrc])
-fi
-
-if test "x$MRC" = "x"; then
-	AC_MSG_WARN([The mrc application was not found, not using resources.])
-else
-	AC_ARG_ENABLE(
-		resources,
-		[AS_HELP_STRING([--disable-resources], [Do not use mrc to store data in resources])])
-
-	AS_IF([test "x$enable_resources" != "xno" ], [
-		USE_RSRC=1
-	])
-fi
-
-AC_SUBST([USE_RSRC], [$USE_RSRC])
-
-AC_DEFINE_UNQUOTED([USE_RSRC], [$USE_RSRC], [Use mrc to store resources])
+AX_MRC
 
 dnl revision numbering is something used internally at the NKI
 AC_ARG_ENABLE(
@@ -78,26 +58,7 @@ AS_IF([test "x$enable_webservice" = "xyes" ], [
 
 AC_SUBST([WEBSERVICE], [$WEBSERVICE])
 
-AC_CHECK_HEADER([filesystem], [], [AC_MSG_ERROR([The file <filesystem> is missing, perhaps you should install a more recent libstdc++ implementation.])])
-
-dnl check if we need stdc++fs as library
-AC_TRY_LINK(
-	[#include <filesystem>],
-	[(void)std::filesystem::current_path();],
-	[],
-	[
-		LIBS="$LIBS -lstdc++fs"
-
-		AC_TRY_LINK(
-			[#include <filesystem>],
-			[(void)std::filesystem::current_path();],
-			[],
-			[
-				AC_MSG_ERROR([Could not link filesystem])
-			]
-		)
-	]
-)
+AX_FILESYSTEM
 
 AX_BOOST_BASE([1.65.1], [], [AC_MSG_ERROR([Could not find a recent version of boost])])
 AX_BOOST_IOSTREAMS
@@ -105,101 +66,16 @@ AX_BOOST_PROGRAM_OPTIONS
 AX_BOOST_DATE_TIME
 AX_BOOST_REGEX
 
-CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
-LDFLAGS="$LDFLAGS $BOOST_LDFLAGS"
-
-dnl Check for libcifpp
-
-AC_ARG_WITH([cif++],
-	AS_HELP_STRING([--with-cif++=@<:@location@:>@],
-		[Use the cif++ library as specified.]),
-		[
-			AS_IF([test -d ${withval}/include], [], [
-				AC_MSG_ERROR(['${withval}'' is not a valid directory for --with-cif++])
-			])
-			dnl AC_SUBST([CIFPP_CFLAGS], ["-I ${withval}/include"])
-			dnl AC_SUBST([CIFPP_LIBS], ["-L${withval}/.libs -lcif++"])
-
-			CIFPP_CFLAGS="-I ${withval}/include"
-			CIFPP_LIBS="-L${withval}/.libs -lcifpp"
-			LIBCIFPP_DATA_DIR="${withval}/rsrc"
-
-			AC_SUBST([CIFPP_CFLAGS], [$CIFPP_CFLAGS])
-			AC_SUBST([CIFPP_LIBS], [$CIFPP_LIBS])
-		])
-
-AS_IF([test "x$CIFPP_LIBS" = "x"], [
-	if test -x "$PKG_CONFIG"
-	then
-		AX_PKG_CHECK_MODULES([CIFPP], [libcifpp], [], [], [AC_MSG_ERROR([the required package libcif++ is not installed])])
-		LIBCIFPP_DATA_DIR=$(pkg-config --variable=datalibdir libcifpp)
-	else
-		AC_CHECK_HEADER(
-	        [cif++/Cif++.hpp],
-	        [
-				dnl CIFPP_CFLAGS="-I ${withval}/include"
-			],
-			[AC_MSG_ERROR([
-Can't find the libcif++ header, Config.hpp.  Make sure that it
-is installed, and either use the --with-cif++ option or install
-pkg-config.])])
-
-		AX_CHECK_LIBRARY([CIFPP], [cif++/Cif++.hpp], [cifpp],
-			[
-				LIBS="-lcifpp $LIBS"
-			],
-			[AC_MSG_ERROR([libcif++ not found])])
-		AS_IF([ test -f /usr/local/share/libcifpp/mmcif_pdbx_v50.dic.gz ], [LIBCIFPP_DATA_DIR=/usr/local/share/libcifpp/ ])
-		AS_IF([ test -f /var/cache/libcifpp/mmcif_pdbx_v50.dic.gz ], [LIBCIFPP_DATA_DIR=/var/cache/libcifpp ])
-	fi
-])
-
-AC_ARG_VAR([LIBCIFPP_DATA_DIR], [Directory containing mmcif_pdbx_v50.dic file])
-AC_SUBST([LIBCIFPP_DATA_DIR], [$LIBCIFPP_DATA_DIR])
-
-dnl Check for libzeep
-
-AC_ARG_WITH([zeep],
-	AS_HELP_STRING([--with-zeep=@<:@location@:>@],
-		[Use the libzeep library as specified.]),
-		[
-			AS_IF([test -d ${withval}/include], [], [
-				AC_MSG_ERROR(['${withval}'' is not a valid directory for --with-zeep])
-			])
-
-			ZEEP_CFLAGS="-I ${withval}/include"
-			ZEEP_LIBS="-L${withval}/.libs -lzeep"
-
-			AC_SUBST([ZEEP_CFLAGS], [$ZEEP_CFLAGS])
-			AC_SUBST([ZEEP_LIBS], [$ZEEP_LIBS])
-		])
-
-AS_IF([test "x$ZEEP_LIBS" = "x"], [
-	if test -x "$PKG_CONFIG"
-	then
-		AX_PKG_CHECK_MODULES([ZEEP], [libzeep], [], [], [AC_MSG_ERROR([the required package libzeep is not installed])])
-	else
-		AC_CHECK_HEADER(
-			[zeep/json/element.hpp],
-			[],
-			[AC_MSG_ERROR([
-Can't find the libzeep header, zeep/json/element.hpp.  Make sure that libzeep
-is installed, and either use the --with-zeep option or install
-pkg-config.])])
-
-		AX_CHECK_LIBRARY([ZEEP], [zeep/json/element.hpp], [zeep],
-			[ LIBS="-lzeep $LIBS" ],
-			[AC_MSG_ERROR([libzeep not found])])
-	fi
-])
+AX_LIBCIFPP
+AX_LIBZEEP
 
 dnl These are still needed outside the Debian environment
 AX_CHECK_LIBRARY([LIBZ], [zlib.h], [z],
-				 [ LIBS="$LIBS -lz" ],
-                 [AC_MSG_ERROR([libz not found - compressed files not supported])])
+	[ LIBS="$LIBS -lz" ],
+	[AC_MSG_ERROR([libz not found - compressed files not supported])])
 AX_CHECK_LIBRARY([LIBBZ2], [bzlib.h], [bz2],
-				 [ LIBS="$LIBS -lbz2"],
-                 [AC_MSG_ERROR([libbz2 not found - compressed files not supported])])
+	[ LIBS="$LIBS -lbz2"],
+	[AC_MSG_ERROR([libbz2 not found - compressed files not supported])])
 
 AC_SUBST([LIBS], [$LIBS])
 
