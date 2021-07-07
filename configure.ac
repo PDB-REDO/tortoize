@@ -66,16 +66,11 @@ AX_BOOST_PROGRAM_OPTIONS
 AX_BOOST_DATE_TIME
 AX_BOOST_REGEX
 
+AX_IOSTREAMS_Z
+AX_IOSTREAMS_BZ2
+
 AX_LIBCIFPP
 AX_LIBZEEP
-
-dnl These are still needed outside the Debian environment
-AX_CHECK_LIBRARY([LIBZ], [zlib.h], [z],
-	[ LIBS="$LIBS -lz" ],
-	[AC_MSG_ERROR([libz not found - compressed files not supported])])
-AX_CHECK_LIBRARY([LIBBZ2], [bzlib.h], [bz2],
-	[ LIBS="$LIBS -lbz2"],
-	[AC_MSG_ERROR([libbz2 not found - compressed files not supported])])
 
 AC_SUBST([LIBS], [$LIBS])
 

@@ -55,6 +55,13 @@
 #include "mrsrc.hpp"
 #endif
 
+#ifdef _MSC_VER
+//MSVC stdlib.h definitions
+#define STDIN_FILENO 0
+#define STDOUT_FILENO 1
+#define STDERR_FILENO 2
+#endif
+
 namespace po = boost::program_options;
 namespace fs = std::filesystem;
 namespace ba = boost::algorithm;
