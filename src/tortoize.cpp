@@ -810,28 +810,17 @@ void DataTable::load(const char* name, std::vector<Data>& table, float& mean, fl
 {
 	using namespace std::literals;
 
-	const float* fv = nullptr;
+	auto rfd = cif::loadResource(name);
 
-#if USE_RSRC
-	mrsrc::rsrc rd(name);
-
-	if (not rd)
+	if (not rfd)
 		throw std::runtime_error("Missing resource "s + name);
 
-	fv = reinterpret_cast<const float*>(rd.data());
-#else
-	std::ifstream rdf(fs::path(DATADIR) / name, std::ios::binary);
-	if (not rdf.is_open())
-		throw std::runtime_error("Missing data file "s + name);
-	
-	rdf.seekg(0, rdf.end);
-	auto size = rdf.tellg();
-	rdf.seekg(0, rdf.beg);
+	rfd->seekg(0, rfd->end);
+	auto size = rfd->tellg();
+	rfd->seekg(0, rfd->beg);
 
-	fv = new float[size / sizeof(float) + 1];
-	rdf.read(reinterpret_cast<char*>(const_cast<float*>(fv)), size);
-	rdf.close();
-#endif
+	const float* fv = new float[size / sizeof(float) + 1];
+	rfd->read(reinterpret_cast<char*>(const_cast<float*>(fv)), size);
 
 	mean = fv[0];
 	sd = fv[1];
