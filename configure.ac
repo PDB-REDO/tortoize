@@ -2,7 +2,7 @@ AC_PREREQ([2.69])
 
 m4_define([tortoize_version_major],[2])
 m4_define([tortoize_version_minor],[0])
-m4_define([tortoize_version_micro],[1])
+m4_define([tortoize_version_micro],[2])
 m4_define([tortoize_version_extra],[])
 m4_define([tortoize_version],[tortoize_version_major().tortoize_version_minor().tortoize_version_micro()tortoize_version_extra])
 

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 # set the project name
-project(tortoize VERSION 2.0.1 LANGUAGES CXX)
+project(tortoize VERSION 2.0.2 LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -19,7 +19,7 @@ set(CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if(NOT $ENV{CCP4} STREQUAL "")
+if(NOT "$ENV{CCP4}" STREQUAL "")
 	set(BUILD_SHARED_LIBS ON)
 
 	set(CCP4 $ENV{CCP4})

@@ -1,0 +1,91 @@
+Content-type: text/html; charset=UTF-8
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of tortoize</TITLE>
+</HEAD><BODY>
+<H1>tortoize</H1>
+Section: User Commands (1)<BR>Updated: 2021-08-31<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+tortoize - Calculate ramachandran z-scores
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+tortoize [OPTION] input [output]
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION</H2>
+
+Tortoize validates protein structure models by checking the
+Ramachandran plot and side-chain rotamer distributions. Quality
+Z-scores are given at the residue level and at the model level
+(ramachandran-z and torsions-z). Higher scores are better. To compare
+models or to describe the reliability of the model Z-scores jackknife-
+based standard deviations are also reported (ramachandran-jackknife-sd
+and torsion-jackknife-sd).
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS</H2>
+
+The input file can be either mmCIF or PDB format and the file may be
+gzip or bzip2 compressed.
+<P>
+The output is a json file, if no file name is specified the output is
+written to <I>stdout</I>.
+<DL COMPACT>
+<DT><B>--dict</B>=&lt;file&gt;<DD>
+Specify a dictionary file containing restraints for residues specific to
+this file.
+<DT><B>--log</B>=&lt;file&gt;<DD>
+Write a log with diagnostic information to this file.
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>REFERENCES</H2>
+
+References:
+<DL COMPACT>
+<DT><B>Sobolev et al.</B><DD>
+A Global Ramachandran Score Identifies Protein
+Structures with Unlikely Stereochemistry, Structure (2020),
+DOI: <I><A HREF="https://doi.org/10.1016/j.str.2020.08.005">https://doi.org/10.1016/j.str.2020.08.005</A></I>
+<DT><B>Van Beusekom et al.</B><DD>
+Homology-based loop modeling yields more complete
+crystallographic protein structures, IUCrJ (2018),
+DOI: <I><A HREF="https://doi.org/10.1107/S2052252518010552">https://doi.org/10.1107/S2052252518010552</A></I>
+<DT><B>Hooft et al.</B><DD>
+Objectively judging the quality of a protein structure
+from a Ramachandran plot, CABIOS (1993),
+DOI: <I><A HREF="https://doi.org/10.1093/bioinformatics/13.4.425">https://doi.org/10.1093/bioinformatics/13.4.425</A> </I>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>AUTHOR</H2>
+
+Written by Maarten L. Hekkelman &lt;<A HREF="mailto:maarten@hekkelman.com">maarten@hekkelman.com</A>&gt;
+<A NAME="lbAH">&nbsp;</A>
+<H2>REPORTING BUGS</H2>
+
+Report bugs at <A HREF="https://github.com/PDB-REDO/tortoize/issues">https://github.com/PDB-REDO/tortoize/issues</A>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">OPTIONS</A><DD>
+<DT><A HREF="#lbAF">REFERENCES</A><DD>
+<DT><A HREF="#lbAG">AUTHOR</A><DD>
+<DT><A HREF="#lbAH">REPORTING BUGS</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 14:01:47 GMT, August 31, 2021
+</BODY>
+</HTML>
