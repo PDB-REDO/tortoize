@@ -24,8 +24,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "config.hpp"
-
 #include <fcntl.h>
 #include <iomanip>
 #include <random>
@@ -1476,6 +1474,8 @@ void print_what (const std::exception& e)
 	}
 }
 
+#if not defined(TORTOIZE_TEST_NO_MAIN)
+
 int main(int argc, char* argv[])
 {
 	int result = -1;
@@ -1495,3 +1495,4 @@ int main(int argc, char* argv[])
 	return result;
 }
 
+#endif

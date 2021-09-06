@@ -19,6 +19,13 @@ set(CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if(CMAKE_COMPILER_IS_GNUCC)
+    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter")
+endif()
+if(MSVC)
+    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /W4")
+endif()
+
 if(NOT "$ENV{CCP4}" STREQUAL "")
 	set(BUILD_SHARED_LIBS ON)
 
@@ -28,13 +35,6 @@ if(NOT "$ENV{CCP4}" STREQUAL "")
 	if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 		set(CMAKE_PREFIX_PATH ${CCP4})
 	endif()
-endif()
-
-if(CMAKE_COMPILER_IS_GNUCC)
-    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter")
-endif()
-if(MSVC)
-    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /W4")
 endif()
 
 if(MSVC)
@@ -60,18 +60,8 @@ if(MSVC)
 		set(CMAKE_INSTALL_PREFIX "$ENV{LOCALAPPDATA}/${PROJECT_NAME}" CACHE PATH "..." FORCE)
 	endif()
 
-	# Find out the processor type for the target
-	if(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "AMD64")
-		set(COFF_TYPE "x64")
-	elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "i386")
-		set(COFF_TYPE "x86")
-	elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "ARM64")
-		set(COFF_TYPE "arm64")
-	else()
-		message(FATAL_ERROR "Unsupported or unknown processor type ${CMAKE_SYSTEM_PROCESSOR}")
-	endif()	
-
-	set(COFF_SPEC "--coff=${COFF_TYPE}")
+	# for mrc, just in case
+	list(APPEND CMAKE_PREFIX_PATH "$ENV{LOCALAPPDATA}/mrc")
 endif()
 
 if(UNIX AND NOT APPLE)
@@ -94,7 +84,7 @@ if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
 else()
     message(WARNING "Git not found, cannot set version info")
 
-    SET(BUILD_VERSION_STRING "unknown")
+    SET(BUILD_VERSION_STRING ${PROJECT_VERSION})
 endif()
 
 # generate version.h
@@ -103,9 +93,9 @@ string(TIMESTAMP BUILD_DATE_TIME "%Y-%m-%d" UTC)
 configure_file("${CMAKE_SOURCE_DIR}/src/revision.hpp.in" "${CMAKE_BINARY_DIR}/revision.hpp" @ONLY)
 
 # Optionally use mrc to create resources
-find_program(MRC mrc HINTS "$ENV{LOCALAPPDATA}/mrc" "$ENV{LOCALAPPDATA}/mrc/bin" "${CMAKE_INSTALL_PREFIX}/../mrc" "/usr/local/bin")
+find_package(Mrc)
 
-if(MRC)
+if(MRC_FOUND)
 	option(USE_RSRC "Use mrc to create resources" ON)
 else()
 	message(WARNING "Not using resources since mrc was not found")
@@ -113,6 +103,9 @@ endif()
 
 if(USE_RSRC STREQUAL "ON")
 	set(USE_RSRC 1)
+
+	mrc_write_header(${CMAKE_CURRENT_BINARY_DIR}/mrsrc.hpp)
+	include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 	message("Using resources compiled with ${MRC}")
 	add_compile_definitions(USE_RSRC)
@@ -147,14 +140,6 @@ if (BZIP2_FOUND)
 	link_libraries(BZip2::BZip2)
 endif()
 
-if(USE_RSRC)
-	add_custom_command(OUTPUT tortoize_rsrc.obj
-		COMMAND ${MRC} -o tortoize_rsrc.obj ${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin ${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin ${CMAKE_SOURCE_DIR}/rsrc/mmcif_pdbx_v50.dic ${COFF_SPEC}
-	)
-
-	set(TORTOIZE_RESOURCE tortoize_rsrc.obj)
-endif()
-
 include_directories(
     ${PROJECT_SOURCE_DIR}/src
 	PUBLIC ${cifpp_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS}
@@ -163,6 +148,10 @@ include_directories(
 add_executable(tortoize
 	${PROJECT_SOURCE_DIR}/src/tortoize.cpp
 	${TORTOIZE_RESOURCE})
+
+if(USE_RSRC)
+	mrc_target_resources(tortoize ${PROJECT_SOURCE_DIR}/rsrc/rama-data.bin ${PROJECT_SOURCE_DIR}/rsrc/torsion-data.bin )
+endif()
 
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${BIN_INSTALL_DIR}
@@ -173,7 +162,60 @@ if(NOT USE_RSRC)
 		DESTINATION ${CIFPP_SHARE_DIR})
 endif()
 
+# # manual
+
+# install(FILES doc/tortoize.1 DESTINATION ${CMAKE_INSTALL_DATADIR}/man/man1)
+
 # manual
 
-install(FILES doc/tortoize.1 DESTINATION ${CMAKE_INSTALL_DATADIR}/man/man1)
+if(UNIX)
+	install(FILES doc/tortoize.1
+		DESTINATION ${CMAKE_INSTALL_DATADIR}/man/man1)
+endif()
 
+if(EXISTS "${CCP4}/html")
+	install(FILES doc/tortoize.html
+		DESTINATION ${CCP4}/html)
+endif()
+
+# test
+
+add_executable(unit-test ${PROJECT_SOURCE_DIR}/test/unit-test.cpp ${PROJECT_SOURCE_DIR}/src/tortoize.cpp)
+
+
+target_include_directories(unit-test PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_link_libraries(unit-test Threads::Threads ${Boost_LIBRARIES} cifpp::cifpp)
+target_compile_definitions(unit-test PRIVATE TORTOIZE_TEST_NO_MAIN)
+
+if(${ZLIB_FOUND})
+	target_link_libraries(unit-test ZLIB::ZLIB)
+endif()
+
+if(${BZip2_FOUND})
+	target_link_libraries(unit-test BZip2::BZip2)
+endif()
+
+if(MSVC)
+	# Specify unwind semantics so that MSVC knowns how to handle exceptions
+	target_compile_options(unit-test PRIVATE /EHsc)
+endif()
+
+add_test(NAME unit-test
+	COMMAND $<TARGET_FILE:unit-test>
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/test)
+
+option(TORTOIZE_BUILD_INSTALLER "Build an installer" OFF)
+if(TORTOIZE_BUILD_INSTALLER)
+	include(InstallRequiredSystemLibraries)
+	set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+	
+	# NSIS options
+	set(CPACK_NSIS_MODIFY_PATH ON)
+
+	# configuration done, include CPack
+
+	include(CPack)
+endif()
