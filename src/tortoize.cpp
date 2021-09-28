@@ -24,8 +24,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "config.hpp"
-
 #include <fcntl.h>
 #include <iomanip>
 #include <random>
@@ -50,10 +48,6 @@
 #include "cif++/Compound.hpp"
 
 #include <zeep/json/element.hpp>
-
-#if USE_RSRC
-#include "mrsrc.hpp"
-#endif
 
 #ifdef _MSC_VER
 //MSVC stdlib.h definitions
@@ -257,12 +251,15 @@ void CompressSimpleArraySelector(OBitStream& inBits, const std::vector<uint32_t>
 				case 4:
 					fits = fits and bn[3] <= w;
 					waste += w - bn[3];
+					[[fallthrough]];
 				case 3:
 					fits = fits and bn[2] <= w;
 					waste += w - bn[2];
+					[[fallthrough]];
 				case 2:
 					fits = fits and bn[1] <= w;
 					waste += w - bn[1];
+					[[fallthrough]];
 				case 1:
 					fits = fits and bn[0] <= w;
 					waste += w - bn[0];
