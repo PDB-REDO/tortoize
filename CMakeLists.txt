@@ -25,7 +25,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 # set the project name
-project(tortoize VERSION 2.0.3 LANGUAGES CXX)
+project(tortoize VERSION 2.0.4 LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -45,12 +45,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Filesystem REQUIRED)
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS_EQUAL 8.4.0)
-		message(WARNING "Your gnu compiler is perhaps too old, please use a more recent one if you get a segmentation in the build process when running symop-map-generator")
-	endif()
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-unused-parameter -Wno-missing-field-initializers")
-endif()
-if(MSVC)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers")
+elseif(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 endif()
 
@@ -154,7 +150,7 @@ find_package(zeep 5.1.3 REQUIRED)
 
 if(USE_RSRC)
 	add_custom_command(OUTPUT tortoize_rsrc.obj
-		COMMAND ${MRC} -o tortoize_rsrc.obj ${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin ${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin ${CMAKE_SOURCE_DIR}/rsrc/mmcif_pdbx_v50.dic ${COFF_SPEC}
+		COMMAND ${MRC} -o tortoize_rsrc.obj ${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin ${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin ${CIFPP_SHARE_DIR}/mmcif_pdbx_v50.dic ${COFF_SPEC}
 	)
 
 	set(TORTOIZE_RESOURCE tortoize_rsrc.obj)
