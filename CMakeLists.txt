@@ -151,7 +151,7 @@ if(NOT BUILD_SHARED_LIBS)
 endif()
 
 find_package(cifpp 2.0.0 REQUIRED)
-find_package(zeep 5.1.3 REQUIRED)
+find_package(zeep 5.1.4 REQUIRED)
 
 if(USE_RSRC)
 	add_custom_command(OUTPUT tortoize_rsrc.obj
