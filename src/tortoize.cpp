@@ -797,7 +797,7 @@ const Data& DataTable::loadRamachandranData(const std::string& aa, SecStrType ss
 			break;
 	}
 
-	if (i == m_torsion.end())
+	if (i == m_ramachandran.end())
 		throw std::runtime_error("Data missing for aa= " + aa + " and ss = '" + static_cast<char>(ss) + '\'');
 	
 	return *i;
@@ -918,13 +918,26 @@ json calculateZScores(const Structure& structure)
 
 				aa = "PRO";
 			}
+			else if (aa == "ASX")
+			{
+				if (cif::VERBOSE > 1)
+					std::cerr << "Replacing ASX with ASP" << std::endl;
 
-			if (mmcif::kAAMap.find(aa) == mmcif::kAAMap.end())
+				aa = "ASP";
+			}
+			else if (aa == "GLX")
+			{
+				if (cif::VERBOSE > 1)
+					std::cerr << "Replacing GLX with GLU" << std::endl;
+
+				aa = "GLU";
+			}
+			else if (mmcif::kAAMap.find(aa) == mmcif::kAAMap.end())
 			{
 				if (cif::VERBOSE)
-					std::cerr << "Skipping unrecognized residue " << aa << std::endl;
+					std::cerr << "Replacing " << aa << " with ALA" << std::endl;
 
-				continue;
+				aa = "ALA";
 			}
 			
 			SecStrType tors_ss, rama_ss;
@@ -943,6 +956,7 @@ json calculateZScores(const Structure& structure)
 			else
 				rama_ss = tors_ss;
 
+#pragma warning "todo"
 			auto& rd = tbl.loadRamachandranData(aa, rama_ss);
 
 			auto zr = rd.zscore(phi, psi);
