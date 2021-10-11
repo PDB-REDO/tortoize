@@ -144,7 +144,7 @@ if(NOT BUILD_SHARED_LIBS)
 endif()
 
 find_package(cifpp 2.0.0 REQUIRED)
-find_package(zeep 5.1.3 REQUIRED)
+find_package(zeep 5.1.4 REQUIRED)
 
 if(USE_RSRC)
 	add_custom_command(OUTPUT tortoize_rsrc.obj
@@ -159,7 +159,7 @@ add_executable(tortoize
 	${TORTOIZE_RESOURCE})
 
 target_include_directories(tortoize PRIVATE cifpp::cifpp ${CMAKE_SOURCE_DIR}/include  ${cifpp_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${CMAKE_BINARY_DIR})
-target_link_libraries(tortoize PRIVATE ${Boost_LIBRARIES} cifpp::cifpp zeep::zeep ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(tortoize cifpp::cifpp zeep::zeep std::filesystem)
 
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${BIN_INSTALL_DIR}
