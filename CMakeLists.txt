@@ -51,6 +51,7 @@ elseif(MSVC)
 endif()
 
 if(NOT "$ENV{CCP4}" STREQUAL "")
+	set(BUILD_SHARED_LIBS ON)
 	set(CCP4 $ENV{CCP4})
 	list(PREPEND CMAKE_MODULE_PATH "${CCP4}/Lib")
 	list(APPEND CMAKE_PREFIX_PATH ${CCP4})
@@ -124,10 +125,6 @@ endif()
 
 if(USE_RSRC STREQUAL "ON")
 	set(USE_RSRC 1)
-
-	mrc_write_header(${CMAKE_CURRENT_BINARY_DIR}/mrsrc.hpp)
-	include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 	message("Using resources compiled with ${MRC}")
 	add_compile_definitions(USE_RSRC)
 endif()
