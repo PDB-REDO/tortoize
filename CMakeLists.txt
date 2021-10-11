@@ -143,17 +143,11 @@ endif()
 find_package(cifpp 2.0.0 REQUIRED)
 find_package(zeep 5.1.4 REQUIRED)
 
+add_executable(tortoize ${PROJECT_SOURCE_DIR}/src/tortoize.cpp)
+
 if(USE_RSRC)
-	add_custom_command(OUTPUT tortoize_rsrc.obj
-		COMMAND ${MRC} -o tortoize_rsrc.obj ${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin ${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin ${CIFPP_SHARE_DIR}/mmcif_pdbx_v50.dic ${COFF_SPEC}
-	)
-
-	set(TORTOIZE_RESOURCE tortoize_rsrc.obj)
+	mrc_target_resources(tortoize ${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin ${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin ${CIFPP_SHARE_DIR}/mmcif_pdbx_v50.dic)
 endif()
-
-add_executable(tortoize
-	${PROJECT_SOURCE_DIR}/src/tortoize.cpp
-	${TORTOIZE_RESOURCE})
 
 target_include_directories(tortoize PRIVATE cifpp::cifpp ${CMAKE_SOURCE_DIR}/include  ${cifpp_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${CMAKE_BINARY_DIR})
 target_link_libraries(tortoize cifpp::cifpp zeep::zeep std::filesystem)
