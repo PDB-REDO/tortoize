@@ -81,19 +81,6 @@ if(MSVC)
 		message(STATUS "The library and auxiliary files will be installed in $ENV{LOCALAPPDATA}/${PROJECT_NAME}")
 		set(CMAKE_INSTALL_PREFIX "$ENV{LOCALAPPDATA}/${PROJECT_NAME}" CACHE PATH "..." FORCE)
 	endif()
-
-	# Find out the processor type for the target
-	if(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "AMD64")
-		set(COFF_TYPE "x64")
-	elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "i386")
-		set(COFF_TYPE "x86")
-	elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "ARM64")
-		set(COFF_TYPE "arm64")
-	else()
-		message(FATAL_ERROR "Unsupported or unknown processor type ${CMAKE_SYSTEM_PROCESSOR}")
-	endif()	
-
-	set(COFF_SPEC "--coff=${COFF_TYPE}")
 endif()
 
 if(UNIX AND NOT APPLE)
@@ -104,24 +91,9 @@ if(UNIX AND NOT APPLE)
 	endif()
 endif()
 
-# Create a revision file, containing the current git version info
-
-find_package(Git)
-if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
-	include(GetGitRevisionDescription)
-    get_git_head_revision(REFSPEC COMMITHASH)
-
-	# Generate our own version string
-	git_describe_working_tree(BUILD_VERSION_STRING --match=build --dirty)
-else()
-    message(WARNING "Git not found, cannot set version info")
-
-    SET(BUILD_VERSION_STRING ${PROJECT_VERSION})
-endif()
-
-# generate version.h
-string(TIMESTAMP BUILD_DATE_TIME "%Y-%m-%dT%H:%M:%SZ" UTC)
-configure_file("${CMAKE_SOURCE_DIR}/src/revision.hpp.in" "${CMAKE_BINARY_DIR}/revision.hpp" @ONLY)
+# Create a revision file, containing the current git version info, if any
+include(VersionString)
+write_version_header()
 
 # Optionally use mrc to create resources
 find_program(MRC mrc HINTS "$ENV{LOCALAPPDATA}/mrc" "$ENV{LOCALAPPDATA}/mrc/bin" "${CMAKE_INSTALL_PREFIX}/../mrc" "/usr/local/bin")
@@ -145,13 +117,10 @@ set(CMAKE_THREAD_PREFER_PTHREAD)
 set(THREADS_PREFER_PTHREAD_FLAG)
 find_package(Threads)
 
-set(Boost_DETAILED_FAILURE_MSG ON)
-if(NOT BUILD_SHARED_LIBS)
-	set(Boost_USE_STATIC_LIBS ON)
-endif()
-
 find_package(cifpp 2.0.0 REQUIRED)
 find_package(zeep 5.1.4 REQUIRED)
+
+find_package(Boost COMPONENTS program_options REQUIRED)
 
 if(USE_RSRC)
 	add_custom_command(OUTPUT tortoize_rsrc.obj
@@ -165,8 +134,8 @@ add_executable(tortoize
 	${PROJECT_SOURCE_DIR}/src/tortoize.cpp
 	${TORTOIZE_RESOURCE})
 
-target_include_directories(tortoize PRIVATE cifpp::cifpp ${CMAKE_SOURCE_DIR}/include  ${cifpp_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${CMAKE_BINARY_DIR})
-target_link_libraries(tortoize cifpp::cifpp zeep::zeep std::filesystem)
+target_include_directories(tortoize PRIVATE cifpp::cifpp ${CMAKE_SOURCE_DIR}/include ${CMAKE_BINARY_DIR})
+target_link_libraries(tortoize cifpp::cifpp zeep::zeep std::filesystem Boost::program_options)
 
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${BIN_INSTALL_DIR}

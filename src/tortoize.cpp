@@ -49,6 +49,8 @@
 
 #include <zeep/json/element.hpp>
 
+#include "revision.hpp"
+
 #ifdef _MSC_VER
 //MSVC stdlib.h definitions
 #define STDIN_FILENO 0
@@ -59,8 +61,6 @@
 namespace po = boost::program_options;
 namespace fs = std::filesystem;
 namespace ba = boost::algorithm;
-
-std::string VERSION_STRING;
 
 using mmcif::Atom;
 using mmcif::Point;
@@ -1066,7 +1066,7 @@ class tortoize_rest_controller : public zeep::http::rest_controller
 				{ "software",
 					{
 						{ "name", "tortoize" },
-						{ "version", VERSION_STRING },
+						{ "version", kVersionNumber },
 						{ "reference", "Sobolev et al. A Global Ramachandran Score Identifies Protein Structures with Unlikely Stereochemistry, Structure (2020)" },
 						{ "reference-doi", "https://doi.org/10.1016/j.str.2020.08.005" }
 					}
@@ -1267,7 +1267,7 @@ int pr_main(int argc, char* argv[])
 
 	if (vm.count("version"))
 	{
-		std::cout << argv[0] << " version " << VERSION_STRING << std::endl;
+		write_version_string(std::cout, vm.count("verbose"));
 		exit(0);
 	}
 
@@ -1347,7 +1347,7 @@ References:
 		{ "software",
 			{
 				{ "name", "tortoize" },
-				{ "version", VERSION_STRING },
+				{ "version", kVersionNumber },
 				{ "reference", "Sobolev et al. A Global Ramachandran Score Identifies Protein Structures with Unlikely Stereochemistry, Structure (2020)" },
 				{ "reference-doi", "https://doi.org/10.1016/j.str.2020.08.005" }
 			}
@@ -1393,71 +1393,6 @@ References:
 
 // --------------------------------------------------------------------
 
-namespace {
-	std::string gVersionNr, gVersionDate;
-}
-
-void load_version_info()
-{
-	const std::regex
-		rxVersionNr(R"(build-(\d+)-g[0-9a-f]{7}(-dirty)?)"),
-		rxVersionDate(R"(Date: +(\d{4}-\d{2}-\d{2}).*)"),
-		rxVersionNr2(R"(tortoize-version: (\d+(?:\.\d+)+))");
-
-#include "revision.hpp"
-
-	struct membuf : public std::streambuf
-	{
-		membuf(char* data, size_t length)       { this->setg(data, data, data + length); }
-	} buffer(const_cast<char*>(kRevision), sizeof(kRevision));
-
-	std::istream is(&buffer);
-
-	std::string line;
-
-	while (getline(is, line))
-	{
-		std::smatch m;
-
-		if (std::regex_match(line, m, rxVersionNr))
-		{
-			gVersionNr = m[1];
-			if (m[2].matched)
-				gVersionNr += '*';
-			continue;
-		}
-
-		if (std::regex_match(line, m, rxVersionDate))
-		{
-			gVersionDate = m[1];
-			continue;
-		}
-
-		// always the first, replace with more specific if followed by the other info
-		if (std::regex_match(line, m, rxVersionNr2))
-		{
-			gVersionNr = m[1];
-			continue;
-		}
-	}
-
-	if (not VERSION_STRING.empty())
-		VERSION_STRING += "\n";
-	VERSION_STRING += gVersionNr + " " + gVersionDate;
-}
-
-std::string get_version_nr()
-{
-	return gVersionNr/* + '/' + cif::get_version_nr()*/;
-}
-
-std::string get_version_date()
-{
-	return gVersionDate;
-}
-
-// --------------------------------------------------------------------
-
 // recursively print exception whats:
 void print_what (const std::exception& e)
 {
@@ -1479,8 +1414,6 @@ int main(int argc, char* argv[])
 	
 	try
 	{
-		load_version_info();
-		
 		result = pr_main(argc, argv);
 	}
 	catch (std::exception& ex)
