@@ -1,3 +1,7 @@
+Version 2.0.5
+- Fixed a crashing bug when fed with unknown amino acids
+- Replacing ASX and GLX with ASP and GLU
+
 Version 2.0.4
 - Should be easier to make
 

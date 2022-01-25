@@ -25,7 +25,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 # set the project name
-project(tortoize VERSION 2.0.4 LANGUAGES CXX)
+project(tortoize VERSION 2.0.5 LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -51,6 +51,7 @@ elseif(MSVC)
 endif()
 
 if(NOT "$ENV{CCP4}" STREQUAL "")
+	set(BUILD_SHARED_LIBS ON)
 	set(CCP4 $ENV{CCP4})
 	list(PREPEND CMAKE_MODULE_PATH "${CCP4}/Lib")
 	list(APPEND CMAKE_PREFIX_PATH ${CCP4})
@@ -96,9 +97,9 @@ include(VersionString)
 write_version_header()
 
 # Optionally use mrc to create resources
-find_program(MRC mrc HINTS "$ENV{LOCALAPPDATA}/mrc" "$ENV{LOCALAPPDATA}/mrc/bin" "${CMAKE_INSTALL_PREFIX}/../mrc" "/usr/local/bin")
+find_package(Mrc)
 
-if(MRC)
+if(MRC_FOUND)
 	option(USE_RSRC "Use mrc to create resources" ON)
 else()
 	message(WARNING "Not using resources since mrc was not found")
@@ -106,8 +107,6 @@ endif()
 
 if(USE_RSRC STREQUAL "ON")
 	set(USE_RSRC 1)
-
-	message("Using resources compiled with ${MRC}")
 	add_compile_definitions(USE_RSRC)
 endif()
 
@@ -122,17 +121,13 @@ find_package(zeep 5.1.4 REQUIRED)
 
 find_package(Boost COMPONENTS program_options REQUIRED)
 
-if(USE_RSRC)
-	add_custom_command(OUTPUT tortoize_rsrc.obj
-		COMMAND ${MRC} -o tortoize_rsrc.obj ${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin ${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin ${CIFPP_SHARE_DIR}/mmcif_pdbx_v50.dic ${COFF_SPEC}
-	)
-
-	set(TORTOIZE_RESOURCE tortoize_rsrc.obj)
-endif()
-
 add_executable(tortoize
 	${PROJECT_SOURCE_DIR}/src/tortoize.cpp
 	${TORTOIZE_RESOURCE})
+
+if(USE_RSRC)
+	mrc_target_resources(tortoize ${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin ${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin ${CIFPP_SHARE_DIR}/mmcif_pdbx_v50.dic)
+endif()
 
 target_include_directories(tortoize PRIVATE cifpp::cifpp ${CMAKE_SOURCE_DIR}/include ${CMAKE_BINARY_DIR})
 target_link_libraries(tortoize cifpp::cifpp zeep::zeep std::filesystem Boost::program_options)
@@ -145,6 +140,10 @@ if(NOT USE_RSRC)
 	install(FILES ${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin ${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin
 		DESTINATION ${CIFPP_SHARE_DIR})
 endif()
+
+# # manual
+
+# install(FILES doc/tortoize.1 DESTINATION ${CMAKE_INSTALL_DATADIR}/man/man1)
 
 # manual
 
