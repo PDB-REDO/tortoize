@@ -888,17 +888,15 @@ json calculateZScores(const Structure& structure)
 			if (phi == 360 or psi == 360)
 				continue;
 
-			std::tuple<std::string,int,std::string,std::string> pdbID = structure.MapLabelToPDB(res.asymID(), res.seqID(), res.compoundID(), res.authSeqID());
-
 			json residue = {
 				{ "asymID", res.asymID() },
 				{ "seqID", res.seqID() },
 				{ "compID", res.compoundID() },
 				{ "pdb", {
-					{ "strandID", std::get<0>(pdbID) },
-					{ "seqNum", std::get<1>(pdbID) },
-					{ "compID", std::get<2>(pdbID) },
-					{ "insCode", std::get<3>(pdbID) }
+					{ "strandID", res.authAsymID() },
+					{ "seqNum", std::stoi(res.authSeqID()) },
+					{ "compID", res.compoundID() },
+					{ "insCode", res.authInsCode() }
 				}}
 			};
 
