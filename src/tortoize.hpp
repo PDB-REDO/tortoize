@@ -24,59 +24,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define BOOST_TEST_ALTERNATIVE_INIT_API
-#include <boost/test/included/unit_test.hpp>
+#include <zeep/json/element.hpp>
+#include <cif++/Structure.hpp>
 
-#include <filesystem>
+void buildDataFile(const std::filesystem::path &dir);
 
-#include <cif++/CifUtils.hpp>
+zeep::json::element calculateZScores(const mmcif::Structure& structure);
 
-#include <zeep/json/parser.hpp>
-
-#include "tortoize.hpp"
-
-namespace fs = std::filesystem;
-
-using json = zeep::json::element;
-
-// --------------------------------------------------------------------
-
-fs::path gTestDir = fs::current_path();
-
-bool init_unit_test()
-{
-	cif::VERBOSE = 1;
-
-	// not a test, just initialize test dir
-	if (boost::unit_test::framework::master_test_suite().argc == 2)
-		gTestDir = boost::unit_test::framework::master_test_suite().argv[1];
-
-	// // do this now, avoids the need for installing
-	// cif::addFileResource("mmcif_pdbx_v50.dic", gTestDir / ".." / "rsrc" / "mmcif_pdbx_v50.dic");
-
-	// // initialize CCD location
-	// cif::addFileResource("components.cif", gTestDir / ".." / "data" / "ccd-subset.cif");
-
-	return true;
-}
-
-// --------------------------------------------------------------------
-
-BOOST_AUTO_TEST_CASE(first_test)
-{
-	auto a = tortoize_calculate(gTestDir / "1cbs.cif.gz");
-
-	std::ifstream bf(gTestDir / "1cbs.json");
-
-	json b;
-	zeep::json::parse_json(bf, b);
-
-	// somehow a == b does not work correctly?
-	// BOOST_CHECK_EQUAL(a, b);
-
-	std::stringstream sa, sb;
-	sa << a;
-	sb << b;
-
-	BOOST_CHECK_EQUAL(sa.str(), sb.str());
-}
+zeep::json::element tortoize_calculate(const std::filesystem::path &xyzin);

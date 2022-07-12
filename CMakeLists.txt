@@ -25,7 +25,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 # set the project name
-project(tortoize VERSION 2.0.6 LANGUAGES CXX)
+project(tortoize VERSION 2.0.7 LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -110,6 +110,10 @@ if(USE_RSRC STREQUAL "ON")
 	add_compile_definitions(USE_RSRC)
 endif()
 
+# Optionally build a webservice
+
+option(BUILD_WEBSERVICE "Build a version with a webservice daemon" OFF)
+
 # libraries
 
 set(CMAKE_THREAD_PREFER_PTHREAD)
@@ -123,13 +127,18 @@ find_package(Boost COMPONENTS program_options REQUIRED)
 
 add_executable(tortoize
 	${PROJECT_SOURCE_DIR}/src/tortoize.cpp
+	${PROJECT_SOURCE_DIR}/src/tortoize-main.cpp
 	${TORTOIZE_RESOURCE})
+
+if(BUILD_WEBSERVICE)
+	target_compile_definitions(tortoize PRIVATE WEBSERVICE)
+endif()
 
 if(USE_RSRC)
 	mrc_target_resources(tortoize ${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin ${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin ${CIFPP_SHARE_DIR}/mmcif_pdbx_v50.dic)
 endif()
 
-target_include_directories(tortoize PRIVATE cifpp::cifpp ${CMAKE_SOURCE_DIR}/include ${CMAKE_BINARY_DIR})
+target_include_directories(tortoize PRIVATE cifpp::cifpp ${CMAKE_BINARY_DIR})
 target_link_libraries(tortoize cifpp::cifpp zeep::zeep std::filesystem Boost::program_options)
 
 install(TARGETS ${PROJECT_NAME}
@@ -141,10 +150,14 @@ if(NOT USE_RSRC)
 		DESTINATION ${CIFPP_SHARE_DIR})
 endif()
 
-# # manual
-
-# install(FILES doc/tortoize.1 DESTINATION ${CMAKE_INSTALL_DATADIR}/man/man1)
-
 # manual
 
 install(FILES doc/tortoize.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+
+# Test code
+
+add_executable(unit-test ${PROJECT_SOURCE_DIR}/test/unit-test.cpp ${PROJECT_SOURCE_DIR}/src/tortoize.cpp)
+target_include_directories(unit-test PRIVATE cifpp::cifpp ${CMAKE_SOURCE_DIR}/src ${CMAKE_BINARY_DIR})
+target_link_libraries(unit-test cifpp::cifpp zeep::zeep std::filesystem)
+
+add_test(NAME unit-test COMMAND $<TARGET_FILE:unit-test> -- ${CMAKE_SOURCE_DIR}/test)
