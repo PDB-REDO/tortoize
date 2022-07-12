@@ -1,1 +1,2527 @@
-{"model":{"1":{"ramachandran-jackknife-sd":0.775832,"ramachandran-z":1.39949,"residues":[{"asymID":"A","compID":"ASN","pdb":{"compID":"ASN","insCode":"","seqNum":2,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":-0.798823},"seqID":2,"torsion":{"ss-type":"other","z-score":-0.947051}},{"asymID":"A","compID":"PHE","pdb":{"compID":"PHE","insCode":"","seqNum":3,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":0.66019},"seqID":3,"torsion":{"ss-type":"other","z-score":0.540828}},{"asymID":"A","compID":"SER","pdb":{"compID":"SER","insCode":"","seqNum":4,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":0.157459},"seqID":4,"torsion":{"ss-type":"other","z-score":-0.203179}},{"asymID":"A","compID":"GLY","pdb":{"compID":"GLY","insCode":"","seqNum":5,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-1.03729},"seqID":5},{"asymID":"A","compID":"ASN","pdb":{"compID":"ASN","insCode":"","seqNum":6,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":1.02985},"seqID":6,"torsion":{"ss-type":"strand","z-score":1.51251}},{"asymID":"A","compID":"TRP","pdb":{"compID":"TRP","insCode":"","seqNum":7,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.566377},"seqID":7,"torsion":{"ss-type":"strand","z-score":0.252848}},{"asymID":"A","compID":"LYS","pdb":{"compID":"LYS","insCode":"","seqNum":8,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.8604},"seqID":8,"torsion":{"ss-type":"strand","z-score":-0.284275}},{"asymID":"A","compID":"ILE","pdb":{"compID":"ILE","insCode":"","seqNum":9,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-1.30086},"seqID":9,"torsion":{"ss-type":"strand","z-score":-1.03026}},{"asymID":"A","compID":"ILE","pdb":{"compID":"ILE","insCode":"","seqNum":10,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-1.33429},"seqID":10,"torsion":{"ss-type":"strand","z-score":-0.680375}},{"asymID":"A","compID":"ARG","pdb":{"compID":"ARG","insCode":"","seqNum":11,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-1.13954},"seqID":11,"torsion":{"ss-type":"strand","z-score":-0.640209}},{"asymID":"A","compID":"SER","pdb":{"compID":"SER","insCode":"","seqNum":12,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.489209},"seqID":12,"torsion":{"ss-type":"strand","z-score":0.967282}},{"asymID":"A","compID":"GLU","pdb":{"compID":"GLU","insCode":"","seqNum":13,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":1.46375},"seqID":13,"torsion":{"ss-type":"strand","z-score":-0.995714}},{"asymID":"A","compID":"ASN","pdb":{"compID":"ASN","insCode":"","seqNum":14,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":0.426071},"seqID":14,"torsion":{"ss-type":"other","z-score":-1.15221}},{"asymID":"A","compID":"PHE","pdb":{"compID":"PHE","insCode":"","seqNum":15,"strandID":"A"},"ramachandran":{"ss-type":"helix","z-score":-0.620096},"seqID":15,"torsion":{"ss-type":"helix","z-score":-0.637395}},{"asymID":"A","compID":"GLU","pdb":{"compID":"GLU","insCode":"","seqNum":16,"strandID":"A"},"ramachandran":{"ss-type":"helix","z-score":0.730873},"seqID":16,"torsion":{"ss-type":"helix","z-score":-1.00514}},{"asymID":"A","compID":"GLU","pdb":{"compID":"GLU","insCode":"","seqNum":17,"strandID":"A"},"ramachandran":{"ss-type":"helix","z-score":-0.50909},"seqID":17,"torsion":{"ss-type":"helix","z-score":-0.402211}},{"asymID":"A","compID":"LEU","pdb":{"compID":"LEU","insCode":"","seqNum":18,"strandID":"A"},"ramachandran":{"ss-type":"helix","z-score":0.821918},"seqID":18,"torsion":{"ss-type":"helix","z-score":-1.27426}},{"asymID":"A","compID":"LEU","pdb":{"compID":"LEU","insCode":"","seqNum":19,"strandID":"A"},"ramachandran":{"ss-type":"helix","z-score":-0.766356},"seqID":19,"torsion":{"ss-type":"helix","z-score":-0.570833}},{"asymID":"A","compID":"LYS","pdb":{"compID":"LYS","insCode":"","seqNum":20,"strandID":"A"},"ramachandran":{"ss-type":"helix","z-score":0.0641989},"seqID":20,"torsion":{"ss-type":"helix","z-score":-1.09269}},{"asymID":"A","compID":"VAL","pdb":{"compID":"VAL","insCode":"","seqNum":21,"strandID":"A"},"ramachandran":{"ss-type":"helix","z-score":-0.940119},"seqID":21,"torsion":{"ss-type":"helix","z-score":1.08157}},{"asymID":"A","compID":"LEU","pdb":{"compID":"LEU","insCode":"","seqNum":22,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":0.520876},"seqID":22,"torsion":{"ss-type":"other","z-score":1.18818}},{"asymID":"A","compID":"GLY","pdb":{"compID":"GLY","insCode":"","seqNum":23,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":0.393732},"seqID":23},{"asymID":"A","compID":"VAL","pdb":{"compID":"VAL","insCode":"","seqNum":24,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":1.26355},"seqID":24,"torsion":{"ss-type":"other","z-score":0.630484}},{"asymID":"A","compID":"ASN","pdb":{"compID":"ASN","insCode":"","seqNum":25,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":-0.569167},"seqID":25,"torsion":{"ss-type":"other","z-score":-1.08208}},{"asymID":"A","compID":"VAL","pdb":{"compID":"VAL","insCode":"","seqNum":26,"strandID":"A"},"ramachandran":{"ss-type":"helix","z-score":-1.28827},"seqID":26,"torsion":{"ss-type":"helix","z-score":-1.35527}},{"asymID":"A","compID":"MET","pdb":{"compID":"MET","insCode":"","seqNum":27,"strandID":"A"},"ramachandran":{"ss-type":"helix","z-score":0.231483},"seqID":27,"torsion":{"ss-type":"helix","z-score":-1.19604}},{"asymID":"A","compID":"LEU","pdb":{"compID":"LEU","insCode":"","seqNum":28,"strandID":"A"},"ramachandran":{"ss-type":"helix","z-score":-0.672637},"seqID":28,"torsion":{"ss-type":"helix","z-score":-0.957632}},{"asymID":"A","compID":"ARG","pdb":{"compID":"ARG","insCode":"","seqNum":29,"strandID":"A"},"ramachandran":{"ss-type":"helix","z-score":0.972201},"seqID":29,"torsion":{"ss-type":"helix","z-score":-1.12442}},{"asymID":"A","compID":"LYS","pdb":{"compID":"LYS","insCode":"","seqNum":30,"strandID":"A"},"ramachandran":{"ss-type":"helix","z-score":-0.585946},"seqID":30,"torsion":{"ss-type":"helix","z-score":0.428523}},{"asymID":"A","compID":"ILE","pdb":{"compID":"ILE","insCode":"","seqNum":31,"strandID":"A"},"ramachandran":{"ss-type":"helix","z-score":0.524346},"seqID":31,"torsion":{"ss-type":"helix","z-score":-0.663487}},{"asymID":"A","compID":"ALA","pdb":{"compID":"ALA","insCode":"","seqNum":32,"strandID":"A"},"ramachandran":{"ss-type":"helix","z-score":-0.600226},"seqID":32},{"asymID":"A","compID":"VAL","pdb":{"compID":"VAL","insCode":"","seqNum":33,"strandID":"A"},"ramachandran":{"ss-type":"helix","z-score":-0.220329},"seqID":33,"torsion":{"ss-type":"helix","z-score":1.18979}},{"asymID":"A","compID":"ALA","pdb":{"compID":"ALA","insCode":"","seqNum":34,"strandID":"A"},"ramachandran":{"ss-type":"helix","z-score":-0.534097},"seqID":34},{"asymID":"A","compID":"ALA","pdb":{"compID":"ALA","insCode":"","seqNum":35,"strandID":"A"},"ramachandran":{"ss-type":"helix","z-score":-0.805852},"seqID":35},{"asymID":"A","compID":"ALA","pdb":{"compID":"ALA","insCode":"","seqNum":36,"strandID":"A"},"ramachandran":{"ss-type":"helix","z-score":-1.33939},"seqID":36},{"asymID":"A","compID":"SER","pdb":{"compID":"SER","insCode":"","seqNum":37,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":0.88262},"seqID":37,"torsion":{"ss-type":"other","z-score":0.886524}},{"asymID":"A","compID":"LYS","pdb":{"compID":"LYS","insCode":"","seqNum":38,"strandID":"A"},"ramachandran":{"ss-type":"prepro","z-score":0.362168},"seqID":38,"torsion":{"ss-type":"other","z-score":-1.0687}},{"asymID":"A","compID":"PRO","pdb":{"compID":"PRO","insCode":"","seqNum":39,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":-1.23038},"seqID":39,"torsion":{"ss-type":"other","z-score":-0.481345}},{"asymID":"A","compID":"ALA","pdb":{"compID":"ALA","insCode":"","seqNum":40,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.348628},"seqID":40},{"asymID":"A","compID":"VAL","pdb":{"compID":"VAL","insCode":"","seqNum":41,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":1.99238},"seqID":41,"torsion":{"ss-type":"strand","z-score":1.18881}},{"asymID":"A","compID":"GLU","pdb":{"compID":"GLU","insCode":"","seqNum":42,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.655331},"seqID":42,"torsion":{"ss-type":"strand","z-score":0.253296}},{"asymID":"A","compID":"ILE","pdb":{"compID":"ILE","insCode":"","seqNum":43,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.896924},"seqID":43,"torsion":{"ss-type":"strand","z-score":-0.170793}},{"asymID":"A","compID":"LYS","pdb":{"compID":"LYS","insCode":"","seqNum":44,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.269909},"seqID":44,"torsion":{"ss-type":"strand","z-score":1.06435}},{"asymID":"A","compID":"GLN","pdb":{"compID":"GLN","insCode":"","seqNum":45,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":1.64461},"seqID":45,"torsion":{"ss-type":"strand","z-score":-0.387419}},{"asymID":"A","compID":"GLU","pdb":{"compID":"GLU","insCode":"","seqNum":46,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-1.72207},"seqID":46,"torsion":{"ss-type":"strand","z-score":-1.12702}},{"asymID":"A","compID":"GLY","pdb":{"compID":"GLY","insCode":"","seqNum":47,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":-0.872875},"seqID":47},{"asymID":"A","compID":"ASP","pdb":{"compID":"ASP","insCode":"","seqNum":48,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":1.19834},"seqID":48,"torsion":{"ss-type":"other","z-score":1.15937}},{"asymID":"A","compID":"THR","pdb":{"compID":"THR","insCode":"","seqNum":49,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.791515},"seqID":49,"torsion":{"ss-type":"strand","z-score":1.82483}},{"asymID":"A","compID":"PHE","pdb":{"compID":"PHE","insCode":"","seqNum":50,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":1.09728},"seqID":50,"torsion":{"ss-type":"strand","z-score":0.99506}},{"asymID":"A","compID":"TYR","pdb":{"compID":"TYR","insCode":"","seqNum":51,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.0696683},"seqID":51,"torsion":{"ss-type":"strand","z-score":-0.989671}},{"asymID":"A","compID":"ILE","pdb":{"compID":"ILE","insCode":"","seqNum":52,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.454947},"seqID":52,"torsion":{"ss-type":"strand","z-score":-0.481759}},{"asymID":"A","compID":"LYS","pdb":{"compID":"LYS","insCode":"","seqNum":53,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.687761},"seqID":53,"torsion":{"ss-type":"strand","z-score":0.613886}},{"asymID":"A","compID":"THR","pdb":{"compID":"THR","insCode":"","seqNum":54,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.020598},"seqID":54,"torsion":{"ss-type":"strand","z-score":-0.0253441}},{"asymID":"A","compID":"SER","pdb":{"compID":"SER","insCode":"","seqNum":55,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.549366},"seqID":55,"torsion":{"ss-type":"strand","z-score":-0.0696146}},{"asymID":"A","compID":"THR","pdb":{"compID":"THR","insCode":"","seqNum":56,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":0.429332},"seqID":56,"torsion":{"ss-type":"other","z-score":0.477194}},{"asymID":"A","compID":"THR","pdb":{"compID":"THR","insCode":"","seqNum":57,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":1.38741},"seqID":57,"torsion":{"ss-type":"other","z-score":-0.552251}},{"asymID":"A","compID":"VAL","pdb":{"compID":"VAL","insCode":"","seqNum":58,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":-0.837707},"seqID":58,"torsion":{"ss-type":"other","z-score":-1.24292}},{"asymID":"A","compID":"ARG","pdb":{"compID":"ARG","insCode":"","seqNum":59,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":-1.10028},"seqID":59,"torsion":{"ss-type":"other","z-score":-0.766007}},{"asymID":"A","compID":"THR","pdb":{"compID":"THR","insCode":"","seqNum":60,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":1.43761},"seqID":60,"torsion":{"ss-type":"strand","z-score":-1.23306}},{"asymID":"A","compID":"THR","pdb":{"compID":"THR","insCode":"","seqNum":61,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.0592513},"seqID":61,"torsion":{"ss-type":"strand","z-score":-0.0892971}},{"asymID":"A","compID":"GLU","pdb":{"compID":"GLU","insCode":"","seqNum":62,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-1.19188},"seqID":62,"torsion":{"ss-type":"strand","z-score":1.80717}},{"asymID":"A","compID":"ILE","pdb":{"compID":"ILE","insCode":"","seqNum":63,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-1.035},"seqID":63,"torsion":{"ss-type":"strand","z-score":-0.636748}},{"asymID":"A","compID":"ASN","pdb":{"compID":"ASN","insCode":"","seqNum":64,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.202345},"seqID":64,"torsion":{"ss-type":"strand","z-score":0.398641}},{"asymID":"A","compID":"PHE","pdb":{"compID":"PHE","insCode":"","seqNum":65,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":1.82401},"seqID":65,"torsion":{"ss-type":"strand","z-score":0.0393884}},{"asymID":"A","compID":"LYS","pdb":{"compID":"LYS","insCode":"","seqNum":66,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":1.87582},"seqID":66,"torsion":{"ss-type":"strand","z-score":-1.15374}},{"asymID":"A","compID":"VAL","pdb":{"compID":"VAL","insCode":"","seqNum":67,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":1.39142},"seqID":67,"torsion":{"ss-type":"other","z-score":0.087626}},{"asymID":"A","compID":"GLY","pdb":{"compID":"GLY","insCode":"","seqNum":68,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":1.14175},"seqID":68},{"asymID":"A","compID":"GLU","pdb":{"compID":"GLU","insCode":"","seqNum":69,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":-0.832521},"seqID":69,"torsion":{"ss-type":"other","z-score":1.68189}},{"asymID":"A","compID":"GLU","pdb":{"compID":"GLU","insCode":"","seqNum":70,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":0.564803},"seqID":70,"torsion":{"ss-type":"other","z-score":-0.1471}},{"asymID":"A","compID":"PHE","pdb":{"compID":"PHE","insCode":"","seqNum":71,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-1.55339},"seqID":71,"torsion":{"ss-type":"strand","z-score":-0.629185}},{"asymID":"A","compID":"GLU","pdb":{"compID":"GLU","insCode":"","seqNum":72,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":1.38123},"seqID":72,"torsion":{"ss-type":"strand","z-score":-1.13082}},{"asymID":"A","compID":"GLU","pdb":{"compID":"GLU","insCode":"","seqNum":73,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-1.72713},"seqID":73,"torsion":{"ss-type":"strand","z-score":-1.01512}},{"asymID":"A","compID":"GLN","pdb":{"compID":"GLN","insCode":"","seqNum":74,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.78093},"seqID":74,"torsion":{"ss-type":"strand","z-score":-0.394844}},{"asymID":"A","compID":"THR","pdb":{"compID":"THR","insCode":"","seqNum":75,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":0.0243752},"seqID":75,"torsion":{"ss-type":"other","z-score":1.0279}},{"asymID":"A","compID":"VAL","pdb":{"compID":"VAL","insCode":"","seqNum":76,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":1.7789},"seqID":76,"torsion":{"ss-type":"other","z-score":-1.68467}},{"asymID":"A","compID":"ASP","pdb":{"compID":"ASP","insCode":"","seqNum":77,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":1.0599},"seqID":77,"torsion":{"ss-type":"other","z-score":-0.97952}},{"asymID":"A","compID":"GLY","pdb":{"compID":"GLY","insCode":"","seqNum":78,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":-0.233955},"seqID":78},{"asymID":"A","compID":"ARG","pdb":{"compID":"ARG","insCode":"","seqNum":79,"strandID":"A"},"ramachandran":{"ss-type":"prepro","z-score":-0.823092},"seqID":79,"torsion":{"ss-type":"other","z-score":0.411635}},{"asymID":"A","compID":"PRO","pdb":{"compID":"PRO","insCode":"","seqNum":80,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":1.19486},"seqID":80,"torsion":{"ss-type":"strand","z-score":-1.1397}},{"asymID":"A","compID":"CYS","pdb":{"compID":"CYS","insCode":"","seqNum":81,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.285435},"seqID":81,"torsion":{"ss-type":"strand","z-score":-0.422403}},{"asymID":"A","compID":"LYS","pdb":{"compID":"LYS","insCode":"","seqNum":82,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.873175},"seqID":82,"torsion":{"ss-type":"strand","z-score":-1.1475}},{"asymID":"A","compID":"SER","pdb":{"compID":"SER","insCode":"","seqNum":83,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.491589},"seqID":83,"torsion":{"ss-type":"strand","z-score":-0.437771}},{"asymID":"A","compID":"LEU","pdb":{"compID":"LEU","insCode":"","seqNum":84,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-1.10688},"seqID":84,"torsion":{"ss-type":"strand","z-score":1.02568}},{"asymID":"A","compID":"VAL","pdb":{"compID":"VAL","insCode":"","seqNum":85,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.952048},"seqID":85,"torsion":{"ss-type":"strand","z-score":0.411411}},{"asymID":"A","compID":"LYS","pdb":{"compID":"LYS","insCode":"","seqNum":86,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.270263},"seqID":86,"torsion":{"ss-type":"strand","z-score":1.88331}},{"asymID":"A","compID":"TRP","pdb":{"compID":"TRP","insCode":"","seqNum":87,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-1.15687},"seqID":87,"torsion":{"ss-type":"strand","z-score":-0.227421}},{"asymID":"A","compID":"GLU","pdb":{"compID":"GLU","insCode":"","seqNum":88,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-1.60402},"seqID":88,"torsion":{"ss-type":"strand","z-score":1.56398}},{"asymID":"A","compID":"SER","pdb":{"compID":"SER","insCode":"","seqNum":89,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.87598},"seqID":89,"torsion":{"ss-type":"strand","z-score":1.43436}},{"asymID":"A","compID":"GLU","pdb":{"compID":"GLU","insCode":"","seqNum":90,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":0.709593},"seqID":90,"torsion":{"ss-type":"other","z-score":0.429129}},{"asymID":"A","compID":"ASN","pdb":{"compID":"ASN","insCode":"","seqNum":91,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":0.292516},"seqID":91,"torsion":{"ss-type":"other","z-score":0.601827}},{"asymID":"A","compID":"LYS","pdb":{"compID":"LYS","insCode":"","seqNum":92,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.488101},"seqID":92,"torsion":{"ss-type":"strand","z-score":1.82809}},{"asymID":"A","compID":"MET","pdb":{"compID":"MET","insCode":"","seqNum":93,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.511992},"seqID":93,"torsion":{"ss-type":"strand","z-score":-0.0858792}},{"asymID":"A","compID":"VAL","pdb":{"compID":"VAL","insCode":"","seqNum":94,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.33652},"seqID":94,"torsion":{"ss-type":"strand","z-score":0.698077}},{"asymID":"A","compID":"CYS","pdb":{"compID":"CYS","insCode":"","seqNum":95,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.974721},"seqID":95,"torsion":{"ss-type":"strand","z-score":0.881575}},{"asymID":"A","compID":"GLU","pdb":{"compID":"GLU","insCode":"","seqNum":96,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.694988},"seqID":96,"torsion":{"ss-type":"strand","z-score":1.19365}},{"asymID":"A","compID":"GLN","pdb":{"compID":"GLN","insCode":"","seqNum":97,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.140035},"seqID":97,"torsion":{"ss-type":"strand","z-score":0.420539}},{"asymID":"A","compID":"LYS","pdb":{"compID":"LYS","insCode":"","seqNum":98,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.618683},"seqID":98,"torsion":{"ss-type":"strand","z-score":-1.16863}},{"asymID":"A","compID":"LEU","pdb":{"compID":"LEU","insCode":"","seqNum":99,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.926147},"seqID":99,"torsion":{"ss-type":"strand","z-score":-0.747159}},{"asymID":"A","compID":"LEU","pdb":{"compID":"LEU","insCode":"","seqNum":100,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":0.277071},"seqID":100,"torsion":{"ss-type":"other","z-score":-0.793526}},{"asymID":"A","compID":"LYS","pdb":{"compID":"LYS","insCode":"","seqNum":101,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":-0.819666},"seqID":101,"torsion":{"ss-type":"other","z-score":-0.933175}},{"asymID":"A","compID":"GLY","pdb":{"compID":"GLY","insCode":"","seqNum":102,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":-0.644178},"seqID":102},{"asymID":"A","compID":"GLU","pdb":{"compID":"GLU","insCode":"","seqNum":103,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":-0.711901},"seqID":103,"torsion":{"ss-type":"other","z-score":-0.992121}},{"asymID":"A","compID":"GLY","pdb":{"compID":"GLY","insCode":"","seqNum":104,"strandID":"A"},"ramachandran":{"ss-type":"prepro","z-score":0.140867},"seqID":104},{"asymID":"A","compID":"PRO","pdb":{"compID":"PRO","insCode":"","seqNum":105,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":0.942441},"seqID":105,"torsion":{"ss-type":"other","z-score":1.1365}},{"asymID":"A","compID":"LYS","pdb":{"compID":"LYS","insCode":"","seqNum":106,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":-0.637257},"seqID":106,"torsion":{"ss-type":"other","z-score":-1.05714}},{"asymID":"A","compID":"THR","pdb":{"compID":"THR","insCode":"","seqNum":107,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.110523},"seqID":107,"torsion":{"ss-type":"strand","z-score":-0.184899}},{"asymID":"A","compID":"SER","pdb":{"compID":"SER","insCode":"","seqNum":108,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.673733},"seqID":108,"torsion":{"ss-type":"strand","z-score":0.596624}},{"asymID":"A","compID":"TRP","pdb":{"compID":"TRP","insCode":"","seqNum":109,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.531782},"seqID":109,"torsion":{"ss-type":"strand","z-score":-0.834292}},{"asymID":"A","compID":"THR","pdb":{"compID":"THR","insCode":"","seqNum":110,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.103828},"seqID":110,"torsion":{"ss-type":"strand","z-score":-0.899794}},{"asymID":"A","compID":"ARG","pdb":{"compID":"ARG","insCode":"","seqNum":111,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.749214},"seqID":111,"torsion":{"ss-type":"strand","z-score":-0.859402}},{"asymID":"A","compID":"GLU","pdb":{"compID":"GLU","insCode":"","seqNum":112,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.976638},"seqID":112,"torsion":{"ss-type":"strand","z-score":-0.393101}},{"asymID":"A","compID":"LEU","pdb":{"compID":"LEU","insCode":"","seqNum":113,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.74038},"seqID":113,"torsion":{"ss-type":"strand","z-score":-1.11613}},{"asymID":"A","compID":"THR","pdb":{"compID":"THR","insCode":"","seqNum":114,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":0.346126},"seqID":114,"torsion":{"ss-type":"other","z-score":0.147395}},{"asymID":"A","compID":"ASN","pdb":{"compID":"ASN","insCode":"","seqNum":115,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":0.578324},"seqID":115,"torsion":{"ss-type":"other","z-score":-0.82567}},{"asymID":"A","compID":"ASP","pdb":{"compID":"ASP","insCode":"","seqNum":116,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":2.14891},"seqID":116,"torsion":{"ss-type":"other","z-score":-0.452464}},{"asymID":"A","compID":"GLY","pdb":{"compID":"GLY","insCode":"","seqNum":117,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":0.573715},"seqID":117},{"asymID":"A","compID":"GLU","pdb":{"compID":"GLU","insCode":"","seqNum":118,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":-0.873572},"seqID":118,"torsion":{"ss-type":"other","z-score":1.47336}},{"asymID":"A","compID":"LEU","pdb":{"compID":"LEU","insCode":"","seqNum":119,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":1.08306},"seqID":119,"torsion":{"ss-type":"strand","z-score":1.49909}},{"asymID":"A","compID":"ILE","pdb":{"compID":"ILE","insCode":"","seqNum":120,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":1.24492},"seqID":120,"torsion":{"ss-type":"strand","z-score":0.0794492}},{"asymID":"A","compID":"LEU","pdb":{"compID":"LEU","insCode":"","seqNum":121,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":1.93521},"seqID":121,"torsion":{"ss-type":"strand","z-score":-1.16349}},{"asymID":"A","compID":"THR","pdb":{"compID":"THR","insCode":"","seqNum":122,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.324276},"seqID":122,"torsion":{"ss-type":"strand","z-score":-1.24626}},{"asymID":"A","compID":"MET","pdb":{"compID":"MET","insCode":"","seqNum":123,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":1.94887},"seqID":123,"torsion":{"ss-type":"strand","z-score":0.608123}},{"asymID":"A","compID":"THR","pdb":{"compID":"THR","insCode":"","seqNum":124,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.000597624},"seqID":124,"torsion":{"ss-type":"strand","z-score":1.56324}},{"asymID":"A","compID":"ALA","pdb":{"compID":"ALA","insCode":"","seqNum":125,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-1.29392},"seqID":125},{"asymID":"A","compID":"ASP","pdb":{"compID":"ASP","insCode":"","seqNum":126,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":-1.10169},"seqID":126,"torsion":{"ss-type":"other","z-score":-0.860178}},{"asymID":"A","compID":"ASP","pdb":{"compID":"ASP","insCode":"","seqNum":127,"strandID":"A"},"ramachandran":{"ss-type":"other","z-score":0.478481},"seqID":127,"torsion":{"ss-type":"other","z-score":-1.18406}},{"asymID":"A","compID":"VAL","pdb":{"compID":"VAL","insCode":"","seqNum":128,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.536613},"seqID":128,"torsion":{"ss-type":"strand","z-score":-0.714822}},{"asymID":"A","compID":"VAL","pdb":{"compID":"VAL","insCode":"","seqNum":129,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":1.92962},"seqID":129,"torsion":{"ss-type":"strand","z-score":-0.17084}},{"asymID":"A","compID":"CYS","pdb":{"compID":"CYS","insCode":"","seqNum":130,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.39766},"seqID":130,"torsion":{"ss-type":"strand","z-score":-1.61867}},{"asymID":"A","compID":"THR","pdb":{"compID":"THR","insCode":"","seqNum":131,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":1.14755},"seqID":131,"torsion":{"ss-type":"strand","z-score":0.546349}},{"asymID":"A","compID":"ARG","pdb":{"compID":"ARG","insCode":"","seqNum":132,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":1.60543},"seqID":132,"torsion":{"ss-type":"strand","z-score":-1.22656}},{"asymID":"A","compID":"VAL","pdb":{"compID":"VAL","insCode":"","seqNum":133,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":0.293087},"seqID":133,"torsion":{"ss-type":"strand","z-score":-0.367003}},{"asymID":"A","compID":"TYR","pdb":{"compID":"TYR","insCode":"","seqNum":134,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.343262},"seqID":134,"torsion":{"ss-type":"strand","z-score":-0.937519}},{"asymID":"A","compID":"VAL","pdb":{"compID":"VAL","insCode":"","seqNum":135,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.797506},"seqID":135,"torsion":{"ss-type":"strand","z-score":-1.44949}},{"asymID":"A","compID":"ARG","pdb":{"compID":"ARG","insCode":"","seqNum":136,"strandID":"A"},"ramachandran":{"ss-type":"strand","z-score":-0.970361},"seqID":136,"torsion":{"ss-type":"strand","z-score":-0.867345}}],"torsion-jackknife-sd":0.813399,"torsion-z":-0.796933}},"software":{"name":"tortoize","reference":"Sobolev et al. A Global Ramachandran Score Identifies Protein Structures with Unlikely Stereochemistry, Structure (2020)","reference-doi":"https:\/\/doi.org\/10.1016\/j.str.2020.08.005","version":"2.0.6"}}
+{
+  "model": {
+    "1": {
+      "ramachandran-jackknife-sd": 0.775832,
+      "ramachandran-z": 1.39949,
+      "residues": [
+        {
+          "asymID": "A",
+          "compID": "ASN",
+          "pdb": {
+            "compID": "ASN",
+            "insCode": "",
+            "seqNum": 2,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": -0.798823
+          },
+          "seqID": 2,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -0.947051
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "PHE",
+          "pdb": {
+            "compID": "PHE",
+            "insCode": "",
+            "seqNum": 3,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 0.66019
+          },
+          "seqID": 3,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": 0.540828
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "SER",
+          "pdb": {
+            "compID": "SER",
+            "insCode": "",
+            "seqNum": 4,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 0.157459
+          },
+          "seqID": 4,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -0.203179
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLY",
+          "pdb": {
+            "compID": "GLY",
+            "insCode": "",
+            "seqNum": 5,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -1.03729
+          },
+          "seqID": 5
+        },
+        {
+          "asymID": "A",
+          "compID": "ASN",
+          "pdb": {
+            "compID": "ASN",
+            "insCode": "",
+            "seqNum": 6,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 1.02985
+          },
+          "seqID": 6,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 1.51251
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "TRP",
+          "pdb": {
+            "compID": "TRP",
+            "insCode": "",
+            "seqNum": 7,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.566377
+          },
+          "seqID": 7,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 0.252848
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LYS",
+          "pdb": {
+            "compID": "LYS",
+            "insCode": "",
+            "seqNum": 8,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.8604
+          },
+          "seqID": 8,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.284275
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ILE",
+          "pdb": {
+            "compID": "ILE",
+            "insCode": "",
+            "seqNum": 9,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -1.30086
+          },
+          "seqID": 9,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -1.03026
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ILE",
+          "pdb": {
+            "compID": "ILE",
+            "insCode": "",
+            "seqNum": 10,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -1.33429
+          },
+          "seqID": 10,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.680375
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ARG",
+          "pdb": {
+            "compID": "ARG",
+            "insCode": "",
+            "seqNum": 11,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -1.13954
+          },
+          "seqID": 11,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.640209
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "SER",
+          "pdb": {
+            "compID": "SER",
+            "insCode": "",
+            "seqNum": 12,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.489209
+          },
+          "seqID": 12,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 0.967282
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLU",
+          "pdb": {
+            "compID": "GLU",
+            "insCode": "",
+            "seqNum": 13,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 1.46375
+          },
+          "seqID": 13,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.995714
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ASN",
+          "pdb": {
+            "compID": "ASN",
+            "insCode": "",
+            "seqNum": 14,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 0.426071
+          },
+          "seqID": 14,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -1.15221
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "PHE",
+          "pdb": {
+            "compID": "PHE",
+            "insCode": "",
+            "seqNum": 15,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "helix",
+            "z-score": -0.620096
+          },
+          "seqID": 15,
+          "torsion": {
+            "ss-type": "helix",
+            "z-score": -0.637395
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLU",
+          "pdb": {
+            "compID": "GLU",
+            "insCode": "",
+            "seqNum": 16,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "helix",
+            "z-score": 0.730873
+          },
+          "seqID": 16,
+          "torsion": {
+            "ss-type": "helix",
+            "z-score": -1.00514
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLU",
+          "pdb": {
+            "compID": "GLU",
+            "insCode": "",
+            "seqNum": 17,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "helix",
+            "z-score": -0.50909
+          },
+          "seqID": 17,
+          "torsion": {
+            "ss-type": "helix",
+            "z-score": -0.402211
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LEU",
+          "pdb": {
+            "compID": "LEU",
+            "insCode": "",
+            "seqNum": 18,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "helix",
+            "z-score": 0.821918
+          },
+          "seqID": 18,
+          "torsion": {
+            "ss-type": "helix",
+            "z-score": -1.27426
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LEU",
+          "pdb": {
+            "compID": "LEU",
+            "insCode": "",
+            "seqNum": 19,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "helix",
+            "z-score": -0.766356
+          },
+          "seqID": 19,
+          "torsion": {
+            "ss-type": "helix",
+            "z-score": -0.570833
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LYS",
+          "pdb": {
+            "compID": "LYS",
+            "insCode": "",
+            "seqNum": 20,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "helix",
+            "z-score": 0.0641989
+          },
+          "seqID": 20,
+          "torsion": {
+            "ss-type": "helix",
+            "z-score": -1.09269
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "VAL",
+          "pdb": {
+            "compID": "VAL",
+            "insCode": "",
+            "seqNum": 21,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "helix",
+            "z-score": -0.940119
+          },
+          "seqID": 21,
+          "torsion": {
+            "ss-type": "helix",
+            "z-score": 1.08157
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LEU",
+          "pdb": {
+            "compID": "LEU",
+            "insCode": "",
+            "seqNum": 22,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 0.520876
+          },
+          "seqID": 22,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": 1.18818
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLY",
+          "pdb": {
+            "compID": "GLY",
+            "insCode": "",
+            "seqNum": 23,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 0.393732
+          },
+          "seqID": 23
+        },
+        {
+          "asymID": "A",
+          "compID": "VAL",
+          "pdb": {
+            "compID": "VAL",
+            "insCode": "",
+            "seqNum": 24,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 1.26355
+          },
+          "seqID": 24,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": 0.630484
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ASN",
+          "pdb": {
+            "compID": "ASN",
+            "insCode": "",
+            "seqNum": 25,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": -0.569167
+          },
+          "seqID": 25,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -1.08208
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "VAL",
+          "pdb": {
+            "compID": "VAL",
+            "insCode": "",
+            "seqNum": 26,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "helix",
+            "z-score": -1.28827
+          },
+          "seqID": 26,
+          "torsion": {
+            "ss-type": "helix",
+            "z-score": -1.35527
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "MET",
+          "pdb": {
+            "compID": "MET",
+            "insCode": "",
+            "seqNum": 27,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "helix",
+            "z-score": 0.231483
+          },
+          "seqID": 27,
+          "torsion": {
+            "ss-type": "helix",
+            "z-score": -1.19604
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LEU",
+          "pdb": {
+            "compID": "LEU",
+            "insCode": "",
+            "seqNum": 28,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "helix",
+            "z-score": -0.672637
+          },
+          "seqID": 28,
+          "torsion": {
+            "ss-type": "helix",
+            "z-score": -0.957632
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ARG",
+          "pdb": {
+            "compID": "ARG",
+            "insCode": "",
+            "seqNum": 29,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "helix",
+            "z-score": 0.972201
+          },
+          "seqID": 29,
+          "torsion": {
+            "ss-type": "helix",
+            "z-score": -1.12442
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LYS",
+          "pdb": {
+            "compID": "LYS",
+            "insCode": "",
+            "seqNum": 30,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "helix",
+            "z-score": -0.585946
+          },
+          "seqID": 30,
+          "torsion": {
+            "ss-type": "helix",
+            "z-score": 0.428523
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ILE",
+          "pdb": {
+            "compID": "ILE",
+            "insCode": "",
+            "seqNum": 31,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "helix",
+            "z-score": 0.524346
+          },
+          "seqID": 31,
+          "torsion": {
+            "ss-type": "helix",
+            "z-score": -0.663487
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ALA",
+          "pdb": {
+            "compID": "ALA",
+            "insCode": "",
+            "seqNum": 32,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "helix",
+            "z-score": -0.600226
+          },
+          "seqID": 32
+        },
+        {
+          "asymID": "A",
+          "compID": "VAL",
+          "pdb": {
+            "compID": "VAL",
+            "insCode": "",
+            "seqNum": 33,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "helix",
+            "z-score": -0.220329
+          },
+          "seqID": 33,
+          "torsion": {
+            "ss-type": "helix",
+            "z-score": 1.18979
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ALA",
+          "pdb": {
+            "compID": "ALA",
+            "insCode": "",
+            "seqNum": 34,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "helix",
+            "z-score": -0.534097
+          },
+          "seqID": 34
+        },
+        {
+          "asymID": "A",
+          "compID": "ALA",
+          "pdb": {
+            "compID": "ALA",
+            "insCode": "",
+            "seqNum": 35,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "helix",
+            "z-score": -0.805852
+          },
+          "seqID": 35
+        },
+        {
+          "asymID": "A",
+          "compID": "ALA",
+          "pdb": {
+            "compID": "ALA",
+            "insCode": "",
+            "seqNum": 36,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "helix",
+            "z-score": -1.33939
+          },
+          "seqID": 36
+        },
+        {
+          "asymID": "A",
+          "compID": "SER",
+          "pdb": {
+            "compID": "SER",
+            "insCode": "",
+            "seqNum": 37,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 0.88262
+          },
+          "seqID": 37,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": 0.886524
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LYS",
+          "pdb": {
+            "compID": "LYS",
+            "insCode": "",
+            "seqNum": 38,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "prepro",
+            "z-score": 0.362168
+          },
+          "seqID": 38,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -1.0687
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "PRO",
+          "pdb": {
+            "compID": "PRO",
+            "insCode": "",
+            "seqNum": 39,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": -1.23038
+          },
+          "seqID": 39,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -0.481345
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ALA",
+          "pdb": {
+            "compID": "ALA",
+            "insCode": "",
+            "seqNum": 40,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.348628
+          },
+          "seqID": 40
+        },
+        {
+          "asymID": "A",
+          "compID": "VAL",
+          "pdb": {
+            "compID": "VAL",
+            "insCode": "",
+            "seqNum": 41,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 1.99238
+          },
+          "seqID": 41,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 1.18881
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLU",
+          "pdb": {
+            "compID": "GLU",
+            "insCode": "",
+            "seqNum": 42,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.655331
+          },
+          "seqID": 42,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 0.253296
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ILE",
+          "pdb": {
+            "compID": "ILE",
+            "insCode": "",
+            "seqNum": 43,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.896924
+          },
+          "seqID": 43,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.170793
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LYS",
+          "pdb": {
+            "compID": "LYS",
+            "insCode": "",
+            "seqNum": 44,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.269909
+          },
+          "seqID": 44,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 1.06435
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLN",
+          "pdb": {
+            "compID": "GLN",
+            "insCode": "",
+            "seqNum": 45,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 1.64461
+          },
+          "seqID": 45,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.387419
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLU",
+          "pdb": {
+            "compID": "GLU",
+            "insCode": "",
+            "seqNum": 46,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -1.72207
+          },
+          "seqID": 46,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -1.12702
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLY",
+          "pdb": {
+            "compID": "GLY",
+            "insCode": "",
+            "seqNum": 47,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": -0.872875
+          },
+          "seqID": 47
+        },
+        {
+          "asymID": "A",
+          "compID": "ASP",
+          "pdb": {
+            "compID": "ASP",
+            "insCode": "",
+            "seqNum": 48,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 1.19834
+          },
+          "seqID": 48,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": 1.15937
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "THR",
+          "pdb": {
+            "compID": "THR",
+            "insCode": "",
+            "seqNum": 49,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.791515
+          },
+          "seqID": 49,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 1.82483
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "PHE",
+          "pdb": {
+            "compID": "PHE",
+            "insCode": "",
+            "seqNum": 50,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 1.09728
+          },
+          "seqID": 50,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 0.99506
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "TYR",
+          "pdb": {
+            "compID": "TYR",
+            "insCode": "",
+            "seqNum": 51,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.0696683
+          },
+          "seqID": 51,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.989671
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ILE",
+          "pdb": {
+            "compID": "ILE",
+            "insCode": "",
+            "seqNum": 52,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.454947
+          },
+          "seqID": 52,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.481759
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LYS",
+          "pdb": {
+            "compID": "LYS",
+            "insCode": "",
+            "seqNum": 53,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.687761
+          },
+          "seqID": 53,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 0.613886
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "THR",
+          "pdb": {
+            "compID": "THR",
+            "insCode": "",
+            "seqNum": 54,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.020598
+          },
+          "seqID": 54,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.0253441
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "SER",
+          "pdb": {
+            "compID": "SER",
+            "insCode": "",
+            "seqNum": 55,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.549366
+          },
+          "seqID": 55,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.0696146
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "THR",
+          "pdb": {
+            "compID": "THR",
+            "insCode": "",
+            "seqNum": 56,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 0.429332
+          },
+          "seqID": 56,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": 0.477194
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "THR",
+          "pdb": {
+            "compID": "THR",
+            "insCode": "",
+            "seqNum": 57,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 1.38741
+          },
+          "seqID": 57,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -0.552251
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "VAL",
+          "pdb": {
+            "compID": "VAL",
+            "insCode": "",
+            "seqNum": 58,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": -0.837707
+          },
+          "seqID": 58,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -1.24292
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ARG",
+          "pdb": {
+            "compID": "ARG",
+            "insCode": "",
+            "seqNum": 59,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": -1.10028
+          },
+          "seqID": 59,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -0.766007
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "THR",
+          "pdb": {
+            "compID": "THR",
+            "insCode": "",
+            "seqNum": 60,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 1.43761
+          },
+          "seqID": 60,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -1.23306
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "THR",
+          "pdb": {
+            "compID": "THR",
+            "insCode": "",
+            "seqNum": 61,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.0592513
+          },
+          "seqID": 61,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.0892971
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLU",
+          "pdb": {
+            "compID": "GLU",
+            "insCode": "",
+            "seqNum": 62,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -1.19188
+          },
+          "seqID": 62,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 1.80717
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ILE",
+          "pdb": {
+            "compID": "ILE",
+            "insCode": "",
+            "seqNum": 63,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -1.035
+          },
+          "seqID": 63,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.636748
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ASN",
+          "pdb": {
+            "compID": "ASN",
+            "insCode": "",
+            "seqNum": 64,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.202345
+          },
+          "seqID": 64,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 0.398641
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "PHE",
+          "pdb": {
+            "compID": "PHE",
+            "insCode": "",
+            "seqNum": 65,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 1.82401
+          },
+          "seqID": 65,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 0.0393884
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LYS",
+          "pdb": {
+            "compID": "LYS",
+            "insCode": "",
+            "seqNum": 66,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 1.87582
+          },
+          "seqID": 66,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -1.15374
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "VAL",
+          "pdb": {
+            "compID": "VAL",
+            "insCode": "",
+            "seqNum": 67,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 1.39142
+          },
+          "seqID": 67,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": 0.087626
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLY",
+          "pdb": {
+            "compID": "GLY",
+            "insCode": "",
+            "seqNum": 68,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 1.14175
+          },
+          "seqID": 68
+        },
+        {
+          "asymID": "A",
+          "compID": "GLU",
+          "pdb": {
+            "compID": "GLU",
+            "insCode": "",
+            "seqNum": 69,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": -0.832521
+          },
+          "seqID": 69,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": 1.68189
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLU",
+          "pdb": {
+            "compID": "GLU",
+            "insCode": "",
+            "seqNum": 70,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 0.564803
+          },
+          "seqID": 70,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -0.1471
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "PHE",
+          "pdb": {
+            "compID": "PHE",
+            "insCode": "",
+            "seqNum": 71,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -1.55339
+          },
+          "seqID": 71,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.629185
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLU",
+          "pdb": {
+            "compID": "GLU",
+            "insCode": "",
+            "seqNum": 72,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 1.38123
+          },
+          "seqID": 72,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -1.13082
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLU",
+          "pdb": {
+            "compID": "GLU",
+            "insCode": "",
+            "seqNum": 73,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -1.72713
+          },
+          "seqID": 73,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -1.01512
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLN",
+          "pdb": {
+            "compID": "GLN",
+            "insCode": "",
+            "seqNum": 74,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.78093
+          },
+          "seqID": 74,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.394844
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "THR",
+          "pdb": {
+            "compID": "THR",
+            "insCode": "",
+            "seqNum": 75,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 0.0243752
+          },
+          "seqID": 75,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": 1.0279
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "VAL",
+          "pdb": {
+            "compID": "VAL",
+            "insCode": "",
+            "seqNum": 76,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 1.7789
+          },
+          "seqID": 76,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -1.68467
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ASP",
+          "pdb": {
+            "compID": "ASP",
+            "insCode": "",
+            "seqNum": 77,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 1.0599
+          },
+          "seqID": 77,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -0.97952
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLY",
+          "pdb": {
+            "compID": "GLY",
+            "insCode": "",
+            "seqNum": 78,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": -0.233955
+          },
+          "seqID": 78
+        },
+        {
+          "asymID": "A",
+          "compID": "ARG",
+          "pdb": {
+            "compID": "ARG",
+            "insCode": "",
+            "seqNum": 79,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "prepro",
+            "z-score": -0.823092
+          },
+          "seqID": 79,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": 0.411635
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "PRO",
+          "pdb": {
+            "compID": "PRO",
+            "insCode": "",
+            "seqNum": 80,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 1.19486
+          },
+          "seqID": 80,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -1.1397
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "CYS",
+          "pdb": {
+            "compID": "CYS",
+            "insCode": "",
+            "seqNum": 81,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.285435
+          },
+          "seqID": 81,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.422403
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LYS",
+          "pdb": {
+            "compID": "LYS",
+            "insCode": "",
+            "seqNum": 82,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.873175
+          },
+          "seqID": 82,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -1.1475
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "SER",
+          "pdb": {
+            "compID": "SER",
+            "insCode": "",
+            "seqNum": 83,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.491589
+          },
+          "seqID": 83,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.437771
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LEU",
+          "pdb": {
+            "compID": "LEU",
+            "insCode": "",
+            "seqNum": 84,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -1.10688
+          },
+          "seqID": 84,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 1.02568
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "VAL",
+          "pdb": {
+            "compID": "VAL",
+            "insCode": "",
+            "seqNum": 85,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.952048
+          },
+          "seqID": 85,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 0.411411
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LYS",
+          "pdb": {
+            "compID": "LYS",
+            "insCode": "",
+            "seqNum": 86,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.270263
+          },
+          "seqID": 86,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 1.88331
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "TRP",
+          "pdb": {
+            "compID": "TRP",
+            "insCode": "",
+            "seqNum": 87,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -1.15687
+          },
+          "seqID": 87,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.227421
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLU",
+          "pdb": {
+            "compID": "GLU",
+            "insCode": "",
+            "seqNum": 88,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -1.60402
+          },
+          "seqID": 88,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 1.56398
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "SER",
+          "pdb": {
+            "compID": "SER",
+            "insCode": "",
+            "seqNum": 89,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.87598
+          },
+          "seqID": 89,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 1.43436
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLU",
+          "pdb": {
+            "compID": "GLU",
+            "insCode": "",
+            "seqNum": 90,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 0.709593
+          },
+          "seqID": 90,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": 0.429129
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ASN",
+          "pdb": {
+            "compID": "ASN",
+            "insCode": "",
+            "seqNum": 91,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 0.292516
+          },
+          "seqID": 91,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": 0.601827
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LYS",
+          "pdb": {
+            "compID": "LYS",
+            "insCode": "",
+            "seqNum": 92,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.488101
+          },
+          "seqID": 92,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 1.82809
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "MET",
+          "pdb": {
+            "compID": "MET",
+            "insCode": "",
+            "seqNum": 93,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.511992
+          },
+          "seqID": 93,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.0858792
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "VAL",
+          "pdb": {
+            "compID": "VAL",
+            "insCode": "",
+            "seqNum": 94,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.33652
+          },
+          "seqID": 94,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 0.698077
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "CYS",
+          "pdb": {
+            "compID": "CYS",
+            "insCode": "",
+            "seqNum": 95,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.974721
+          },
+          "seqID": 95,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 0.881575
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLU",
+          "pdb": {
+            "compID": "GLU",
+            "insCode": "",
+            "seqNum": 96,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.694988
+          },
+          "seqID": 96,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 1.19365
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLN",
+          "pdb": {
+            "compID": "GLN",
+            "insCode": "",
+            "seqNum": 97,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.140035
+          },
+          "seqID": 97,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 0.420539
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LYS",
+          "pdb": {
+            "compID": "LYS",
+            "insCode": "",
+            "seqNum": 98,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.618683
+          },
+          "seqID": 98,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -1.16863
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LEU",
+          "pdb": {
+            "compID": "LEU",
+            "insCode": "",
+            "seqNum": 99,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.926147
+          },
+          "seqID": 99,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.747159
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LEU",
+          "pdb": {
+            "compID": "LEU",
+            "insCode": "",
+            "seqNum": 100,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 0.277071
+          },
+          "seqID": 100,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -0.793526
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LYS",
+          "pdb": {
+            "compID": "LYS",
+            "insCode": "",
+            "seqNum": 101,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": -0.819666
+          },
+          "seqID": 101,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -0.933175
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLY",
+          "pdb": {
+            "compID": "GLY",
+            "insCode": "",
+            "seqNum": 102,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": -0.644178
+          },
+          "seqID": 102
+        },
+        {
+          "asymID": "A",
+          "compID": "GLU",
+          "pdb": {
+            "compID": "GLU",
+            "insCode": "",
+            "seqNum": 103,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": -0.711901
+          },
+          "seqID": 103,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -0.992121
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLY",
+          "pdb": {
+            "compID": "GLY",
+            "insCode": "",
+            "seqNum": 104,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "prepro",
+            "z-score": 0.140867
+          },
+          "seqID": 104
+        },
+        {
+          "asymID": "A",
+          "compID": "PRO",
+          "pdb": {
+            "compID": "PRO",
+            "insCode": "",
+            "seqNum": 105,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 0.942441
+          },
+          "seqID": 105,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": 1.1365
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LYS",
+          "pdb": {
+            "compID": "LYS",
+            "insCode": "",
+            "seqNum": 106,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": -0.637257
+          },
+          "seqID": 106,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -1.05714
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "THR",
+          "pdb": {
+            "compID": "THR",
+            "insCode": "",
+            "seqNum": 107,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.110523
+          },
+          "seqID": 107,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.184899
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "SER",
+          "pdb": {
+            "compID": "SER",
+            "insCode": "",
+            "seqNum": 108,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.673733
+          },
+          "seqID": 108,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 0.596624
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "TRP",
+          "pdb": {
+            "compID": "TRP",
+            "insCode": "",
+            "seqNum": 109,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.531782
+          },
+          "seqID": 109,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.834292
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "THR",
+          "pdb": {
+            "compID": "THR",
+            "insCode": "",
+            "seqNum": 110,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.103828
+          },
+          "seqID": 110,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.899794
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ARG",
+          "pdb": {
+            "compID": "ARG",
+            "insCode": "",
+            "seqNum": 111,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.749214
+          },
+          "seqID": 111,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.859402
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLU",
+          "pdb": {
+            "compID": "GLU",
+            "insCode": "",
+            "seqNum": 112,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.976638
+          },
+          "seqID": 112,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.393101
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LEU",
+          "pdb": {
+            "compID": "LEU",
+            "insCode": "",
+            "seqNum": 113,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.74038
+          },
+          "seqID": 113,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -1.11613
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "THR",
+          "pdb": {
+            "compID": "THR",
+            "insCode": "",
+            "seqNum": 114,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 0.346126
+          },
+          "seqID": 114,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": 0.147395
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ASN",
+          "pdb": {
+            "compID": "ASN",
+            "insCode": "",
+            "seqNum": 115,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 0.578324
+          },
+          "seqID": 115,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -0.82567
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ASP",
+          "pdb": {
+            "compID": "ASP",
+            "insCode": "",
+            "seqNum": 116,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 2.14891
+          },
+          "seqID": 116,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -0.452464
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "GLY",
+          "pdb": {
+            "compID": "GLY",
+            "insCode": "",
+            "seqNum": 117,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 0.573715
+          },
+          "seqID": 117
+        },
+        {
+          "asymID": "A",
+          "compID": "GLU",
+          "pdb": {
+            "compID": "GLU",
+            "insCode": "",
+            "seqNum": 118,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": -0.873572
+          },
+          "seqID": 118,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": 1.47336
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LEU",
+          "pdb": {
+            "compID": "LEU",
+            "insCode": "",
+            "seqNum": 119,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 1.08306
+          },
+          "seqID": 119,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 1.49909
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ILE",
+          "pdb": {
+            "compID": "ILE",
+            "insCode": "",
+            "seqNum": 120,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 1.24492
+          },
+          "seqID": 120,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 0.0794492
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "LEU",
+          "pdb": {
+            "compID": "LEU",
+            "insCode": "",
+            "seqNum": 121,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 1.93521
+          },
+          "seqID": 121,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -1.16349
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "THR",
+          "pdb": {
+            "compID": "THR",
+            "insCode": "",
+            "seqNum": 122,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.324276
+          },
+          "seqID": 122,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -1.24626
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "MET",
+          "pdb": {
+            "compID": "MET",
+            "insCode": "",
+            "seqNum": 123,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 1.94887
+          },
+          "seqID": 123,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 0.608123
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "THR",
+          "pdb": {
+            "compID": "THR",
+            "insCode": "",
+            "seqNum": 124,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.000597624
+          },
+          "seqID": 124,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 1.56324
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ALA",
+          "pdb": {
+            "compID": "ALA",
+            "insCode": "",
+            "seqNum": 125,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -1.29392
+          },
+          "seqID": 125
+        },
+        {
+          "asymID": "A",
+          "compID": "ASP",
+          "pdb": {
+            "compID": "ASP",
+            "insCode": "",
+            "seqNum": 126,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": -1.10169
+          },
+          "seqID": 126,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -0.860178
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ASP",
+          "pdb": {
+            "compID": "ASP",
+            "insCode": "",
+            "seqNum": 127,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "other",
+            "z-score": 0.478481
+          },
+          "seqID": 127,
+          "torsion": {
+            "ss-type": "other",
+            "z-score": -1.18406
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "VAL",
+          "pdb": {
+            "compID": "VAL",
+            "insCode": "",
+            "seqNum": 128,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.536613
+          },
+          "seqID": 128,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.714822
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "VAL",
+          "pdb": {
+            "compID": "VAL",
+            "insCode": "",
+            "seqNum": 129,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 1.92962
+          },
+          "seqID": 129,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.17084
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "CYS",
+          "pdb": {
+            "compID": "CYS",
+            "insCode": "",
+            "seqNum": 130,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.39766
+          },
+          "seqID": 130,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -1.61867
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "THR",
+          "pdb": {
+            "compID": "THR",
+            "insCode": "",
+            "seqNum": 131,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 1.14755
+          },
+          "seqID": 131,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": 0.546349
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ARG",
+          "pdb": {
+            "compID": "ARG",
+            "insCode": "",
+            "seqNum": 132,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 1.60543
+          },
+          "seqID": 132,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -1.22656
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "VAL",
+          "pdb": {
+            "compID": "VAL",
+            "insCode": "",
+            "seqNum": 133,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": 0.293087
+          },
+          "seqID": 133,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.367003
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "TYR",
+          "pdb": {
+            "compID": "TYR",
+            "insCode": "",
+            "seqNum": 134,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.343262
+          },
+          "seqID": 134,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.937519
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "VAL",
+          "pdb": {
+            "compID": "VAL",
+            "insCode": "",
+            "seqNum": 135,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.797506
+          },
+          "seqID": 135,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -1.44949
+          }
+        },
+        {
+          "asymID": "A",
+          "compID": "ARG",
+          "pdb": {
+            "compID": "ARG",
+            "insCode": "",
+            "seqNum": 136,
+            "strandID": "A"
+          },
+          "ramachandran": {
+            "ss-type": "strand",
+            "z-score": -0.970361
+          },
+          "seqID": 136,
+          "torsion": {
+            "ss-type": "strand",
+            "z-score": -0.867345
+          }
+        }
+      ],
+      "torsion-jackknife-sd": 0.813399,
+      "torsion-z": -0.796933
+    }
+  },
+  "software": {
+    "name": "tortoize",
+    "reference": "Sobolev et al. A Global Ramachandran Score Identifies Protein Structures with Unlikely Stereochemistry, Structure (2020)",
+    "reference-doi": "https://doi.org/10.1016/j.str.2020.08.005",
+    "version": "2.0.7"
+  }
+}
