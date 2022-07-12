@@ -161,3 +161,7 @@ target_include_directories(unit-test PRIVATE cifpp::cifpp ${CMAKE_SOURCE_DIR}/sr
 target_link_libraries(unit-test cifpp::cifpp zeep::zeep std::filesystem)
 
 add_test(NAME unit-test COMMAND $<TARGET_FILE:unit-test> -- ${CMAKE_SOURCE_DIR}/test)
+
+if(USE_RSRC)
+	mrc_target_resources(unit-test ${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin ${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin ${CIFPP_SHARE_DIR}/mmcif_pdbx_v50.dic)
+endif()
