@@ -49,7 +49,11 @@ bool init_unit_test()
 
 	// not a test, just initialize test dir
 	if (boost::unit_test::framework::master_test_suite().argc == 2)
+	{
 		gTestDir = boost::unit_test::framework::master_test_suite().argv[1];
+
+		cif::addDataDirectory(gTestDir / ".." / "rsrc");
+	}
 
 	// // do this now, avoids the need for installing
 	// cif::addFileResource("mmcif_pdbx_v50.dic", gTestDir / ".." / "rsrc" / "mmcif_pdbx_v50.dic");
