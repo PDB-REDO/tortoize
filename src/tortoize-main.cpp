@@ -66,6 +66,7 @@ using json = zeep::json::element;
 
 
 #ifdef _MSC_VER
+#include <fcntl.h>
 //MSVC stdlib.h definitions
 #define STDIN_FILENO 0
 #define STDOUT_FILENO 1
