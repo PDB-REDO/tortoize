@@ -29,7 +29,7 @@
 
 #include <filesystem>
 
-#include <cif++/CifUtils.hpp>
+#include <cif++.hpp>
 
 #include <zeep/json/parser.hpp>
 
@@ -52,7 +52,7 @@ bool init_unit_test()
 	{
 		gTestDir = boost::unit_test::framework::master_test_suite().argv[1];
 
-		cif::addDataDirectory(gTestDir / ".." / "rsrc");
+		cif::add_data_directory(gTestDir / ".." / "rsrc");
 	}
 
 	// // do this now, avoids the need for installing
@@ -75,6 +75,9 @@ BOOST_AUTO_TEST_CASE(first_test)
 	json b;
 	zeep::json::parse_json(bf, b);
 
+	a["software"]["version"] = "test";
+	b["software"]["version"] = "test";
+
 	// somehow a == b does not work correctly?
 	// BOOST_CHECK_EQUAL(a, b);
 
@@ -83,4 +86,15 @@ BOOST_AUTO_TEST_CASE(first_test)
 	sb << b;
 
 	BOOST_CHECK_EQUAL(sa.str(), sb.str());
+
+	if (sa.str() != sb.str())
+	{
+		std::ofstream out1("/tmp/a.json");
+		out1 << sa.str();
+		out1.close();
+
+		std::ofstream out2("/tmp/b.json");
+		out2 << sb.str();
+		out2.close();
+	}
 }

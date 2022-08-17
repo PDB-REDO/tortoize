@@ -25,23 +25,16 @@
  */
 
 #include <fstream>
+#include <numeric>
 #include <vector>
 
-#include "cif++/Secondary.hpp"
-#include "cif++/Structure.hpp"
-
 #include "tortoize.hpp"
+#include "../dssp/src/DSSP.hpp"
 
 #include "revision.hpp"
 
 namespace fs = std::filesystem;
 namespace ba = boost::algorithm;
-
-using mmcif::Atom;
-using mmcif::Point;
-using mmcif::Structure;
-using mmcif::Monomer;
-using mmcif::Polymer;
 
 using json = zeep::json::element;
 
@@ -601,19 +594,21 @@ void buildDataFile(const fs::path &dir)
 	std::vector<uint8_t> bits;
 
 	// first ramachandran counts
-	for (auto aa: mmcif::kAAMap)
+	for (const char *aa: {
+		 "ALA", "ARG", "ASN", "ASP", "CYS", "GLU", "GLN", "GLY", "HIS", "ILE", "LEU", "LYS", "MET", "PHE", "PRO", "SER", "THR", "TRP", "TYR", "VAL"
+	})
 	{
 		for (std::pair<SecStrType, const char*> ss: {
 				std::make_pair(SecStrType::helix, "helix"),
 				std::make_pair(SecStrType::strand, "strand"),
 				std::make_pair(SecStrType::other, "other") })
 		{
-			auto p = dir / ("rama_count_"s + ss.second + '_' + aa.first + ".txt");
+			auto p = dir / ("rama_count_"s + ss.second + '_' + aa + ".txt");
 			if (not fs::exists(p))
 				continue;
 			
 			std::ifstream f(p);
-			Data d("rama", aa.first, ss.first, f);
+			Data d("rama", aa, ss.first, f);
 
 			StoredData sd = { };
 			d.store(sd, bits);
@@ -656,19 +651,21 @@ void buildDataFile(const fs::path &dir)
 	bits.clear();
 
 	// next torsion counts
-	for (auto aa: mmcif::kAAMap)
+	for (const char *aa: {
+		 "ALA", "ARG", "ASN", "ASP", "CYS", "GLU", "GLN", "GLY", "HIS", "ILE", "LEU", "LYS", "MET", "PHE", "PRO", "SER", "THR", "TRP", "TYR", "VAL"
+	})
 	{
 		for (std::pair<SecStrType, const char*> ss: {
 				std::make_pair(SecStrType::helix, "helix"),
 				std::make_pair(SecStrType::strand, "strand"),
 				std::make_pair(SecStrType::other, "other") })
 		{
-			auto p = dir / ("torsion_count_"s + ss.second + '_' + aa.first + ".txt");
+			auto p = dir / ("torsion_count_"s + ss.second + '_' + aa + ".txt");
 			if (not fs::exists(p))
 				continue;
 			
 			std::ifstream f(p);
-			Data d("torsion", aa.first, ss.first, f);
+			Data d("torsion", aa, ss.first, f);
 
 			StoredData sd = { };
 			d.store(sd, bits);
@@ -782,7 +779,7 @@ void DataTable::load(const char* name, std::vector<Data>& table, float& mean, fl
 {
 	using namespace std::literals;
 
-	auto rfd = cif::loadResource(name);
+	auto rfd = cif::load_resource(name);
 
 	if (not rfd)
 		throw std::runtime_error("Missing resource "s + name);
@@ -838,9 +835,9 @@ float jackknife(const std::vector<float>& zScorePerResidue)
 
 // --------------------------------------------------------------------
 
-json calculateZScores(const Structure& structure)
+json calculateZScores(const cif::datablock &db, int model_nr)
 {
-	mmcif::DSSP dssp(structure, 3, false);
+	dssp::DSSP dssp(db, model_nr, 3, false);
 	auto& tbl = DataTable::instance();
 
 	double ramaZScoreSum = 0;
@@ -851,134 +848,129 @@ json calculateZScores(const Structure& structure)
 	json residues;
 	std::vector<float> ramaZScorePerResidue, torsZScorePerResidue;
 
-	for (auto& poly: structure.polymers())
+	for (auto res : dssp)
 	{
-		for (size_t i = 1; i + 1 < poly.size(); ++i)
+		auto phi = res.phi();
+		auto psi = res.psi();
+
+		if (phi == 360 or psi == 360)
+			continue;
+
+		std::string aa = res.compound_id();
+
+		json residue = {
+			{ "asymID", res.asym_id() },
+			{ "seqID", res.seq_id() },
+			{ "compID", aa },
+			{ "pdb", {
+				{ "strandID", res.pdb_strand_id() },
+				{ "seqNum", res.pdb_seq_num() },
+				{ "compID", aa },
+				{ "insCode", res.pdb_ins_code() }
+			}}
+		};
+
+		// remap some common modified amino acids
+		if (aa == "MSE")
 		{
-			auto& res = poly[i];
+			if (cif::VERBOSE > 1)
+				std::cerr << "Replacing MSE with MET" << std::endl;
+			aa = "MET";
+		}
+		else if (aa == "HYP")
+		{
+			if (cif::VERBOSE > 1)
+				std::cerr << "Replacing HYP with PRO" << std::endl;
 
-			auto phi = res.phi();
-			auto psi = res.psi();
+			aa = "PRO";
+		}
+		else if (aa == "ASX")
+		{
+			if (cif::VERBOSE > 1)
+				std::cerr << "Replacing ASX with ASP" << std::endl;
 
-			if (phi == 360 or psi == 360)
-				continue;
+			aa = "ASP";
+		}
+		else if (aa == "GLX")
+		{
+			if (cif::VERBOSE > 1)
+				std::cerr << "Replacing GLX with GLU" << std::endl;
 
-			json residue = {
-				{ "asymID", res.asymID() },
-				{ "seqID", res.seqID() },
-				{ "compID", res.compoundID() },
-				{ "pdb", {
-					{ "strandID", res.authAsymID() },
-					{ "seqNum", std::stoi(res.authSeqID()) },
-					{ "compID", res.compoundID() },
-					{ "insCode", res.authInsCode() }
-				}}
-			};
+			aa = "GLU";
+		}
+		else if (res.compound_letter() == 'X')
+		{
+			if (cif::VERBOSE)
+				std::cerr << "Replacing " << aa << " with ALA" << std::endl;
 
-			std::string aa = res.compoundID();
+			aa = "ALA";
+		}
+		
+		SecStrType tors_ss, rama_ss;
 
-			// remap some common modified amino acids
-			if (aa == "MSE")
-			{
-				if (cif::VERBOSE > 1)
-					std::cerr << "Replacing MSE with MET" << std::endl;
-				aa = "MET";
-			}
-			else if (aa == "HYP")
-			{
-				if (cif::VERBOSE > 1)
-					std::cerr << "Replacing HYP with PRO" << std::endl;
+		switch (res.type())
+		{
+			case dssp::structure_type::Alphahelix:	tors_ss = SecStrType::helix; break;
+			case dssp::structure_type::Strand:		tors_ss = SecStrType::strand; break;
+			default:					tors_ss = SecStrType::other; break;
+		}
 
-				aa = "PRO";
-			}
-			else if (aa == "ASX")
-			{
-				if (cif::VERBOSE > 1)
-					std::cerr << "Replacing ASX with ASP" << std::endl;
-
-				aa = "ASP";
-			}
-			else if (aa == "GLX")
-			{
-				if (cif::VERBOSE > 1)
-					std::cerr << "Replacing GLX with GLU" << std::endl;
-
-				aa = "GLU";
-			}
-			else if (mmcif::kAAMap.find(aa) == mmcif::kAAMap.end())
-			{
-				if (cif::VERBOSE)
-					std::cerr << "Replacing " << aa << " with ALA" << std::endl;
-
-				aa = "ALA";
-			}
-			
-			SecStrType tors_ss, rama_ss;
-
-			switch (dssp(res))
-			{
-				case mmcif::ssAlphahelix:	tors_ss = SecStrType::helix; break;
-				case mmcif::ssStrand:		tors_ss = SecStrType::strand; break;
-				default:					tors_ss = SecStrType::other; break;
-			}
-
-			if (aa != "PRO" and poly[i + 1].compoundID() == "PRO")
-				rama_ss = SecStrType::prepro;
-			else if (aa == "PRO" && res.isCis())
-				rama_ss = SecStrType::cis;
-			else
-				rama_ss = tors_ss;
+		if (res.is_pre_pro())
+			rama_ss = SecStrType::prepro;
+		else if (aa == "PRO" && res.is_cis())
+			rama_ss = SecStrType::cis;
+		else
+			rama_ss = tors_ss;
 
 // TODO: #pragma warning "todo" (but the question now is, what is here to do???)
-			auto& rd = tbl.loadRamachandranData(aa, rama_ss);
+		auto& rd = tbl.loadRamachandranData(aa, rama_ss);
 
-			auto zr = rd.zscore(phi, psi);
+		auto zr = rd.zscore(phi, psi);
 
-			residue["ramachandran"] =
+		residue["ramachandran"] =
+		{
+			{ "ss-type", boost::lexical_cast<std::string>(rama_ss) },
+			{ "z-score", zr }
+		};
+
+		ramaZScorePerResidue.push_back(zr);
+
+		ramaZScoreSum += zr;
+		++ramaZScoreCount;
+
+		try
+		{
+			float zt = nan("1");
+
+			auto chiCount = res.nr_of_chis();
+			if (chiCount)
 			{
-				{ "ss-type", boost::lexical_cast<std::string>(rama_ss) },
-				{ "z-score", zr }
-			};
+				float chi1 = res.chi(0);
+				float chi2 = chiCount > 1 ? res.chi(1) : 0;
 
-			ramaZScorePerResidue.push_back(zr);
+				auto& td = tbl.loadTorsionData(aa, tors_ss);
 
-			ramaZScoreSum += zr;
-			++ramaZScoreCount;
+				zt = td.zscore(chi1, chi2);
 
-			try
-			{
-				float zt = nan("1");
+				torsZScoreSum += zt;
+				++torsZScoreCount;
 
-				auto chiCount = res.nrOfChis();
-				if (chiCount)
+				torsZScorePerResidue.push_back(zt);
+
+				residue["torsion"] =
 				{
-					float chi1 = res.chi(0);
-					float chi2 = chiCount > 1 ? res.chi(1) : 0;
-
-					auto& td = tbl.loadTorsionData(aa, tors_ss);
-
-					zt = td.zscore(chi1, chi2);
-
-					torsZScoreSum += zt;
-					++torsZScoreCount;
-
-					torsZScorePerResidue.push_back(zt);
-
-					residue["torsion"] =
-					{
-						{ "ss-type", boost::lexical_cast<std::string>(tors_ss) },
-						{ "z-score", zt }
-					};
-				}
+					{ "ss-type", boost::lexical_cast<std::string>(tors_ss) },
+					{ "z-score", zt }
+				};
 			}
-			catch (const std::exception& e)
-			{
-				if (cif::VERBOSE)
-					std::cerr << e.what() << '\n';
-			}
-
-			residues.push_back(residue);
 		}
+		catch (const std::exception& e)
+		{
+			if (cif::VERBOSE)
+				std::cerr << e.what() << '\n';
+		}
+
+		residues.push_back(residue);
 	}
 
 	float ramaVsRand = ramaZScoreSum / ramaZScoreCount;
@@ -1013,10 +1005,13 @@ json tortoize_calculate(const fs::path &xyzin)
 
 	// --------------------------------------------------------------------
 
-	mmcif::File f(xyzin);
+	cif::file f(xyzin);
+
+	if (not f.is_valid())
+		throw std::runtime_error("Invalid mmCIF file");
 
 	std::set<uint32_t> models;
-	for (auto r: f.data()["atom_site"])
+	for (auto r: f.front()["atom_site"])
 	{
 		if (not r["pdbx_PDB_model_num"].empty())
 			models.insert(r["pdbx_PDB_model_num"].as<uint32_t>());
@@ -1026,11 +1021,7 @@ json tortoize_calculate(const fs::path &xyzin)
 		models.insert(0);
 
 	for (auto model: models)
-	{
-		Structure structure(f, model);
-
-		data["model"][std::to_string(model)] = calculateZScores(structure);
-	}
+		data["model"][std::to_string(model)] = calculateZScores(f.front(), model);
 
 	return data;
 }

@@ -24,29 +24,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// #include <fcntl.h>
-// #include <iomanip>
-// #include <random>
 #include <fstream>
-// #include <filesystem>
-// #include <mutex>
 
 #include <boost/program_options.hpp>
-// #include <boost/algorithm/string.hpp>
 
 #include <zeep/http/daemon.hpp>
 #include <zeep/http/server.hpp>
 #include <zeep/http/html-controller.hpp>
 #include <zeep/http/rest-controller.hpp>
 #include <zeep/crypto.hpp>
-
-// #include "cif++/Secondary.hpp"
-// #include "cif++/CifUtils.hpp"
-// #include "cif++/Cif++.hpp"
-#include "cif++/Structure.hpp"
-#include "cif++/Compound.hpp"
-
-// #include <zeep/json/element.hpp>
 
 #include "tortoize.hpp"
 
@@ -56,14 +42,7 @@ namespace po = boost::program_options;
 namespace fs = std::filesystem;
 namespace ba = boost::algorithm;
 
-// using mmcif::Atom;
-// using mmcif::Point;
-using mmcif::Structure;
-// using mmcif::Monomer;
-// using mmcif::Polymer;
-
 using json = zeep::json::element;
-
 
 #ifdef _MSC_VER
 #include <fcntl.h>
@@ -72,8 +51,6 @@ using json = zeep::json::element;
 #define STDOUT_FILENO 1
 #define STDERR_FILENO 2
 #endif
-
-
 
 // --------------------------------------------------------------------
 #if WEBSERVICE
@@ -115,14 +92,14 @@ class tortoize_rest_controller : public zeep::http::rest_controller
 
 		fs::path dictFile;
 
-		if (not dict.empty())\
-		{
-			dictFile = m_tempdir / ("dict-" + std::to_string(m_next_dict_nr++));
-			std::ofstream tmpFile(dictFile);
-			tmpFile << dict;
+		// if (not dict.empty())
+		// {
+		// 	dictFile = m_tempdir / ("dict-" + std::to_string(m_next_dict_nr++));
+		// 	std::ofstream tmpFile(dictFile);
+		// 	tmpFile << dict;
 
-			mmcif::CompoundFactory::instance().pushDictionary(dictFile);
-		}
+		// 	mmcif::CompoundFactory::instance().pushDictionary(dictFile);
+		// }
 
 		try
 		{
@@ -141,7 +118,9 @@ class tortoize_rest_controller : public zeep::http::rest_controller
 
 			// --------------------------------------------------------------------
 
-			mmcif::File f(file.data(), file.length());
+
+
+			cif::file f(file.data(), file.length());
 
 			std::set<uint32_t> models;
 			for (auto r: f.data()["atom_site"])
@@ -401,11 +380,11 @@ References:
 		close(fd);
 	}
 
-	if (vm.count("dict"))
-	{
-		for (auto dict: vm["dict"].as<std::vector<std::string>>())
-			mmcif::CompoundFactory::instance().pushDictionary(dict);
-	}
+	// if (vm.count("dict"))
+	// {
+	// 	for (auto dict: vm["dict"].as<std::vector<std::string>>())
+	// 		mmcif::CompoundFactory::instance().pushDictionary(dict);
+	// }
 
 	// --------------------------------------------------------------------
 	
