@@ -31,6 +31,9 @@
 #include "tortoize.hpp"
 #include "../dssp/src/DSSP.hpp"
 
+#include <gxrio.hpp>
+#include <pdbx++.hpp>
+
 #include "revision.hpp"
 
 namespace fs = std::filesystem;
@@ -1005,7 +1008,14 @@ json tortoize_calculate(const fs::path &xyzin)
 
 	// --------------------------------------------------------------------
 
-	cif::file f(xyzin);
+	gxrio::ifstream in(xyzin);
+	if (not in.is_open())
+	{
+		std::cerr << "Could not open file" << std::endl;
+		exit(1);
+	}
+
+	cif::file f = pdbx::load_pdb_file(in);
 
 	if (not f.is_valid())
 		throw std::runtime_error("Invalid mmCIF file");
