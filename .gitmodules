@@ -1,3 +1,12 @@
 [submodule "dssp"]
 	path = dssp
 	url = https://github.com/PDB-REDO/dssp.git
+[submodule "libpdbxpp"]
+	path = libpdbxpp
+	url = s4:git-repo/libpdbxpp.git
+[submodule "libcifpp"]
+	path = libcifpp
+	url = https://github.com/PDB-REDO/libcifpp.git
+[submodule "libzeep"]
+	path = libzeep
+	url = https://github.com/mhekkel/libzeep.git

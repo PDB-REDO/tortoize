@@ -36,7 +36,7 @@ include(CheckLibraryExists)
 include(CMakePackageConfigHelpers)
 include(Dart)
 include(FindFilesystem)
-include(GenerateExportHeader)
+include(AddGitSubmodule)
 
 set(CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD 17)
@@ -120,13 +120,24 @@ set(CMAKE_THREAD_PREFER_PTHREAD)
 set(THREADS_PREFER_PTHREAD_FLAG)
 find_package(Threads)
 
-find_package(cifpp 5.0.0 REQUIRED)
-find_package(pdbxpp 5.0.0 REQUIRED)
-find_package(zeep 5.1.4 REQUIRED)
+find_package(cifpp 5.0.0 QUIET)
+if(NOT cifpp_FOUND)
+	add_git_submodule(libcifpp EXCLUDE_FROM_ALL)
+endif()
+
+find_package(pdbxpp 5.0.0 QUIET)
+if(NOT pdbxpp_FOUND)
+	add_git_submodule(libpdbxpp EXCLUDE_FROM_ALL)
+endif()
+
+find_package(zeep 5.1.4 QUIET)
+if(NOT zeep_FOUND)
+	add_git_submodule(libzeep EXCLUDE_FROM_ALL)
+endif()
 
 find_package(Boost COMPONENTS program_options REQUIRED)
 
-add_subdirectory(dssp EXCLUDE_FROM_ALL)
+add_git_submodule(dssp EXCLUDE_FROM_ALL)
 
 add_executable(tortoize
 	${PROJECT_SOURCE_DIR}/src/tortoize.cpp
