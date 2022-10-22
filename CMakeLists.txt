@@ -135,7 +135,11 @@ if(BUILD_WEBSERVICE)
 endif()
 
 if(USE_RSRC)
-	mrc_target_resources(tortoize ${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin ${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin ${CIFPP_SHARE_DIR}/mmcif_pdbx_v50.dic)
+	mrc_target_resources(tortoize
+		${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin
+		${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin
+		${CIFPP_SHARE_DIR}/mmcif_pdbx_v50.dic
+		${CMAKE_SOURCE_DIR}/docroot/)
 endif()
 
 target_include_directories(tortoize PRIVATE cifpp::cifpp ${CMAKE_BINARY_DIR})
@@ -163,5 +167,8 @@ target_link_libraries(unit-test cifpp::cifpp zeep::zeep std::filesystem)
 add_test(NAME unit-test COMMAND $<TARGET_FILE:unit-test> -- ${CMAKE_SOURCE_DIR}/test)
 
 if(USE_RSRC)
-	mrc_target_resources(unit-test ${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin ${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin ${CIFPP_SHARE_DIR}/mmcif_pdbx_v50.dic)
+	mrc_target_resources(unit-test
+		${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin
+		${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin
+		${CIFPP_SHARE_DIR}/mmcif_pdbx_v50.dic)
 endif()
