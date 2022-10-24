@@ -24,15 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// #include <fcntl.h>
-// #include <iomanip>
-// #include <random>
 #include <fstream>
-// #include <filesystem>
-// #include <mutex>
-
-#include <boost/program_options.hpp>
-// #include <boost/algorithm/string.hpp>
 
 #include <zeep/http/daemon.hpp>
 #include <zeep/http/server.hpp>
@@ -40,27 +32,15 @@
 #include <zeep/http/rest-controller.hpp>
 #include <zeep/crypto.hpp>
 
-// #include "cif++/Secondary.hpp"
-// #include "cif++/CifUtils.hpp"
-// #include "cif++/Cif++.hpp"
-#include "cif++/Structure.hpp"
-#include "cif++/Compound.hpp"
-
-// #include <zeep/json/element.hpp>
+#include <gxrio.hpp>
+#include <cfg.hpp>
+#include <cif++.hpp>
 
 #include "tortoize.hpp"
-
 #include "revision.hpp"
 
-namespace po = boost::program_options;
 namespace fs = std::filesystem;
 namespace ba = boost::algorithm;
-
-// using mmcif::Atom;
-// using mmcif::Point;
-using mmcif::Structure;
-// using mmcif::Monomer;
-// using mmcif::Polymer;
 
 using json = zeep::json::element;
 
@@ -115,13 +95,13 @@ class tortoize_rest_controller : public zeep::http::rest_controller
 
 		fs::path dictFile;
 
-		if (not dict.empty())\
+		if (not dict.empty())
 		{
 			dictFile = m_tempdir / ("dict-" + std::to_string(m_next_dict_nr++));
 			std::ofstream tmpFile(dictFile);
 			tmpFile << dict;
 
-			mmcif::CompoundFactory::instance().pushDictionary(dictFile);
+			cif::compound_factory::instance().push_dictionary(dictFile);
 		}
 
 		try
@@ -141,10 +121,22 @@ class tortoize_rest_controller : public zeep::http::rest_controller
 
 			// --------------------------------------------------------------------
 
-			mmcif::File f(file.data(), file.length());
+			struct membuf : public std::streambuf
+			{
+				membuf(char *text, size_t length)
+				{
+					this->setg(text, text, text + length);
+				}
+			} buffer(const_cast<char *>(file.data()), file.length());
+
+			gxrio::istream in(&buffer);
+
+			cif::file f = cif::pdb::read(in);
+			if (f.empty())
+				throw std::runtime_error("Invalid mmCIF or PDB file");
 
 			std::set<uint32_t> models;
-			for (auto r: f.data()["atom_site"])
+			for (auto r: f.front()["atom_site"])
 			{
 				if (not r["pdbx_PDB_model_num"].empty())
 					models.insert(r["pdbx_PDB_model_num"].as<uint32_t>());
@@ -155,13 +147,13 @@ class tortoize_rest_controller : public zeep::http::rest_controller
 
 			for (auto model: models)
 			{
-				Structure structure(f, model);
+				cif::mm::structure structure(f, model);
 				data["model"][std::to_string(model)] = calculateZScores(structure);
 			}
 
 			if (not dictFile.empty())
 			{
-				mmcif::CompoundFactory::instance().popDictionary();
+				cif::compound_factory::instance().pop_dictionary();
 				fs::remove(dictFile);
 			}
 
@@ -173,7 +165,7 @@ class tortoize_rest_controller : public zeep::http::rest_controller
 
 			if (not dictFile.empty())
 			{
-				mmcif::CompoundFactory::instance().popDictionary();
+				cif::compound_factory::instance().pop_dictionary();
 				fs::remove(dictFile);
 			}
 
@@ -190,57 +182,52 @@ int start_server(int argc, char* argv[])
 	using namespace std::literals;
 	namespace zh = zeep::http;
 
-	mmcif::CompoundFactory::init(true);
+	cif::compound_factory::init(true);
 
 	int result = 0;
 
-	po::options_description visible_options(kProjectName + " [options] input [output]"s);
-	visible_options.add_options()
-		("log",		po::value<std::string>(),	"Write log to this file")
-		
-		("help,h",								"Display help message")
-		("version",								"Print version")
+	auto &config = cfg::config::instance();
 
-		("address",	po::value<std::string>()->default_value("0.0.0.0"),		"External address")
-		("port",	po::value<uint16_t>()->default_value(10350),			"Port to listen to")
-		("user,u",	po::value<std::string>()->default_value("www-data"),	"User to run the daemon")
+	config.init(
+		cfg::make_option("help,h", "Display help message"),
+		cfg::make_option("version", "Print version"),
+		cfg::make_option("verbose,v", "verbose output"),
 
-		("no-daemon,F",							"Do not fork into background" )
+		cfg::make_option<std::string>("address", "0.0.0.0", "External address"),
+		cfg::make_option<uint16_t>("port", 10350, "Port to listen to"),
+		cfg::make_option<std::string>("user,u", "www-data", "User to run the daemon"),
 
-		("verbose,v",							"verbose output")
-		;
-	
-	po::options_description hidden_options("hidden options");
-	hidden_options.add_options()
-		("command", po::value<std::string>(),	"The command to execute")
-		("debug,d",	po::value<int>(),			"Debug level (for even more verbose output)")
-		;
+		cfg::make_option("no-daemon,F", "Do not fork into background"));
 
-	po::options_description cmdline_options;
-	cmdline_options.add(visible_options).add(hidden_options);
+	config.parse(argc, argv);
 
-	po::positional_options_description p;
-	p.add("command", 1);
-	
-	po::variables_map vm;
-	po::store(po::command_line_parser(argc, argv).options(cmdline_options).positional(p).run(), vm);
-	
-	po::notify(vm);
-	
 	// --------------------------------------------------------------------
-	
-	std::string secret;
-	if (vm.count("secret"))
-		secret = vm["secret"].as<std::string>();
-	else
+
+	if (config.has("version"))
 	{
-		secret = zeep::encode_base64(zeep::random_hash());
-		std::cerr << "starting with created secret " << secret << std::endl;
+		write_version_string(std::cout, config.has("verbose"));
+		exit(0);
 	}
 
-	std::string user = vm["user"].as<std::string>();
-	std::string address = vm["address"].as<std::string>();
-	uint16_t port = vm["port"].as<uint16_t>();
+	if (config.has("help"))
+	{
+		std::cout << "tortoize server [options] start|stop|status|reload" << std::endl
+			 << std::endl
+			 << config << std::endl;
+		exit(0);
+	}
+	
+	if (config.operands().empty())
+	{
+		std::cerr << "Missing command, should be one of start, stop, status or reload" << std::endl;
+		exit(1);
+	}
+
+	cif::VERBOSE = config.count("verbose");
+
+	std::string user = config.get<std::string>("user");
+	std::string address = config.get<std::string>("address");
+	uint16_t port = config.get<uint16_t>("port");
 
 	zh::daemon server([&]()
 	{
@@ -256,13 +243,13 @@ int start_server(int argc, char* argv[])
 		return s;
 	}, kProjectName );
 
-	std::string command = vm["command"].as<std::string>();
+	std::string command = config.operands().front();
 
 	if (command == "start")
 	{
 		std::cout << "starting server at http://" << address << ':' << port << '/' << std::endl;
 
-		if (vm.count("no-daemon"))
+		if (config.has("no-daemon"))
 			result = server.run_foreground(address, port);
 		else
 			result = server.start(address, port, 2, 2, user);
@@ -296,50 +283,38 @@ int pr_main(int argc, char* argv[])
 		return start_server(argc - 1, argv + 1);
 #endif
 
-	po::options_description visible_options(fs::path(argv[0]).filename().string() + " [options] input [output]");
-	visible_options.add_options()
-		("log",		po::value<std::string>(),	"Write log to this file")
-		
-		("dict",	po::value<std::vector<std::string>>(),
-												"Dictionary file containing restraints for residues in this specific target, can be specified multiple times.")
+	auto &config = cfg::config::instance();
 
-		("help,h",								"Display help message")
-		("version",								"Print version")
+	config.init(
+		cfg::make_option("help,h", "Display help message"),
+		cfg::make_option("version", "Print version"),
 
-		("verbose,v",							"verbose output")
-		;
-	
-	po::options_description hidden_options("hidden options");
-	hidden_options.add_options()
-		("xyzin",	po::value<std::string>(),	"coordinates file")
-		("output",	po::value<std::string>(),	"Output to this file")
-		("debug,d",	po::value<int>(),			"Debug level (for even more verbose output)")
-		("build",	po::value<std::string>(),	"Build a binary data table")
-		;
+		cfg::make_option("verbose,v", "verbose output"),
 
-	po::options_description cmdline_options;
-	cmdline_options.add(visible_options).add(hidden_options);
+		cfg::make_option<std::string>("log", "Write log to this file"),
 
-	po::positional_options_description p;
-	p.add("xyzin", 1);
-	p.add("output", 1);
-	
-	po::variables_map vm;
-	po::store(po::command_line_parser(argc, argv).options(cmdline_options).positional(p).run(), vm);
-	
-	po::notify(vm);
+		cfg::make_option<std::vector<std::string>>("dict",
+			"Dictionary file containing restraints for residues in this specific target, can be specified multiple times."),
+
+		cfg::make_hidden_option<std::string>("build", "Build a binary data table")
+
+	);
+
+	config.parse(argc, argv);
 
 	// --------------------------------------------------------------------
 
-	if (vm.count("version"))
+	if (config.has("version"))
 	{
-		write_version_string(std::cout, vm.count("verbose"));
+		write_version_string(std::cout, config.has("verbose"));
 		exit(0);
 	}
 
-	if (vm.count("help"))
+	if (config.has("help"))
 	{
-		std::cout << visible_options << std::endl
+		std::cout << "tortoize [options] input [output]" << std::endl
+			 << std::endl
+			 << config << std::endl
 			 << std::endl
 			 << R"(Tortoize validates protein structure models by checking the 
 Ramachandran plot and side-chain rotamer distributions. Quality
@@ -364,31 +339,29 @@ References:
 		exit(0);
 	}
 	
-	if (vm.count("build"))
+	if (config.has("build"))
 	{
-		buildDataFile(vm["build"].as<std::string>());
+		buildDataFile(config.get<std::string>("build"));
 		exit(0);
 	}
 
-	if (vm.count("xyzin") == 0)
+	if (config.operands().empty())
 	{
 		std::cerr << "Input file not specified" << std::endl;
 		exit(1);
 	}
 
-	cif::VERBOSE = vm.count("verbose") != 0;
-	if (vm.count("debug"))
-		cif::VERBOSE = vm["debug"].as<int>();
+	cif::VERBOSE = config.count("verbose");
 
-	if (vm.count("log"))
+	if (config.has("log"))
 	{
-		if (not vm.count("output"))
+		if (config.operands().size() != 2)
 		{
 			std::cerr << "If you specify a log file, you should also specify an output file" << std::endl;
 			exit(1);
 		}
 
-		std::string logFile = vm["log"].as<std::string>();
+		std::string logFile = config.get<std::string>("log");
 		
 		// open the log file
 		int fd = open(logFile.c_str(), O_CREAT|O_RDWR, 0644);
@@ -401,19 +374,19 @@ References:
 		close(fd);
 	}
 
-	if (vm.count("dict"))
+	if (config.has("dict"))
 	{
-		for (auto dict: vm["dict"].as<std::vector<std::string>>())
-			mmcif::CompoundFactory::instance().pushDictionary(dict);
+		for (auto dict: config.get<std::vector<std::string>>("dict"))
+			cif::compound_factory::instance().push_dictionary(dict);
 	}
 
 	// --------------------------------------------------------------------
 	
-	json data = tortoize_calculate(vm["xyzin"].as<std::string>());
+	json data = tortoize_calculate(config.operands().front());
 
-	if (vm.count("output"))
+	if (config.has("output"))
 	{
-		std::ofstream of(vm["output"].as<std::string>());
+		std::ofstream of(config.get<std::string>("output"));
 		if (not of.is_open())
 		{
 			std::cerr << "Could not open output file" << std::endl;

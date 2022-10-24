@@ -37,6 +37,7 @@ include(CMakePackageConfigHelpers)
 include(Dart)
 include(FindFilesystem)
 include(GenerateExportHeader)
+include(AddGitSubmodule)
 
 set(CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD 17)
@@ -120,15 +121,18 @@ set(CMAKE_THREAD_PREFER_PTHREAD)
 set(THREADS_PREFER_PTHREAD_FLAG)
 find_package(Threads)
 
-find_package(cifpp 2.0.0 REQUIRED)
-find_package(zeep 5.1.4 REQUIRED)
+find_package(cifpp 5 REQUIRED)
+find_package(zeep 5.1.8 REQUIRED)
 
-find_package(Boost COMPONENTS program_options REQUIRED)
+add_git_submodule(dssp EXCLUDE_FROM_ALL)
+find_package(gxrio REQUIRED)
+find_package(libconfig REQUIRED)
 
 add_executable(tortoize
 	${PROJECT_SOURCE_DIR}/src/tortoize.cpp
 	${PROJECT_SOURCE_DIR}/src/tortoize-main.cpp
-	${TORTOIZE_RESOURCE})
+	${TORTOIZE_RESOURCE}
+	$<TARGET_OBJECTS:dssp_library>)
 
 if(BUILD_WEBSERVICE)
 	target_compile_definitions(tortoize PRIVATE WEBSERVICE)
@@ -142,8 +146,14 @@ if(USE_RSRC)
 		${CMAKE_SOURCE_DIR}/docroot/)
 endif()
 
-target_include_directories(tortoize PRIVATE cifpp::cifpp ${CMAKE_BINARY_DIR})
-target_link_libraries(tortoize cifpp::cifpp zeep::zeep std::filesystem Boost::program_options)
+target_include_directories(tortoize PRIVATE ${CMAKE_BINARY_DIR})
+target_link_libraries(tortoize
+	cifpp::cifpp
+	dssp::dssp
+	zeep::zeep
+	std::filesystem
+	gxrio::gxrio
+	libconfig::libconfig)
 
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${BIN_INSTALL_DIR}
@@ -160,9 +170,18 @@ install(FILES doc/tortoize.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
 # Test code
 
-add_executable(unit-test ${PROJECT_SOURCE_DIR}/test/unit-test.cpp ${PROJECT_SOURCE_DIR}/src/tortoize.cpp)
-target_include_directories(unit-test PRIVATE cifpp::cifpp ${CMAKE_SOURCE_DIR}/src ${CMAKE_BINARY_DIR})
-target_link_libraries(unit-test cifpp::cifpp zeep::zeep std::filesystem)
+add_executable(unit-test
+	${PROJECT_SOURCE_DIR}/test/unit-test.cpp
+	${PROJECT_SOURCE_DIR}/src/tortoize.cpp
+	$<TARGET_OBJECTS:dssp_library>)
+
+target_include_directories(unit-test PRIVATE ${CMAKE_SOURCE_DIR}/src ${CMAKE_BINARY_DIR})
+
+target_link_libraries(unit-test
+	cifpp::cifpp
+	dssp::dssp
+	zeep::zeep
+	std::filesystem)
 
 add_test(NAME unit-test COMMAND $<TARGET_FILE:unit-test> -- ${CMAKE_SOURCE_DIR}/test)
 

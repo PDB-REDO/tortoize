@@ -27,10 +27,10 @@
 #define BOOST_TEST_ALTERNATIVE_INIT_API
 #include <boost/test/included/unit_test.hpp>
 
+namespace tt = boost::test_tools;
+namespace utf = boost::unit_test;
+
 #include <filesystem>
-
-#include <cif++/CifUtils.hpp>
-
 #include <zeep/json/parser.hpp>
 
 #include "tortoize.hpp"
@@ -52,7 +52,7 @@ bool init_unit_test()
 	{
 		gTestDir = boost::unit_test::framework::master_test_suite().argv[1];
 
-		cif::addDataDirectory(gTestDir / ".." / "rsrc");
+		cif::add_data_directory(gTestDir / ".." / "rsrc");
 	}
 
 	// // do this now, avoids the need for installing
@@ -66,7 +66,7 @@ bool init_unit_test()
 
 // --------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(first_test)
+BOOST_AUTO_TEST_CASE(first_test, *utf::tolerance(0.0001))
 {
 	auto a = tortoize_calculate(gTestDir / "1cbs.cif.gz");
 
@@ -75,12 +75,12 @@ BOOST_AUTO_TEST_CASE(first_test)
 	json b;
 	zeep::json::parse_json(bf, b);
 
-	// somehow a == b does not work correctly?
-	// BOOST_CHECK_EQUAL(a, b);
+	auto ma = a["model"]["1"];
+	auto mb = b["model"]["1"];
 
-	std::stringstream sa, sb;
-	sa << a;
-	sb << b;
+	BOOST_TEST(ma["ramachandran-jackknife-sd"].as<double>() == mb["ramachandran-jackknife-sd"].as<double>());
+	BOOST_TEST(ma["ramachandran-z"].as<double>() == mb["ramachandran-z"].as<double>());
 
-	BOOST_CHECK_EQUAL(sa.str(), sb.str());
+	BOOST_TEST(ma["torsion-jackknife-sd"].as<double>() == mb["torsion-jackknife-sd"].as<double>());
+	BOOST_TEST(ma["torsion-z"].as<double>() == mb["torsion-z"].as<double>());
 }

@@ -27,21 +27,15 @@
 #include <fstream>
 #include <vector>
 
-#include "cif++/Secondary.hpp"
-#include "cif++/Structure.hpp"
+#include <gxrio.hpp>
+
+#include "../dssp/src/DSSP.hpp"
 
 #include "tortoize.hpp"
-
 #include "revision.hpp"
 
 namespace fs = std::filesystem;
 namespace ba = boost::algorithm;
-
-using mmcif::Atom;
-using mmcif::Point;
-using mmcif::Structure;
-using mmcif::Monomer;
-using mmcif::Polymer;
 
 using json = zeep::json::element;
 
@@ -601,7 +595,7 @@ void buildDataFile(const fs::path &dir)
 	std::vector<uint8_t> bits;
 
 	// first ramachandran counts
-	for (auto aa: mmcif::kAAMap)
+	for (auto aa: cif::compound_factory::kAAMap)
 	{
 		for (std::pair<SecStrType, const char*> ss: {
 				std::make_pair(SecStrType::helix, "helix"),
@@ -656,7 +650,7 @@ void buildDataFile(const fs::path &dir)
 	bits.clear();
 
 	// next torsion counts
-	for (auto aa: mmcif::kAAMap)
+	for (auto aa: cif::compound_factory::kAAMap)
 	{
 		for (std::pair<SecStrType, const char*> ss: {
 				std::make_pair(SecStrType::helix, "helix"),
@@ -782,7 +776,7 @@ void DataTable::load(const char* name, std::vector<Data>& table, float& mean, fl
 {
 	using namespace std::literals;
 
-	auto rfd = cif::loadResource(name);
+	auto rfd = cif::load_resource(name);
 
 	if (not rfd)
 		throw std::runtime_error("Missing resource "s + name);
@@ -838,9 +832,9 @@ float jackknife(const std::vector<float>& zScorePerResidue)
 
 // --------------------------------------------------------------------
 
-json calculateZScores(const Structure& structure)
+json calculateZScores(const cif::mm::structure& structure)
 {
-	mmcif::DSSP dssp(structure, 3, false);
+	dssp::DSSP dssp(structure.get_datablock(), structure.get_model_nr(), 3, false);
 	auto& tbl = DataTable::instance();
 
 	double ramaZScoreSum = 0;
@@ -863,19 +857,19 @@ json calculateZScores(const Structure& structure)
 			if (phi == 360 or psi == 360)
 				continue;
 
+			std::string aa = res.get_compound_id();
+
 			json residue = {
-				{ "asymID", res.asymID() },
-				{ "seqID", res.seqID() },
-				{ "compID", res.compoundID() },
+				{ "asymID", res.get_asym_id() },
+				{ "seqID", res.get_seq_id() },
+				{ "compID", aa },
 				{ "pdb", {
-					{ "strandID", res.authAsymID() },
-					{ "seqNum", std::stoi(res.authSeqID()) },
-					{ "compID", res.compoundID() },
-					{ "insCode", res.authInsCode() }
+					{ "strandID", res.get_auth_asym_id() },
+					{ "seqNum", std::stoi(res.get_auth_seq_id()) },
+					{ "compID", aa },
+					{ "insCode", res.get_pdb_ins_code() }
 				}}
 			};
-
-			std::string aa = res.compoundID();
 
 			// remap some common modified amino acids
 			if (aa == "MSE")
@@ -905,7 +899,7 @@ json calculateZScores(const Structure& structure)
 
 				aa = "GLU";
 			}
-			else if (mmcif::kAAMap.find(aa) == mmcif::kAAMap.end())
+			else if (not cif::compound_factory::instance().is_known_peptide(aa))
 			{
 				if (cif::VERBOSE)
 					std::cerr << "Replacing " << aa << " with ALA" << std::endl;
@@ -915,16 +909,16 @@ json calculateZScores(const Structure& structure)
 			
 			SecStrType tors_ss, rama_ss;
 
-			switch (dssp(res))
+			switch (dssp[{res.get_asym_id(), res.get_seq_id()}].type())
 			{
-				case mmcif::ssAlphahelix:	tors_ss = SecStrType::helix; break;
-				case mmcif::ssStrand:		tors_ss = SecStrType::strand; break;
-				default:					tors_ss = SecStrType::other; break;
+				case dssp::structure_type::Alphahelix:	tors_ss = SecStrType::helix; break;
+				case dssp::structure_type::Strand:		tors_ss = SecStrType::strand; break;
+				default:								tors_ss = SecStrType::other; break;
 			}
 
-			if (aa != "PRO" and poly[i + 1].compoundID() == "PRO")
+			if (aa != "PRO" and poly[i + 1].get_compound_id() == "PRO")
 				rama_ss = SecStrType::prepro;
-			else if (aa == "PRO" && res.isCis())
+			else if (aa == "PRO" && res.is_cis())
 				rama_ss = SecStrType::cis;
 			else
 				rama_ss = tors_ss;
@@ -949,7 +943,7 @@ json calculateZScores(const Structure& structure)
 			{
 				float zt = nan("1");
 
-				auto chiCount = res.nrOfChis();
+				auto chiCount = res.nr_of_chis();
 				if (chiCount)
 				{
 					float chi1 = res.chi(0);
@@ -1013,10 +1007,14 @@ json tortoize_calculate(const fs::path &xyzin)
 
 	// --------------------------------------------------------------------
 
-	mmcif::File f(xyzin);
+	gxrio::ifstream in(xyzin);
+	cif::file f = cif::pdb::read(in);
+
+	if (f.empty())
+		throw std::runtime_error("Invalid or empty mmCIF/PDB file");
 
 	std::set<uint32_t> models;
-	for (auto r: f.data()["atom_site"])
+	for (auto r: f.front()["atom_site"])
 	{
 		if (not r["pdbx_PDB_model_num"].empty())
 			models.insert(r["pdbx_PDB_model_num"].as<uint32_t>());
@@ -1027,7 +1025,7 @@ json tortoize_calculate(const fs::path &xyzin)
 
 	for (auto model: models)
 	{
-		Structure structure(f, model);
+		cif::mm::structure structure(f, model);
 
 		data["model"][std::to_string(model)] = calculateZScores(structure);
 	}
