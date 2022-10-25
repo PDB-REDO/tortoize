@@ -27,8 +27,6 @@
 #include <fstream>
 #include <vector>
 
-#include <gxrio.hpp>
-
 #include "../dssp/src/DSSP.hpp"
 
 #include "tortoize.hpp"
@@ -1007,8 +1005,7 @@ json tortoize_calculate(const fs::path &xyzin)
 
 	// --------------------------------------------------------------------
 
-	gxrio::ifstream in(xyzin);
-	cif::file f = cif::pdb::read(in);
+	cif::file f = cif::pdb::read(xyzin);
 
 	if (f.empty())
 		throw std::runtime_error("Invalid or empty mmCIF/PDB file");

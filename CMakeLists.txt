@@ -121,12 +121,11 @@ set(CMAKE_THREAD_PREFER_PTHREAD)
 set(THREADS_PREFER_PTHREAD_FLAG)
 find_package(Threads)
 
+add_git_submodule(dssp EXCLUDE_FROM_ALL)
+add_git_submodule(gxrio EXCLUDE_FROM_ALL)
+
 find_package(cifpp 5 REQUIRED)
 find_package(zeep 5.1.8 REQUIRED)
-
-add_git_submodule(dssp EXCLUDE_FROM_ALL)
-find_package(gxrio REQUIRED)
-find_package(libconfig REQUIRED)
 
 add_executable(tortoize
 	${PROJECT_SOURCE_DIR}/src/tortoize.cpp
@@ -142,7 +141,7 @@ if(USE_RSRC)
 	mrc_target_resources(tortoize
 		${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin
 		${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin
-		${CIFPP_SHARE_DIR}/mmcif_pdbx_v50.dic
+		${CIFPP_SHARE_DIR}/mmcif_pdbx.dic
 		${CMAKE_SOURCE_DIR}/docroot/)
 endif()
 
@@ -170,24 +169,26 @@ install(FILES doc/tortoize.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
 # Test code
 
-add_executable(unit-test
-	${PROJECT_SOURCE_DIR}/test/unit-test.cpp
-	${PROJECT_SOURCE_DIR}/src/tortoize.cpp
-	$<TARGET_OBJECTS:dssp_library>)
+if(ENABLE_TESTING)
+	add_executable(unit-test
+		${PROJECT_SOURCE_DIR}/test/unit-test.cpp
+		${PROJECT_SOURCE_DIR}/src/tortoize.cpp
+		$<TARGET_OBJECTS:dssp_library>)
 
-target_include_directories(unit-test PRIVATE ${CMAKE_SOURCE_DIR}/src ${CMAKE_BINARY_DIR})
+	target_include_directories(unit-test PRIVATE ${CMAKE_SOURCE_DIR}/src ${CMAKE_BINARY_DIR})
 
-target_link_libraries(unit-test
-	cifpp::cifpp
-	dssp::dssp
-	zeep::zeep
-	std::filesystem)
+	target_link_libraries(unit-test
+		cifpp::cifpp
+		dssp::dssp
+		zeep::zeep
+		std::filesystem)
 
-add_test(NAME unit-test COMMAND $<TARGET_FILE:unit-test> -- ${CMAKE_SOURCE_DIR}/test)
+	add_test(NAME unit-test COMMAND $<TARGET_FILE:unit-test> -- ${CMAKE_SOURCE_DIR}/test)
 
-if(USE_RSRC)
-	mrc_target_resources(unit-test
-		${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin
-		${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin
-		${CIFPP_SHARE_DIR}/mmcif_pdbx_v50.dic)
+	if(USE_RSRC)
+		mrc_target_resources(unit-test
+			${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin
+			${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin
+			${CIFPP_SHARE_DIR}/mmcif_pdbx.dic)
+	endif()
 endif()
