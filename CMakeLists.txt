@@ -123,6 +123,7 @@ find_package(Threads)
 
 add_git_submodule(dssp EXCLUDE_FROM_ALL)
 
+find_package(libconfig REQUIRED)
 find_package(cifpp 5 REQUIRED)
 find_package(zeep 5.1.8 REQUIRED)
 
