@@ -1,6 +1,6 @@
 [submodule "dssp"]
 	path = dssp
-	url = https://github.com/PDB-REDO/dssp.git
+	url = git@github.com:PDB-REDO/dssp.git
 [submodule "libconfig"]
 	path = libconfig
 	url = https://github.com/mhekkel/libconfig.git
