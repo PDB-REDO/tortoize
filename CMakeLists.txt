@@ -138,11 +138,18 @@ if(BUILD_WEBSERVICE)
 endif()
 
 if(USE_RSRC)
-	mrc_target_resources(tortoize
+	list(APPEND RESOURCES 
 		${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin
 		${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin
 		${CIFPP_SHARE_DIR}/mmcif_pdbx.dic
-		${CMAKE_SOURCE_DIR}/docroot/)
+		${CIFPP_SHARE_DIR}/mmcif_ddl.dic
+		${CIFPP_SHARE_DIR}/mmcif_ma.dic)
+	
+	if(BUILD_WEBSERVICE)
+		list(APPEND RESOURCES ${CMAKE_SOURCE_DIR}/docroot/)
+	endif()
+
+	mrc_target_resources(tortoize ${RESOURCES})
 endif()
 
 target_include_directories(tortoize PRIVATE ${CMAKE_BINARY_DIR})
@@ -186,9 +193,6 @@ if(ENABLE_TESTING)
 	add_test(NAME unit-test COMMAND $<TARGET_FILE:unit-test> -- ${CMAKE_SOURCE_DIR}/test)
 
 	if(USE_RSRC)
-		mrc_target_resources(unit-test
-			${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin
-			${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin
-			${CIFPP_SHARE_DIR}/mmcif_pdbx.dic)
+		mrc_target_resources(unit-test ${RESOURCES})
 	endif()
 endif()
