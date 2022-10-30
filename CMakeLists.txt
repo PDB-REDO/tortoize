@@ -48,7 +48,7 @@ find_package(Filesystem REQUIRED)
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers")
 elseif(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 endif()
 
 if(NOT "$ENV{CCP4}" STREQUAL "")
@@ -56,17 +56,18 @@ if(NOT "$ENV{CCP4}" STREQUAL "")
 	set(CCP4 $ENV{CCP4})
 	list(PREPEND CMAKE_MODULE_PATH "${CCP4}/Lib")
 	list(APPEND CMAKE_PREFIX_PATH ${CCP4})
+
 	if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 		set(CMAKE_PREFIX_PATH ${CCP4})
 	endif()
 endif()
 
 if(MSVC)
-    # make msvc standards compliant...
-    add_compile_options(/permissive-)
+	# make msvc standards compliant...
+	add_compile_options(/permissive-)
 
 	macro(get_WIN32_WINNT version)
-		if (WIN32 AND CMAKE_SYSTEM_VERSION)
+		if(WIN32 AND CMAKE_SYSTEM_VERSION)
 			set(ver ${CMAKE_SYSTEM_VERSION})
 			string(REPLACE "." "" ver ${ver})
 			string(REGEX REPLACE "([0-9])" "0\\1" ver ${ver})
@@ -112,21 +113,18 @@ if(USE_RSRC STREQUAL "ON")
 endif()
 
 # Optionally build a webservice
-
 option(BUILD_WEBSERVICE "Build a version with a webservice daemon" OFF)
 
 # libraries
-
 set(CMAKE_THREAD_PREFER_PTHREAD)
 set(THREADS_PREFER_PTHREAD_FLAG)
 find_package(Threads)
 
 if(NOT PDB_REDO_META)
-add_git_submodule(dssp EXCLUDE_FROM_ALL)
+	add_git_submodule(dssp EXCLUDE_FROM_ALL)
+	find_package(cifpp 5 REQUIRED)
+	find_package(zeep 5.1.8 REQUIRED)
 endif()
-
-find_package(cifpp 5 REQUIRED)
-find_package(zeep 5.1.8 REQUIRED)
 
 add_executable(tortoize
 	${PROJECT_SOURCE_DIR}/src/tortoize.cpp
@@ -139,13 +137,13 @@ if(BUILD_WEBSERVICE)
 endif()
 
 if(USE_RSRC)
-	list(APPEND RESOURCES 
+	list(APPEND RESOURCES
 		${PROJECT_SOURCE_DIR}/rsrc/rama-data.bin
 		${PROJECT_SOURCE_DIR}/rsrc/torsion-data.bin
 		${CIFPP_SHARE_DIR}/mmcif_pdbx.dic
 		${CIFPP_SHARE_DIR}/mmcif_ddl.dic
 		${CIFPP_SHARE_DIR}/mmcif_ma.dic)
-	
+
 	if(BUILD_WEBSERVICE)
 		list(APPEND RESOURCES ${PROJECT_SOURCE_DIR}/docroot/)
 	endif()
@@ -168,7 +166,7 @@ target_link_libraries(tortoize
 	libconfig::libconfig)
 
 install(TARGETS ${PROJECT_NAME}
-    RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+	RUNTIME DESTINATION ${BIN_INSTALL_DIR}
 )
 
 if(NOT USE_RSRC)
@@ -177,11 +175,9 @@ if(NOT USE_RSRC)
 endif()
 
 # manual
-
 install(FILES doc/tortoize.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
 # Test code
-
 if(ENABLE_TESTING)
 	add_executable(tortoize-unit-test
 		${PROJECT_SOURCE_DIR}/test/tortoize-unit-test.cpp
