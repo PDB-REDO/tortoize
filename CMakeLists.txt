@@ -123,7 +123,6 @@ find_package(Threads)
 
 # add_git_submodule(dssp EXCLUDE_FROM_ALL)
 
-find_package(libconfig REQUIRED)
 find_package(cifpp 5 REQUIRED)
 find_package(zeep 5.1.8 REQUIRED)
 
@@ -139,14 +138,14 @@ endif()
 
 if(USE_RSRC)
 	list(APPEND RESOURCES 
-		${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin
-		${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin
+		${PROJECT_SOURCE_DIR}/rsrc/rama-data.bin
+		${PROJECT_SOURCE_DIR}/rsrc/torsion-data.bin
 		${CIFPP_SHARE_DIR}/mmcif_pdbx.dic
 		${CIFPP_SHARE_DIR}/mmcif_ddl.dic
 		${CIFPP_SHARE_DIR}/mmcif_ma.dic)
 	
 	if(BUILD_WEBSERVICE)
-		list(APPEND RESOURCES ${CMAKE_SOURCE_DIR}/docroot/)
+		list(APPEND RESOURCES ${PROJECT_SOURCE_DIR}/docroot/)
 	endif()
 
 	mrc_target_resources(tortoize ${RESOURCES})
@@ -166,7 +165,7 @@ install(TARGETS ${PROJECT_NAME}
 )
 
 if(NOT USE_RSRC)
-	install(FILES ${CMAKE_SOURCE_DIR}/rsrc/rama-data.bin ${CMAKE_SOURCE_DIR}/rsrc/torsion-data.bin
+	install(FILES ${PROJECT_SOURCE_DIR}/rsrc/rama-data.bin ${PROJECT_SOURCE_DIR}/rsrc/torsion-data.bin
 		DESTINATION ${CIFPP_SHARE_DIR})
 endif()
 
@@ -182,7 +181,7 @@ if(ENABLE_TESTING)
 		${PROJECT_SOURCE_DIR}/src/tortoize.cpp
 		$<TARGET_OBJECTS:dssp_library>)
 
-	target_include_directories(tortoize-unit-test PRIVATE ${CMAKE_SOURCE_DIR}/src ${CMAKE_BINARY_DIR})
+	target_include_directories(tortoize-unit-test PRIVATE ${PROJECT_SOURCE_DIR}/src ${CMAKE_BINARY_DIR})
 
 	target_link_libraries(tortoize-unit-test
 		cifpp::cifpp
@@ -190,7 +189,7 @@ if(ENABLE_TESTING)
 		zeep::zeep
 		std::filesystem)
 
-	add_test(NAME tortoize-unit-test COMMAND $<TARGET_FILE:tortoize-unit-test> -- ${CMAKE_SOURCE_DIR}/test)
+	add_test(NAME tortoize-unit-test COMMAND $<TARGET_FILE:tortoize-unit-test> -- ${PROJECT_SOURCE_DIR}/test)
 
 	if(USE_RSRC)
 		mrc_target_resources(tortoize-unit-test ${RESOURCES})
