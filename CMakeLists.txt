@@ -153,7 +153,12 @@ if(USE_RSRC)
 	mrc_target_resources(tortoize ${RESOURCES})
 endif()
 
-target_include_directories(tortoize PRIVATE ${CMAKE_BINARY_DIR})
+target_include_directories(tortoize PRIVATE ${PROJECT_BINARY_DIR})
+
+if(PDB_REDO_META)
+	target_include_directories(tortoize PRIVATE ${CMAKE_PROJECT_DIR}/dssp/include)
+endif()
+
 target_link_libraries(tortoize
 	cifpp::cifpp
 	dssp::dssp
@@ -183,7 +188,7 @@ if(ENABLE_TESTING)
 		${PROJECT_SOURCE_DIR}/src/tortoize.cpp
 		$<TARGET_OBJECTS:dssp_library>)
 
-	target_include_directories(tortoize-unit-test PRIVATE ${PROJECT_SOURCE_DIR}/src ${CMAKE_BINARY_DIR})
+	target_include_directories(tortoize-unit-test PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
 
 	target_link_libraries(tortoize-unit-test
 		cifpp::cifpp
