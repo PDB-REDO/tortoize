@@ -188,7 +188,7 @@ int start_server(int argc, char* argv[])
 
 	auto &config = cfg::config::instance();
 
-	config.init(
+	config.init("tortoize server [options] start|stop|status|reload",
 		cfg::make_option("help,h", "Display help message"),
 		cfg::make_option("version", "Print version"),
 		cfg::make_option("verbose,v", "verbose output"),
@@ -211,9 +211,7 @@ int start_server(int argc, char* argv[])
 
 	if (config.has("help"))
 	{
-		std::cout << "tortoize server [options] start|stop|status|reload" << std::endl
-			 << std::endl
-			 << config << std::endl;
+		std::cout << config << std::endl;
 		exit(0);
 	}
 	
@@ -285,7 +283,7 @@ int pr_main(int argc, char* argv[])
 
 	auto &config = cfg::config::instance();
 
-	config.init(
+	config.init("tortoize [options] input [output]",
 		cfg::make_option("help,h", "Display help message"),
 		cfg::make_option("version", "Print version"),
 
@@ -312,9 +310,7 @@ int pr_main(int argc, char* argv[])
 
 	if (config.has("help"))
 	{
-		std::cout << "tortoize [options] input [output]" << std::endl
-			 << std::endl
-			 << config << std::endl
+		std::cout << config << std::endl
 			 << std::endl
 			 << R"(Tortoize validates protein structure models by checking the 
 Ramachandran plot and side-chain rotamer distributions. Quality
