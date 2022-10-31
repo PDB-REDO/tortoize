@@ -380,9 +380,9 @@ References:
 	
 	json data = tortoize_calculate(config.operands().front());
 
-	if (config.has("output"))
+	if (config.operands().size() == 2)
 	{
-		std::ofstream of(config.get<std::string>("output"));
+		std::ofstream of(config.operands().back());
 		if (not of.is_open())
 		{
 			std::cerr << "Could not open output file" << std::endl;
