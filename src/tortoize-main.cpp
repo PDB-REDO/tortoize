@@ -33,7 +33,7 @@
 #include <zeep/crypto.hpp>
 
 #include <gxrio.hpp>
-#include <cfg.hpp>
+#include <cfp/cfp.hpp>
 #include <cif++.hpp>
 
 #include "tortoize.hpp"
@@ -186,18 +186,18 @@ int start_server(int argc, char* argv[])
 
 	int result = 0;
 
-	auto &config = cfg::config::instance();
+	auto &config = cfp::config::instance();
 
 	config.init("tortoize server [options] start|stop|status|reload",
-		cfg::make_option("help,h", "Display help message"),
-		cfg::make_option("version", "Print version"),
-		cfg::make_option("verbose,v", "verbose output"),
+		cfp::make_option("help,h", "Display help message"),
+		cfp::make_option("version", "Print version"),
+		cfp::make_option("verbose,v", "verbose output"),
 
-		cfg::make_option<std::string>("address", "0.0.0.0", "External address"),
-		cfg::make_option<uint16_t>("port", 10350, "Port to listen to"),
-		cfg::make_option<std::string>("user,u", "www-data", "User to run the daemon"),
+		cfp::make_option<std::string>("address", "0.0.0.0", "External address"),
+		cfp::make_option<uint16_t>("port", 10350, "Port to listen to"),
+		cfp::make_option<std::string>("user,u", "www-data", "User to run the daemon"),
 
-		cfg::make_option("no-daemon,F", "Do not fork into background"));
+		cfp::make_option("no-daemon,F", "Do not fork into background"));
 
 	config.parse(argc, argv);
 
@@ -281,20 +281,20 @@ int pr_main(int argc, char* argv[])
 		return start_server(argc - 1, argv + 1);
 #endif
 
-	auto &config = cfg::config::instance();
+	auto &config = cfp::config::instance();
 
 	config.init("tortoize [options] input [output]",
-		cfg::make_option("help,h", "Display help message"),
-		cfg::make_option("version", "Print version"),
+		cfp::make_option("help,h", "Display help message"),
+		cfp::make_option("version", "Print version"),
 
-		cfg::make_option("verbose,v", "verbose output"),
+		cfp::make_option("verbose,v", "verbose output"),
 
-		cfg::make_option<std::string>("log", "Write log to this file"),
+		cfp::make_option<std::string>("log", "Write log to this file"),
 
-		cfg::make_option<std::vector<std::string>>("dict",
+		cfp::make_option<std::vector<std::string>>("dict",
 			"Dictionary file containing restraints for residues in this specific target, can be specified multiple times."),
 
-		cfg::make_hidden_option<std::string>("build", "Build a binary data table")
+		cfp::make_hidden_option<std::string>("build", "Build a binary data table")
 
 	);
 

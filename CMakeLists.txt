@@ -122,7 +122,7 @@ find_package(Threads)
 
 if(NOT PDB_REDO_META)
 	find_package(gxrio REQUIRED)
-	find_package(libconfig REQUIRED)
+	find_package(libcfp REQUIRED)
 	find_package(newuoa REQUIRED)
 	add_git_submodule(dssp EXCLUDE_FROM_ALL)
 	find_package(cifpp 5 REQUIRED)
@@ -166,7 +166,7 @@ target_link_libraries(tortoize
 	zeep::zeep
 	std::filesystem
 	gxrio::gxrio
-	libconfig::libconfig)
+	libcfp::libcfp)
 
 install(TARGETS ${PROJECT_NAME}
 	RUNTIME DESTINATION ${BIN_INSTALL_DIR}
