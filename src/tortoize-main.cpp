@@ -32,7 +32,6 @@
 #include <zeep/http/rest-controller.hpp>
 #include <zeep/crypto.hpp>
 
-#include <gxrio.hpp>
 #include <cfp/cfp.hpp>
 #include <cif++.hpp>
 
@@ -129,7 +128,7 @@ class tortoize_rest_controller : public zeep::http::rest_controller
 				}
 			} buffer(const_cast<char *>(file.data()), file.length());
 
-			gxrio::istream in(&buffer);
+			cif::gzio::istream in(&buffer);
 
 			cif::file f = cif::pdb::read(in);
 			if (f.empty())

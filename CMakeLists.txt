@@ -165,7 +165,6 @@ target_link_libraries(tortoize
 	dssp::dssp
 	zeep::zeep
 	std::filesystem
-	gxrio::gxrio
 	libcfp::libcfp)
 
 install(TARGETS ${PROJECT_NAME}
