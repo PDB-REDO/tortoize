@@ -899,7 +899,7 @@ json calculateZScores(const cif::mm::structure& structure)
 			}
 			else if (not cif::compound_factory::instance().is_known_peptide(aa))
 			{
-				if (cif::VERBOSE)
+				if (cif::VERBOSE > 0)
 					std::cerr << "Replacing " << aa << " with ALA" << std::endl;
 
 				aa = "ALA";
@@ -965,7 +965,7 @@ json calculateZScores(const cif::mm::structure& structure)
 			}
 			catch (const std::exception& e)
 			{
-				if (cif::VERBOSE)
+				if (cif::VERBOSE > 0)
 					std::cerr << e.what() << '\n';
 			}
 
