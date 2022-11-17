@@ -33,7 +33,6 @@
 #include "revision.hpp"
 
 namespace fs = std::filesystem;
-namespace ba = boost::algorithm;
 
 using json = zeep::json::element;
 
