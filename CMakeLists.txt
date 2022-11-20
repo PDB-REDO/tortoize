@@ -121,19 +121,15 @@ set(THREADS_PREFER_PTHREAD_FLAG)
 find_package(Threads)
 
 if(NOT PDB_REDO_META)
-	find_package(gxrio REQUIRED)
 	find_package(libcfp REQUIRED)
-	find_package(newuoa REQUIRED)
-	add_git_submodule(dssp EXCLUDE_FROM_ALL)
-	find_package(cifpp 5 REQUIRED)
+	find_package(dssp REQUIRED)
 	find_package(zeep 5.1.8 REQUIRED)
 endif()
 
 add_executable(tortoize
 	${PROJECT_SOURCE_DIR}/src/tortoize.cpp
 	${PROJECT_SOURCE_DIR}/src/tortoize-main.cpp
-	${TORTOIZE_RESOURCE}
-	$<TARGET_OBJECTS:dssp_library>)
+	${TORTOIZE_RESOURCE})
 
 if(BUILD_WEBSERVICE)
 	target_compile_definitions(tortoize PRIVATE WEBSERVICE)
@@ -183,8 +179,7 @@ install(FILES doc/tortoize.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 if(ENABLE_TESTING)
 	add_executable(tortoize-unit-test
 		${PROJECT_SOURCE_DIR}/test/tortoize-unit-test.cpp
-		${PROJECT_SOURCE_DIR}/src/tortoize.cpp
-		$<TARGET_OBJECTS:dssp_library>)
+		${PROJECT_SOURCE_DIR}/src/tortoize.cpp)
 
 	target_include_directories(tortoize-unit-test PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
 

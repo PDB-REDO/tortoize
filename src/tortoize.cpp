@@ -27,7 +27,7 @@
 #include <fstream>
 #include <vector>
 
-#include "../dssp/src/DSSP.hpp"
+#include <dssp.hpp>
 
 #include "tortoize.hpp"
 #include "revision.hpp"
@@ -831,7 +831,7 @@ float jackknife(const std::vector<float>& zScorePerResidue)
 
 json calculateZScores(const cif::mm::structure& structure)
 {
-	dssp::DSSP dssp(structure.get_datablock(), structure.get_model_nr(), 3, false);
+	dssp dssp(structure.get_datablock(), structure.get_model_nr(), 3, false);
 	auto& tbl = DataTable::instance();
 
 	double ramaZScoreSum = 0;
