@@ -32,7 +32,7 @@
 #include <zeep/http/rest-controller.hpp>
 #include <zeep/crypto.hpp>
 
-#include <cfp/cfp.hpp>
+#include <mcfp/mcfp.hpp>
 #include <cif++.hpp>
 
 #include "tortoize.hpp"
@@ -184,18 +184,18 @@ int start_server(int argc, char* argv[])
 
 	int result = 0;
 
-	auto &config = cfp::config::instance();
+	auto &config = mcfp::config::instance();
 
 	config.init("tortoize server [options] start|stop|status|reload",
-		cfp::make_option("help,h", "Display help message"),
-		cfp::make_option("version", "Print version"),
-		cfp::make_option("verbose,v", "verbose output"),
+		mcfp::make_option("help,h", "Display help message"),
+		mcfp::make_option("version", "Print version"),
+		mcfp::make_option("verbose,v", "verbose output"),
 
-		cfp::make_option<std::string>("address", "0.0.0.0", "External address"),
-		cfp::make_option<uint16_t>("port", 10350, "Port to listen to"),
-		cfp::make_option<std::string>("user,u", "www-data", "User to run the daemon"),
+		mcfp::make_option<std::string>("address", "0.0.0.0", "External address"),
+		mcfp::make_option<uint16_t>("port", 10350, "Port to listen to"),
+		mcfp::make_option<std::string>("user,u", "www-data", "User to run the daemon"),
 
-		cfp::make_option("no-daemon,F", "Do not fork into background"));
+		mcfp::make_option("no-daemon,F", "Do not fork into background"));
 
 	config.parse(argc, argv);
 
@@ -279,20 +279,20 @@ int pr_main(int argc, char* argv[])
 		return start_server(argc - 1, argv + 1);
 #endif
 
-	auto &config = cfp::config::instance();
+	auto &config = mcfp::config::instance();
 
 	config.init("tortoize [options] input [output]",
-		cfp::make_option("help,h", "Display help message"),
-		cfp::make_option("version", "Print version"),
+		mcfp::make_option("help,h", "Display help message"),
+		mcfp::make_option("version", "Print version"),
 
-		cfp::make_option("verbose,v", "verbose output"),
+		mcfp::make_option("verbose,v", "verbose output"),
 
-		cfp::make_option<std::string>("log", "Write log to this file"),
+		mcfp::make_option<std::string>("log", "Write log to this file"),
 
-		cfp::make_option<std::vector<std::string>>("dict",
+		mcfp::make_option<std::vector<std::string>>("dict",
 			"Dictionary file containing restraints for residues in this specific target, can be specified multiple times."),
 
-		cfp::make_hidden_option<std::string>("build", "Build a binary data table")
+		mcfp::make_hidden_option<std::string>("build", "Build a binary data table")
 
 	);
 

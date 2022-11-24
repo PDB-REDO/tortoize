@@ -25,7 +25,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 # set the project name
-project(tortoize VERSION 2.0.8 LANGUAGES CXX)
+project(tortoize VERSION 2.0.9 LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -37,7 +37,6 @@ include(CMakePackageConfigHelpers)
 include(Dart)
 include(FindFilesystem)
 include(GenerateExportHeader)
-include(AddGitSubmodule)
 
 set(CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD 17)
@@ -78,25 +77,11 @@ if(MSVC)
 
 	get_WIN32_WINNT(ver)
 	add_definitions(-D_WIN32_WINNT=${ver})
-
-	# On Windows, do not install in the system location
-	if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND NOT BUILD_FOR_CCP4)
-		message(STATUS "The library and auxiliary files will be installed in $ENV{LOCALAPPDATA}/${PROJECT_NAME}")
-		set(CMAKE_INSTALL_PREFIX "$ENV{LOCALAPPDATA}/${PROJECT_NAME}" CACHE PATH "..." FORCE)
-	endif()
-endif()
-
-if(UNIX AND NOT APPLE)
-	# On Linux, install in the $HOME/.local folder by default
-	if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-		message(WARNING "The library and auxiliary files will be installed in $ENV{HOME}/.local")
-		set(CMAKE_INSTALL_PREFIX "$ENV{HOME}/.local" CACHE PATH "..." FORCE)
-	endif()
 endif()
 
 # Create a revision file, containing the current git version info, if any
 include(VersionString)
-write_version_header()
+write_version_header(${PROJECT_SOURCE_DIR}/src)
 
 # Optionally use mrc to create resources
 find_package(Mrc)
@@ -121,19 +106,15 @@ set(THREADS_PREFER_PTHREAD_FLAG)
 find_package(Threads)
 
 if(NOT PDB_REDO_META)
-	find_package(gxrio REQUIRED)
-	find_package(libcfp REQUIRED)
-	find_package(newuoa REQUIRED)
-	add_git_submodule(dssp EXCLUDE_FROM_ALL)
-	find_package(cifpp 5 REQUIRED)
+	find_package(libmcfp REQUIRED)
+	find_package(dssp REQUIRED)
 	find_package(zeep 5.1.8 REQUIRED)
 endif()
 
 add_executable(tortoize
 	${PROJECT_SOURCE_DIR}/src/tortoize.cpp
 	${PROJECT_SOURCE_DIR}/src/tortoize-main.cpp
-	${TORTOIZE_RESOURCE}
-	$<TARGET_OBJECTS:dssp_library>)
+	${TORTOIZE_RESOURCE})
 
 if(BUILD_WEBSERVICE)
 	target_compile_definitions(tortoize PRIVATE WEBSERVICE)
@@ -165,7 +146,7 @@ target_link_libraries(tortoize
 	dssp::dssp
 	zeep::zeep
 	std::filesystem
-	libcfp::libcfp)
+	libmcfp::libmcfp)
 
 install(TARGETS ${PROJECT_NAME}
 	RUNTIME DESTINATION ${BIN_INSTALL_DIR}
@@ -183,8 +164,7 @@ install(FILES doc/tortoize.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 if(ENABLE_TESTING)
 	add_executable(tortoize-unit-test
 		${PROJECT_SOURCE_DIR}/test/tortoize-unit-test.cpp
-		${PROJECT_SOURCE_DIR}/src/tortoize.cpp
-		$<TARGET_OBJECTS:dssp_library>)
+		${PROJECT_SOURCE_DIR}/src/tortoize.cpp)
 
 	target_include_directories(tortoize-unit-test PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
 
