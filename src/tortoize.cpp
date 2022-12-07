@@ -327,6 +327,20 @@ std::ostream& operator<<(std::ostream& os, SecStrType ss)
 	return os;
 }
 
+std::string to_string(SecStrType ss)
+{
+	switch (ss)
+	{
+		case SecStrType::helix:		return "helix"; break;
+		case SecStrType::strand:	return "strand"; break;
+		case SecStrType::other:		return "other"; break;
+		case SecStrType::cis:		return "cis"; break;
+		case SecStrType::prepro:	return "prepro"; break;
+	}
+
+	throw std::runtime_error("Invalid sec structure");
+}
+
 // --------------------------------------------------------------------
 // The header for the data blocks as written in de resource
 
@@ -764,7 +778,7 @@ const Data& DataTable::loadRamachandranData(const std::string& aa, SecStrType ss
 	}
 
 	if (i == m_ramachandran.end())
-		throw std::runtime_error("Data missing for aa= " + aa + " and ss = '" + static_cast<char>(ss) + '\'');
+		throw std::runtime_error("Data missing for aa = " + aa + " and ss = '" + static_cast<char>(ss) + '\'');
 	
 	return *i;
 }
@@ -896,7 +910,7 @@ json calculateZScores(const cif::mm::structure& structure)
 
 				aa = "GLU";
 			}
-			else if (not cif::compound_factory::instance().is_known_peptide(aa))
+			else if (not cif::compound_factory::instance().kAAMap.count(aa))
 			{
 				if (cif::VERBOSE > 0)
 					std::cerr << "Replacing " << aa << " with ALA" << std::endl;
@@ -927,7 +941,7 @@ json calculateZScores(const cif::mm::structure& structure)
 
 			residue["ramachandran"] =
 			{
-				{ "ss-type", boost::lexical_cast<std::string>(rama_ss) },
+				{ "ss-type", to_string(rama_ss) },
 				{ "z-score", zr }
 			};
 
@@ -957,7 +971,7 @@ json calculateZScores(const cif::mm::structure& structure)
 
 					residue["torsion"] =
 					{
-						{ "ss-type", boost::lexical_cast<std::string>(tors_ss) },
+						{ "ss-type", to_string(tors_ss) },
 						{ "z-score", zt }
 					};
 				}
