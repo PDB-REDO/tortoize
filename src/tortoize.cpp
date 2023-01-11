@@ -1,17 +1,17 @@
 /*-
  * SPDX-License-Identifier: BSD-2-Clause
- * 
+ *
  * Copyright (c) 2020 NKI/AVL, Netherlands Cancer Institute
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this
  *    list of conditions and the following disclaimer
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -29,8 +29,8 @@
 
 #include <dssp.hpp>
 
-#include "tortoize.hpp"
 #include "revision.hpp"
+#include "tortoize.hpp"
 
 namespace fs = std::filesystem;
 
@@ -42,20 +42,20 @@ using json = zeep::json::element;
 class OBitStream
 {
   public:
-	OBitStream(std::vector<uint8_t>& buffer)
+	OBitStream(std::vector<uint8_t> &buffer)
 		: m_buffer(buffer)
 	{
 		m_buffer.push_back(0);
 	}
 
-	OBitStream(const OBitStream&) = delete;
-	OBitStream& operator=(const OBitStream&) = delete;
+	OBitStream(const OBitStream &) = delete;
+	OBitStream &operator=(const OBitStream &) = delete;
 
 	void writebit(bool bit)
 	{
 		if (bit)
 			m_buffer.back() |= 1 << m_bitOffset;
-		
+
 		if (--m_bitOffset < 0)
 		{
 			m_buffer.push_back(0);
@@ -70,7 +70,7 @@ class OBitStream
 		{
 			if (value & (1UL << bits))
 				m_buffer.back() |= 1 << m_bitOffset;
-			
+
 			if (--m_bitOffset < 0)
 			{
 				m_buffer.push_back(0);
@@ -87,27 +87,33 @@ class OBitStream
 			writebit(1);
 	}
 
-	const uint8_t* data() const					{ return m_buffer.data(); }
-	size_t size() const							{ return m_buffer.size(); }
+	const uint8_t *data() const { return m_buffer.data(); }
+	size_t size() const { return m_buffer.size(); }
 
-	friend void WriteArray(OBitStream& bs, const std::vector<uint32_t>& data);
+	friend void WriteArray(OBitStream &bs, const std::vector<uint32_t> &data);
 
   private:
-	std::vector<uint8_t>& m_buffer;
+	std::vector<uint8_t> &m_buffer;
 	int m_bitOffset = 7;
 };
 
 class IBitStream
 {
   public:
-	IBitStream(const uint8_t* data)
-		: m_data(data), m_byte(*m_data++), m_bitOffset(7) {}
+	IBitStream(const uint8_t *data)
+		: m_data(data)
+		, m_byte(*m_data++)
+		, m_bitOffset(7)
+	{
+	}
 
-	IBitStream(const OBitStream& bits)
-		: IBitStream(bits.data()) {}
+	IBitStream(const OBitStream &bits)
+		: IBitStream(bits.data())
+	{
+	}
 
-	IBitStream(const IBitStream&) = delete;
-	IBitStream& operator=(const IBitStream&) = delete;
+	IBitStream(const IBitStream &) = delete;
+	IBitStream &operator=(const IBitStream &) = delete;
 
 	uint32_t read(int bc)
 	{
@@ -136,10 +142,10 @@ class IBitStream
 		return result;
 	}
 
-	friend std::vector<uint32_t> ReadArray(IBitStream& bs);
+	friend std::vector<uint32_t> ReadArray(IBitStream &bs);
 
   private:
-	const uint8_t* m_data;
+	const uint8_t *m_data;
 	uint8_t m_byte;
 	int m_bitOffset;
 };
@@ -154,19 +160,19 @@ struct Selector
 	int32_t databits;
 	uint32_t span;
 } const kSelectors[16] = {
-	{  0, 1 },
+	{ 0, 1 },
 	{ -4, 1 },
 	{ -2, 1 }, { -2, 2 },
 	{ -1, 1 }, { -1, 2 }, { -1, 4 },
-	{  0, 1 }, {  0, 2 }, {  0, 4 },
-	{  1, 1 }, {  1, 2 }, {  1, 4 },
-	{  2, 1 }, {  2, 2 },
-	{  4, 1 }
+	{ 0, 1 }, { 0, 2 }, { 0, 4 },
+	{ 1, 1 }, { 1, 2 }, { 1, 4 },
+	{ 2, 1 }, { 2, 2 },
+	{ 4, 1 }
 };
- 
+
 // store ints of at most 24 bits, should be enough.
 const uint32_t kStartWidth = 8, kMaxWidth = 24;
- 
+
 inline uint32_t bitWidth(uint32_t v)
 {
 	uint32_t result = 0;
@@ -178,7 +184,7 @@ inline uint32_t bitWidth(uint32_t v)
 	return result;
 }
 
-void CompressSimpleArraySelector(OBitStream& inBits, const std::vector<uint32_t>& inArray)
+void CompressSimpleArraySelector(OBitStream &inBits, const std::vector<uint32_t> &inArray)
 {
 	int32_t width = kStartWidth;
 
@@ -271,11 +277,11 @@ void CompressSimpleArraySelector(OBitStream& inBits, const std::vector<uint32_t>
 	}
 }
 
-void DecompressSimpleArraySelector(IBitStream& inBits, std::vector<uint32_t>& outArray)
+void DecompressSimpleArraySelector(IBitStream &inBits, std::vector<uint32_t> &outArray)
 {
 	uint32_t width = kStartWidth;
 	uint32_t span = 0;
-	
+
 	// The array should be initilialized to the expected size!
 	auto size = outArray.size();
 	auto a = outArray.begin();
@@ -313,7 +319,7 @@ enum class SecStrType : char
 	prepro = 'p'
 };
 
-std::ostream& operator<<(std::ostream& os, SecStrType ss)
+std::ostream &operator<<(std::ostream &os, SecStrType ss)
 {
 	switch (ss)
 	{
@@ -331,11 +337,11 @@ std::string to_string(SecStrType ss)
 {
 	switch (ss)
 	{
-		case SecStrType::helix:		return "helix"; break;
-		case SecStrType::strand:	return "strand"; break;
-		case SecStrType::other:		return "other"; break;
-		case SecStrType::cis:		return "cis"; break;
-		case SecStrType::prepro:	return "prepro"; break;
+		case SecStrType::helix: return "helix"; break;
+		case SecStrType::strand: return "strand"; break;
+		case SecStrType::other: return "other"; break;
+		case SecStrType::cis: return "cis"; break;
+		case SecStrType::prepro: return "prepro"; break;
 	}
 
 	throw std::runtime_error("Invalid sec structure");
@@ -346,10 +352,10 @@ std::string to_string(SecStrType ss)
 
 struct StoredData
 {
-	char		aa[3];
-	SecStrType	ss;
-	float		mean, mean_vs_random, sd, sd_vs_random, binSpacing;
-	uint32_t	offset;			// offset into compressed data area
+	char aa[3];
+	SecStrType ss;
+	float mean, mean_vs_random, sd, sd_vs_random, binSpacing;
+	uint32_t offset; // offset into compressed data area
 };
 
 class Data
@@ -357,21 +363,27 @@ class Data
 	friend class DataTable;
 
   public:
-	Data(Data&& d)
-		: aa(d.aa), ss(d.ss), mean(d.mean), sd(d.sd)
-		, mean_vs_random(d.mean_vs_random), sd_vs_random(d.sd_vs_random)
-		, binSpacing(d.binSpacing), counts(move(d.counts))
-		, dim(d.dim), d2(d.d2)
+	Data(Data &&d)
+		: aa(d.aa)
+		, ss(d.ss)
+		, mean(d.mean)
+		, sd(d.sd)
+		, mean_vs_random(d.mean_vs_random)
+		, sd_vs_random(d.sd_vs_random)
+		, binSpacing(d.binSpacing)
+		, counts(move(d.counts))
+		, dim(d.dim)
+		, d2(d.d2)
 	{
 	}
 
-	Data(const Data&) = delete;
-	Data& operator=(const Data&) = delete;
+	Data(const Data &) = delete;
+	Data &operator=(const Data &) = delete;
 
-	Data(const char* type, const std::string& aa, SecStrType ss, std::istream& is);
-	Data(bool torsion, const StoredData& data, const uint8_t* bits);
+	Data(const char *type, const std::string &aa, SecStrType ss, std::istream &is);
+	Data(bool torsion, const StoredData &data, const uint8_t *bits);
 
-	void store(StoredData& data, std::vector<uint8_t>& databits);
+	void store(StoredData &data, std::vector<uint8_t> &databits);
 
 	float interpolatedCount(float phi, float a2) const;
 	float zscore(float a1, float a2) const
@@ -390,7 +402,6 @@ class Data
 	}
 
   private:
-
 	std::string aa;
 	SecStrType ss;
 	float mean, sd, mean_vs_random, sd_vs_random;
@@ -400,7 +411,7 @@ class Data
 	// calculated
 	size_t dim;
 	bool d2;
-	
+
 	float count(size_t a1Ix, size_t a2Ix) const
 	{
 		a1Ix %= dim;
@@ -423,7 +434,7 @@ class Data
 		return x * (360 / binSpacing) + y;
 	}
 
-	std::tuple<float,float> angles(size_t index) const
+	std::tuple<float, float> angles(size_t index) const
 	{
 		size_t x = index / dim;
 		size_t y = index % dim;
@@ -432,8 +443,9 @@ class Data
 	}
 };
 
-Data::Data(const char* type, const std::string& aa, SecStrType ss, std::istream& is)
-	: aa(aa), ss(ss)
+Data::Data(const char *type, const std::string &aa, SecStrType ss, std::istream &is)
+	: aa(aa)
+	, ss(ss)
 {
 	// example:
 	// 14400 bins, aver 19.2878, sd 15.4453, binspacing 3
@@ -445,7 +457,7 @@ Data::Data(const char* type, const std::string& aa, SecStrType ss, std::istream&
 	std::string line;
 	getline(is, line);
 
-	d2 = strcmp(type, "torsion") != 0 or std::set<std::string>{"CYS", "SER", "THR", "VAL"}.count(aa) == 0;
+	d2 = strcmp(type, "torsion") != 0 or std::set<std::string>{ "CYS", "SER", "THR", "VAL" }.count(aa) == 0;
 
 	std::smatch m;
 	if (not std::regex_match(line, m, kRX1))
@@ -466,7 +478,7 @@ Data::Data(const char* type, const std::string& aa, SecStrType ss, std::istream&
 
 	if (not std::regex_match(line, m, kRX2) or m[1] != type)
 		throw std::runtime_error("Invalid file");
-	
+
 	mean_vs_random = stof(m[2]);
 	sd_vs_random = stof(m[3]);
 
@@ -482,12 +494,12 @@ Data::Data(const char* type, const std::string& aa, SecStrType ss, std::istream&
 
 		if (is.eof())
 			throw std::runtime_error("truncated file?");
-		
+
 		counts.at(index(a1, a2)) = count;
 	}
 }
 
-Data::Data(bool torsion, const StoredData& data, const uint8_t* databits)
+Data::Data(bool torsion, const StoredData &data, const uint8_t *databits)
 {
 	aa.assign(data.aa, data.aa + 3);
 	ss = data.ss;
@@ -496,8 +508,8 @@ Data::Data(bool torsion, const StoredData& data, const uint8_t* databits)
 	sd = data.sd;
 	sd_vs_random = data.sd_vs_random;
 	binSpacing = data.binSpacing;
-	
-	d2 = not torsion or std::set<std::string>{"CYS", "SER", "THR", "VAL"}.count(aa) == 0;
+
+	d2 = not torsion or std::set<std::string>{ "CYS", "SER", "THR", "VAL" }.count(aa) == 0;
 
 	size_t nBins = static_cast<size_t>(360 / binSpacing);
 	dim = nBins;
@@ -511,7 +523,7 @@ Data::Data(bool torsion, const StoredData& data, const uint8_t* databits)
 	DecompressSimpleArraySelector(bits, counts);
 }
 
-void Data::store(StoredData& data, std::vector<uint8_t>& databits)
+void Data::store(StoredData &data, std::vector<uint8_t> &databits)
 {
 	assert(aa.length() == 3);
 	copy(aa.begin(), aa.end(), data.aa);
@@ -522,7 +534,7 @@ void Data::store(StoredData& data, std::vector<uint8_t>& databits)
 	data.sd_vs_random = sd_vs_random;
 	data.offset = databits.size();
 	data.binSpacing = binSpacing;
-	
+
 	OBitStream bits(databits);
 	CompressSimpleArraySelector(bits, counts);
 	bits.sync();
@@ -538,7 +550,7 @@ float Data::interpolatedCount(float a1, float a2) const
 	{
 		size_t a1FloorIx = static_cast<size_t>(N * (a1 + 180) / 360);
 		size_t a2FloorIx = static_cast<size_t>(N * (a2 + 180) / 360);
-		
+
 		size_t a1CeilIx = (a1FloorIx + 1);
 		size_t a2CeilIx = (a2FloorIx + 1);
 
@@ -553,7 +565,7 @@ float Data::interpolatedCount(float a1, float a2) const
 
 		float c1 = count(a1FloorIx, a2FloorIx) + (count(a1CeilIx, a2FloorIx) - count(a1FloorIx, a2FloorIx)) * a1Factor;
 		float c2 = count(a1FloorIx, a2CeilIx) + (count(a1CeilIx, a2CeilIx) - count(a1FloorIx, a2CeilIx)) * a1Factor;
-		
+
 		result = c1 + (c2 - c1) * a2Factor;
 	}
 	else
@@ -606,40 +618,40 @@ void buildDataFile(const fs::path &dir)
 	std::vector<uint8_t> bits;
 
 	// first ramachandran counts
-	for (auto aa: cif::compound_factory::kAAMap)
+	for (auto aa : cif::compound_factory::kAAMap)
 	{
-		for (std::pair<SecStrType, const char*> ss: {
-				std::make_pair(SecStrType::helix, "helix"),
-				std::make_pair(SecStrType::strand, "strand"),
-				std::make_pair(SecStrType::other, "other") })
+		for (std::pair<SecStrType, const char *> ss : {
+				 std::make_pair(SecStrType::helix, "helix"),
+				 std::make_pair(SecStrType::strand, "strand"),
+				 std::make_pair(SecStrType::other, "other") })
 		{
 			auto p = dir / ("rama_count_"s + ss.second + '_' + aa.first + ".txt");
 			if (not fs::exists(p))
 				continue;
-			
+
 			std::ifstream f(p);
 			Data d("rama", aa.first, ss.first, f);
 
-			StoredData sd = { };
+			StoredData sd = {};
 			d.store(sd, bits);
 			data.push_back(sd);
 		}
 	}
 
-	for (std::tuple<SecStrType, const char*, const char*> ss: {
-			std::make_tuple(SecStrType::cis, "PRO", "cis_PRO"),
-			std::make_tuple(SecStrType::prepro, "***", "prepro_all_noGIV"),
-			std::make_tuple(SecStrType::prepro, "GLY", "prepro_GLY"),
-			std::make_tuple(SecStrType::prepro, "IV_", "prepro_ILEVAL") })
+	for (std::tuple<SecStrType, const char *, const char *> ss : {
+			 std::make_tuple(SecStrType::cis, "PRO", "cis_PRO"),
+			 std::make_tuple(SecStrType::prepro, "***", "prepro_all_noGIV"),
+			 std::make_tuple(SecStrType::prepro, "GLY", "prepro_GLY"),
+			 std::make_tuple(SecStrType::prepro, "IV_", "prepro_ILEVAL") })
 	{
 		auto p = dir / ("rama_count_"s + std::get<2>(ss) + ".txt");
 		if (not fs::exists(p))
 			continue;
-		
+
 		std::ifstream f(p);
 		Data d("rama", std::get<1>(ss), std::get<0>(ss), f);
 
-		StoredData sd = { };
+		StoredData sd = {};
 		d.store(sd, bits);
 		data.push_back(sd);
 	}
@@ -651,31 +663,31 @@ void buildDataFile(const fs::path &dir)
 	std::ofstream out("rama-data.bin", std::ios::binary);
 	if (not out.is_open())
 		throw std::runtime_error("Could not create rama-data.bin file");
-	out.write(reinterpret_cast<char*>(&mean_ramachandran), sizeof(mean_ramachandran));
-	out.write(reinterpret_cast<char*>(&sd_ramachandran), sizeof(sd_ramachandran));
-	out.write(reinterpret_cast<char*>(data.data()), data.size() * sizeof(StoredData));
-	out.write(reinterpret_cast<char*>(bits.data()), bits.size());
+	out.write(reinterpret_cast<char *>(&mean_ramachandran), sizeof(mean_ramachandran));
+	out.write(reinterpret_cast<char *>(&sd_ramachandran), sizeof(sd_ramachandran));
+	out.write(reinterpret_cast<char *>(data.data()), data.size() * sizeof(StoredData));
+	out.write(reinterpret_cast<char *>(bits.data()), bits.size());
 	out.close();
 
 	data.clear();
 	bits.clear();
 
 	// next torsion counts
-	for (auto aa: cif::compound_factory::kAAMap)
+	for (auto aa : cif::compound_factory::kAAMap)
 	{
-		for (std::pair<SecStrType, const char*> ss: {
-				std::make_pair(SecStrType::helix, "helix"),
-				std::make_pair(SecStrType::strand, "strand"),
-				std::make_pair(SecStrType::other, "other") })
+		for (std::pair<SecStrType, const char *> ss : {
+				 std::make_pair(SecStrType::helix, "helix"),
+				 std::make_pair(SecStrType::strand, "strand"),
+				 std::make_pair(SecStrType::other, "other") })
 		{
 			auto p = dir / ("torsion_count_"s + ss.second + '_' + aa.first + ".txt");
 			if (not fs::exists(p))
 				continue;
-			
+
 			std::ifstream f(p);
 			Data d("torsion", aa.first, ss.first, f);
 
-			StoredData sd = { };
+			StoredData sd = {};
 			d.store(sd, bits);
 			data.push_back(sd);
 		}
@@ -688,10 +700,10 @@ void buildDataFile(const fs::path &dir)
 	out.open("torsion-data.bin", std::ios::binary);
 	if (not out.is_open())
 		throw std::runtime_error("Could not create torsion-data.bin file");
-	out.write(reinterpret_cast<char*>(&mean_torsion), sizeof(mean_torsion));
-	out.write(reinterpret_cast<char*>(&sd_torsion), sizeof(sd_torsion));
-	out.write(reinterpret_cast<char*>(data.data()), data.size() * sizeof(StoredData));
-	out.write(reinterpret_cast<char*>(bits.data()), bits.size());
+	out.write(reinterpret_cast<char *>(&mean_torsion), sizeof(mean_torsion));
+	out.write(reinterpret_cast<char *>(&sd_torsion), sizeof(sd_torsion));
+	out.write(reinterpret_cast<char *>(data.data()), data.size() * sizeof(StoredData));
+	out.write(reinterpret_cast<char *>(bits.data()), bits.size());
 	out.close();
 }
 
@@ -700,31 +712,29 @@ void buildDataFile(const fs::path &dir)
 class DataTable
 {
   public:
-
-	static DataTable& instance()
+	static DataTable &instance()
 	{
 		static DataTable sInstance;
 		return sInstance;
 	}
 
-	const Data& loadTorsionData(const std::string& aa, SecStrType ss) const;
-	const Data& loadRamachandranData(const std::string& aa, SecStrType ss) const;
+	const Data &loadTorsionData(const std::string &aa, SecStrType ss) const;
+	const Data &loadRamachandranData(const std::string &aa, SecStrType ss) const;
 
-	float mean_torsion() const		{ return m_mean_torsion; }
-	float sd_torsion() const		{ return m_sd_torsion; }
-	float mean_ramachandran() const	{ return m_mean_ramachandran; }
-	float sd_ramachandran() const	{ return m_sd_ramachandran; }
+	float mean_torsion() const { return m_mean_torsion; }
+	float sd_torsion() const { return m_sd_torsion; }
+	float mean_ramachandran() const { return m_mean_ramachandran; }
+	float sd_ramachandran() const { return m_sd_ramachandran; }
 
   private:
-
-	DataTable(const DataTable& ) = delete;
-	DataTable& operator=(const DataTable&) = delete;
+	DataTable(const DataTable &) = delete;
+	DataTable &operator=(const DataTable &) = delete;
 
 	DataTable();
 
-	void load(const char* name, std::vector<Data>& table, float& mean, float& sd);
+	void load(const char *name, std::vector<Data> &table, float &mean, float &sd);
 
-	std::vector<Data>	m_torsion, m_ramachandran;
+	std::vector<Data> m_torsion, m_ramachandran;
 
 	float m_mean_torsion, m_sd_torsion, m_mean_ramachandran, m_sd_ramachandran;
 };
@@ -735,9 +745,9 @@ DataTable::DataTable()
 	load("rama-data.bin", m_ramachandran, m_mean_ramachandran, m_sd_ramachandran);
 }
 
-const Data& DataTable::loadTorsionData(const std::string& aa, SecStrType ss) const
+const Data &DataTable::loadTorsionData(const std::string &aa, SecStrType ss) const
 {
-	auto i = find_if(m_torsion.begin(), m_torsion.end(), [aa, ss](auto& d)
+	auto i = find_if(m_torsion.begin(), m_torsion.end(), [aa, ss](auto &d)
 		{ return d.aa == aa and d.ss == ss; });
 	if (i == m_torsion.end())
 		throw std::runtime_error("Data missing for aa = " + aa + " and ss = '" + static_cast<char>(ss) + '\'');
@@ -745,18 +755,20 @@ const Data& DataTable::loadTorsionData(const std::string& aa, SecStrType ss) con
 	return *i;
 }
 
-const Data& DataTable::loadRamachandranData(const std::string& aa, SecStrType ss) const
+const Data &DataTable::loadRamachandranData(const std::string &aa, SecStrType ss) const
 {
 	std::vector<Data>::const_iterator i;
 
 	switch (ss)
 	{
 		case SecStrType::cis:
-			i = find_if(m_ramachandran.begin(), m_ramachandran.end(), [](auto& d) { return d.ss == SecStrType::cis and d.aa == "PRO"; });
+			i = find_if(m_ramachandran.begin(), m_ramachandran.end(), [](auto &d)
+				{ return d.ss == SecStrType::cis and d.aa == "PRO"; });
 			break;
 
 		case SecStrType::prepro:
-			i = find_if(m_ramachandran.begin(), m_ramachandran.end(), [aa](auto& d) {
+			i = find_if(m_ramachandran.begin(), m_ramachandran.end(), [aa](auto &d)
+				{
 					bool result = false;
 					if (d.ss == SecStrType::prepro)
 					{
@@ -767,23 +779,22 @@ const Data& DataTable::loadRamachandranData(const std::string& aa, SecStrType ss
 						else
 							result = d.aa == "***";
 					}
-					return result;
-				});
+					return result; });
 			break;
 
 		default:
-			i = find_if(m_ramachandran.begin(), m_ramachandran.end(), [aa, ss](auto& d)
+			i = find_if(m_ramachandran.begin(), m_ramachandran.end(), [aa, ss](auto &d)
 				{ return d.aa == aa and d.ss == ss; });
 			break;
 	}
 
 	if (i == m_ramachandran.end())
 		throw std::runtime_error("Data missing for aa = " + aa + " and ss = '" + static_cast<char>(ss) + '\'');
-	
+
 	return *i;
 }
 
-void DataTable::load(const char* name, std::vector<Data>& table, float& mean, float& sd)
+void DataTable::load(const char *name, std::vector<Data> &table, float &mean, float &sd)
 {
 	using namespace std::literals;
 
@@ -796,19 +807,19 @@ void DataTable::load(const char* name, std::vector<Data>& table, float& mean, fl
 	auto size = rfd->tellg();
 	rfd->seekg(0, rfd->beg);
 
-	const float* fv = new float[size / sizeof(float) + 1];
-	rfd->read(reinterpret_cast<char*>(const_cast<float*>(fv)), size);
+	const float *fv = new float[size / sizeof(float) + 1];
+	rfd->read(reinterpret_cast<char *>(const_cast<float *>(fv)), size);
 
 	mean = fv[0];
 	sd = fv[1];
 
-	const StoredData* data = reinterpret_cast<const StoredData*>(fv + 2);
+	const StoredData *data = reinterpret_cast<const StoredData *>(fv + 2);
 	size_t ix = 0;
 	while (data[ix].aa[0] != 0)
 		++ix;
-	
+
 	size_t n = ix;
-	const uint8_t* bits = reinterpret_cast<const uint8_t*>(fv + 2) + (n + 1) * sizeof(StoredData);
+	const uint8_t *bits = reinterpret_cast<const uint8_t *>(fv + 2) + (n + 1) * sizeof(StoredData);
 
 	for (ix = 0; ix < n; ++ix)
 		table.emplace_back(strcmp(name, "torsion-data.bin") == 0, data[ix], bits);
@@ -816,7 +827,7 @@ void DataTable::load(const char* name, std::vector<Data>& table, float& mean, fl
 
 // --------------------------------------------------------------------
 
-float jackknife(const std::vector<float>& zScorePerResidue)
+float jackknife(const std::vector<float> &zScorePerResidue)
 {
 	// jackknife variance estimate, see: https://en.wikipedia.org/wiki/Jackknife_resampling
 
@@ -824,7 +835,7 @@ float jackknife(const std::vector<float>& zScorePerResidue)
 	double zScoreSum = accumulate(zScorePerResidue.begin(), zScorePerResidue.end(), 0.0);
 	std::vector<double> scores(N);
 
-	DataTable& tbl = DataTable::instance();
+	DataTable &tbl = DataTable::instance();
 
 	double scoreSum = 0;
 	for (size_t i = 0; i < zScorePerResidue.size(); ++i)
@@ -836,17 +847,18 @@ float jackknife(const std::vector<float>& zScorePerResidue)
 	}
 
 	double avg = scoreSum / N;
-	double sumD = accumulate(scores.begin(), scores.end(), 0.0, [avg](double a, double z) { return a + (z - avg) * (z - avg); });
+	double sumD = accumulate(scores.begin(), scores.end(), 0.0, [avg](double a, double z)
+		{ return a + (z - avg) * (z - avg); });
 
 	return sqrt((N - 1) * sumD / N);
 }
 
 // --------------------------------------------------------------------
 
-json calculateZScores(const cif::mm::structure& structure)
+json calculateZScores(const cif::mm::structure &structure)
 {
 	dssp dssp(structure, 3, false);
-	auto& tbl = DataTable::instance();
+	auto &tbl = DataTable::instance();
 
 	double ramaZScoreSum = 0;
 	size_t ramaZScoreCount = 0;
@@ -856,11 +868,11 @@ json calculateZScores(const cif::mm::structure& structure)
 	json residues;
 	std::vector<float> ramaZScorePerResidue, torsZScorePerResidue;
 
-	for (auto& poly: structure.polymers())
+	for (auto &poly : structure.polymers())
 	{
 		for (size_t i = 1; i + 1 < poly.size(); ++i)
 		{
-			auto& res = poly[i];
+			auto &res = poly[i];
 
 			auto phi = res.phi();
 			auto psi = res.psi();
@@ -874,12 +886,10 @@ json calculateZScores(const cif::mm::structure& structure)
 				{ "asymID", res.get_asym_id() },
 				{ "seqID", res.get_seq_id() },
 				{ "compID", aa },
-				{ "pdb", {
-					{ "strandID", res.get_auth_asym_id() },
-					{ "seqNum", std::stoi(res.get_auth_seq_id()) },
-					{ "compID", aa },
-					{ "insCode", res.get_pdb_ins_code() }
-				}}
+				{ "pdb", { { "strandID", res.get_auth_asym_id() },
+							 { "seqNum", std::stoi(res.get_auth_seq_id()) },
+							 { "compID", aa },
+							 { "insCode", res.get_pdb_ins_code() } } }
 			};
 
 			// remap some common modified amino acids
@@ -917,14 +927,23 @@ json calculateZScores(const cif::mm::structure& structure)
 
 				aa = "ALA";
 			}
-			
+
 			SecStrType tors_ss, rama_ss;
 
-			switch (dssp[{res.get_asym_id(), res.get_seq_id()}].type())
+			try
 			{
-				case dssp::structure_type::Alphahelix:	tors_ss = SecStrType::helix; break;
-				case dssp::structure_type::Strand:		tors_ss = SecStrType::strand; break;
-				default:								tors_ss = SecStrType::other; break;
+				switch (dssp[{ res.get_asym_id(), res.get_seq_id() }].type())
+				{
+					case dssp::structure_type::Alphahelix: tors_ss = SecStrType::helix; break;
+					case dssp::structure_type::Strand: tors_ss = SecStrType::strand; break;
+					default: tors_ss = SecStrType::other; break;
+				}
+			}
+			catch (const std::out_of_range &e)
+			{
+				if (cif::VERBOSE > 0)
+					std::cerr << "Residue " << res << " is missing in DSSP" << std::endl;
+				continue;
 			}
 
 			if (aa != "PRO" and poly[i + 1].get_compound_id() == "PRO")
@@ -934,13 +953,12 @@ json calculateZScores(const cif::mm::structure& structure)
 			else
 				rama_ss = tors_ss;
 
-// TODO: #pragma warning "todo" (but the question now is, what is here to do???)
-			auto& rd = tbl.loadRamachandranData(aa, rama_ss);
+			// TODO: #pragma warning "todo" (but the question now is, what is here to do???)
+			auto &rd = tbl.loadRamachandranData(aa, rama_ss);
 
 			auto zr = rd.zscore(phi, psi);
 
-			residue["ramachandran"] =
-			{
+			residue["ramachandran"] = {
 				{ "ss-type", to_string(rama_ss) },
 				{ "z-score", zr }
 			};
@@ -960,7 +978,7 @@ json calculateZScores(const cif::mm::structure& structure)
 					float chi1 = res.chi(0);
 					float chi2 = chiCount > 1 ? res.chi(1) : 0;
 
-					auto& td = tbl.loadTorsionData(aa, tors_ss);
+					auto &td = tbl.loadTorsionData(aa, tors_ss);
 
 					zt = td.zscore(chi1, chi2);
 
@@ -969,14 +987,13 @@ json calculateZScores(const cif::mm::structure& structure)
 
 					torsZScorePerResidue.push_back(zt);
 
-					residue["torsion"] =
-					{
+					residue["torsion"] = {
 						{ "ss-type", to_string(tors_ss) },
 						{ "z-score", zt }
 					};
 				}
 			}
-			catch (const std::exception& e)
+			catch (const std::exception &e)
 			{
 				if (cif::VERBOSE > 0)
 					std::cerr << e.what() << '\n';
@@ -1007,13 +1024,10 @@ json tortoize_calculate(const fs::path &xyzin)
 {
 	json data{
 		{ "software",
-			{
-				{ "name", "tortoize" },
+			{ { "name", "tortoize" },
 				{ "version", kVersionNumber },
 				{ "reference", "Sobolev et al. A Global Ramachandran Score Identifies Protein Structures with Unlikely Stereochemistry, Structure (2020)" },
-				{ "reference-doi", "https://doi.org/10.1016/j.str.2020.08.005" }
-			}
-		}
+				{ "reference-doi", "https://doi.org/10.1016/j.str.2020.08.005" } } }
 	};
 
 	// --------------------------------------------------------------------
@@ -1024,7 +1038,7 @@ json tortoize_calculate(const fs::path &xyzin)
 		throw std::runtime_error("Invalid or empty mmCIF/PDB file");
 
 	std::set<uint32_t> models;
-	for (auto r: f.front()["atom_site"])
+	for (auto r : f.front()["atom_site"])
 	{
 		if (not r["pdbx_PDB_model_num"].empty())
 			models.insert(r["pdbx_PDB_model_num"].as<uint32_t>());
@@ -1033,7 +1047,7 @@ json tortoize_calculate(const fs::path &xyzin)
 	if (models.empty())
 		models.insert(0);
 
-	for (auto model: models)
+	for (auto model : models)
 	{
 		cif::mm::structure structure(f, model);
 

@@ -1,3 +1,6 @@
+Version 2.0.11
+- Don't stop when a residue is not complete according to DSSP
+
 Version 2.0.10
 - Fix in logic, do not crash on modfied residues
 
