@@ -24,13 +24,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <fstream>
-#include <vector>
+#include "tortoize.hpp"
+#include "revision.hpp"
 
 #include <dssp.hpp>
 
-#include "revision.hpp"
-#include "tortoize.hpp"
+#include <fstream>
+#include <vector>
 
 namespace fs = std::filesystem;
 
@@ -416,7 +416,7 @@ class Data
 	{
 		a1Ix %= dim;
 		a2Ix %= dim;
-		return d2 ? counts.at(a1Ix * dim + a2Ix) : counts.at(a1Ix);
+		return static_cast<float>(d2 ? counts.at(a1Ix * dim + a2Ix) : counts.at(a1Ix));
 	}
 
 	size_t index(float a1, float a2 = 0) const
@@ -431,7 +431,7 @@ class Data
 		else
 			y = static_cast<size_t>((a1 + 180) / binSpacing);
 
-		return x * (360 / binSpacing) + y;
+		return x * static_cast<int>(std::rint(360 / binSpacing)) + y;
 	}
 
 	std::tuple<float, float> angles(size_t index) const
@@ -484,7 +484,7 @@ Data::Data(const char *type, const std::string &aa, SecStrType ss, std::istream 
 
 	for (size_t i = 0; i < nBins; ++i)
 	{
-		float a1, a2;
+		float a1 = 0, a2 = 0;
 		uint32_t count;
 
 		if (d2)
@@ -532,7 +532,7 @@ void Data::store(StoredData &data, std::vector<uint8_t> &databits)
 	data.sd = sd;
 	data.mean_vs_random = mean_vs_random;
 	data.sd_vs_random = sd_vs_random;
-	data.offset = databits.size();
+	data.offset = static_cast<uint32_t>(databits.size());
 	data.binSpacing = binSpacing;
 
 	OBitStream bits(databits);
@@ -850,7 +850,7 @@ float jackknife(const std::vector<float> &zScorePerResidue)
 	double sumD = accumulate(scores.begin(), scores.end(), 0.0, [avg](double a, double z)
 		{ return a + (z - avg) * (z - avg); });
 
-	return sqrt((N - 1) * sumD / N);
+	return static_cast<float>(std::sqrt((N - 1) * sumD / N));
 }
 
 // --------------------------------------------------------------------
@@ -970,7 +970,7 @@ json calculateZScores(const cif::mm::structure &structure)
 
 			try
 			{
-				float zt = nan("1");
+				float zt = nanf("1");
 
 				auto chiCount = res.nr_of_chis();
 				if (chiCount)
@@ -1003,8 +1003,8 @@ json calculateZScores(const cif::mm::structure &structure)
 		}
 	}
 
-	float ramaVsRand = ramaZScoreSum / ramaZScoreCount;
-	float torsVsRand = torsZScoreSum / torsZScoreCount;
+	float ramaVsRand = static_cast<float>(ramaZScoreSum / ramaZScoreCount);
+	float torsVsRand = static_cast<float>(torsZScoreSum / torsZScoreCount);
 
 	float jackknifeRama = jackknife(ramaZScorePerResidue);
 	float jackknifeTors = jackknife(torsZScorePerResidue);

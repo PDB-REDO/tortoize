@@ -24,8 +24,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <zeep/json/element.hpp>
 #include <cif++.hpp>
+#include <zeep/json/element.hpp>
 
 void buildDataFile(const std::filesystem::path &dir);
 

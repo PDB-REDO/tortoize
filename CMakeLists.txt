@@ -50,14 +50,21 @@ elseif(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 endif()
 
-if(NOT "$ENV{CCP4}" STREQUAL "")
-	set(BUILD_SHARED_LIBS ON)
-	set(CCP4 $ENV{CCP4})
-	list(PREPEND CMAKE_MODULE_PATH "${CCP4}/Lib")
-	list(APPEND CMAKE_PREFIX_PATH ${CCP4})
+# Optionally build a version to be installed inside CCP4
+option(BUILD_FOR_CCP4 "Build a version to be installed in CCP4" OFF)
 
-	if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-		set(CMAKE_PREFIX_PATH ${CCP4})
+if(BUILD_FOR_CCP4)
+	set(USE_RSRC 0)
+	if("$ENV{CCP4}" STREQUAL "" OR NOT EXISTS $ENV{CCP4})
+		message(FATAL_ERROR "A CCP4 built was requested but CCP4 was not sourced")
+	else()
+		list(APPEND CMAKE_MODULE_PATH "$ENV{CCP4}")
+		list(APPEND CMAKE_PREFIX_PATH "$ENV{CCP4}")
+		set(CMAKE_INSTALL_PREFIX "$ENV{CCP4}")
+
+		if(WIN32)
+			set(BUILD_SHARED_LIBS ON)
+		endif()
 	endif()
 endif()
 
@@ -84,15 +91,18 @@ include(VersionString)
 write_version_header(${PROJECT_SOURCE_DIR}/src)
 
 # Optionally use mrc to create resources
-find_package(Mrc QUIET)
+if(NOT DEFINED USE_RSRC)
+	find_package(Mrc QUIET)
 
-if(MRC_FOUND)
-	option(USE_RSRC "Use mrc to create resources" ON)
-else()
-	message(STATUS "Not using resources since mrc was not found")
+	if(MRC_FOUND)
+		option(USE_RSRC "Use mrc to create resources" ON)
+	else()
+		message(STATUS "Not using resources since mrc was not found")
+		set(USE_RSRC OFF)
+	endif()
 endif()
 
-if(USE_RSRC STREQUAL "ON")
+if(USE_RSRC)
 	set(USE_RSRC 1)
 	add_compile_definitions(USE_RSRC)
 endif()
@@ -108,6 +118,7 @@ find_package(Threads)
 if(NOT PDB_REDO_META)
 	find_package(libmcfp REQUIRED)
 	find_package(dssp REQUIRED)
+	find_package(cifpp REQUIRED)
 	find_package(zeep 5.1.8 REQUIRED)
 endif()
 
@@ -141,12 +152,8 @@ if(PDB_REDO_META)
 	target_include_directories(tortoize PRIVATE ${CMAKE_PROJECT_DIR}/dssp/include)
 endif()
 
-target_link_libraries(tortoize
-	cifpp::cifpp
-	dssp::dssp
-	zeep::zeep
-	std::filesystem
-	libmcfp::libmcfp)
+target_link_libraries(tortoize dssp::dssp cifpp::cifpp zeep::zeep std::filesystem libmcfp::libmcfp)
+target_compile_definitions(tortoize PUBLIC NOMINMAX=1)
 
 install(TARGETS ${PROJECT_NAME}
 	RUNTIME DESTINATION ${BIN_INSTALL_DIR}
@@ -166,13 +173,10 @@ if(ENABLE_TESTING)
 		${PROJECT_SOURCE_DIR}/test/tortoize-unit-test.cpp
 		${PROJECT_SOURCE_DIR}/src/tortoize.cpp)
 
+	target_compile_definitions(tortoize-unit-test PUBLIC NOMINMAX=1)
 	target_include_directories(tortoize-unit-test PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
 
-	target_link_libraries(tortoize-unit-test
-		cifpp::cifpp
-		dssp::dssp
-		zeep::zeep
-		std::filesystem)
+	target_link_libraries(tortoize-unit-test dssp::dssp cifpp::cifpp zeep::zeep std::filesystem)
 
 	add_test(NAME tortoize-unit-test COMMAND $<TARGET_FILE:tortoize-unit-test> -- ${PROJECT_SOURCE_DIR}/test)
 
