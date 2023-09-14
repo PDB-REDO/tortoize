@@ -34,9 +34,9 @@ include(CheckFunctionExists)
 include(CheckIncludeFiles)
 include(CheckLibraryExists)
 include(CMakePackageConfigHelpers)
-include(Dart)
 include(FindFilesystem)
 include(GenerateExportHeader)
+include(CTest)
 
 set(CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD 17)
@@ -165,7 +165,9 @@ endif()
 install(FILES doc/tortoize.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
 # Test code
-if(ENABLE_TESTING)
+if(BUILD_TESTING)
+	enable_testing()
+
 	add_executable(tortoize-unit-test
 		${PROJECT_SOURCE_DIR}/test/tortoize-unit-test.cpp
 		${PROJECT_SOURCE_DIR}/src/tortoize.cpp)
