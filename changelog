@@ -1,3 +1,6 @@
+Version 2.0.12
+- new version string module
+
 Version 2.0.11
 - Don't stop when a residue is not complete according to DSSP
 - Building for CCP4
