@@ -27,11 +27,13 @@
 #include "tortoize.hpp"
 #include "revision.hpp"
 
+#if WEBSERVICE
 #include <zeep/http/daemon.hpp>
 #include <zeep/http/server.hpp>
 #include <zeep/http/html-controller.hpp>
 #include <zeep/http/rest-controller.hpp>
 #include <zeep/crypto.hpp>
+#endif
 
 #include <mcfp/mcfp.hpp>
 #include <cif++.hpp>
