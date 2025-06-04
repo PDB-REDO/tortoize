@@ -29,6 +29,7 @@ project(tortoize VERSION 2.0.14 LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+include(CPM)
 include(FindOrFetch)
 include(GNUInstallDirs)
 include(CheckFunctionExists)
@@ -89,7 +90,7 @@ include(VersionString)
 write_version_header(${PROJECT_SOURCE_DIR}/src)
 
 # Optionally use mrc to create resources
-find_package(Mrc QUIET)
+find_package(mrc QUIET)
 
 if(MRC_FOUND)
 	option(USE_RSRC "Use mrc to create resources" ON)
@@ -113,11 +114,19 @@ find_package(Threads)
 
 find_package(nlohmann_json REQUIRED)
 
-find_or_fetch_package(mcfp VERSION 1.3.5 GIT_REPOSITORY https://github.com/mhekkel/libmcfp GIT_TAG b6c62a3)
-find_or_fetch_package(cifpp VERSION 7 GIT_REPOSITORY https://github.com/PDB-REDO/libcifpp.git GIT_TAG v7.0.9 VARIABLES "CIFPP_SHARE_DIR")
+CPMFindPackage(NAME mcfp GIT_REPOSITORY "https://github.com/mhekkel/libmcfp.git" GIT_TAG v1.4.2 EXCLUDE_FROM_ALL YES)
 
-if (NOT TARGET dssp)
+if(NOT TARGET dssp)
 	add_subdirectory(dssp EXCLUDE_FROM_ALL)
+endif()
+
+if(TARGET cifpp)
+	get_target_property(CIFPP_SOURCE_DIR cifpp SOURCE_DIR)
+	get_target_property(CIFPP_SHARE_DIR cifpp CIFPP_DATA_DIR)
+
+	set(CIFPP_DATA_DIR ${CIFPP_SOURCE_DIR}/rsrc)
+else()
+	set(CIFPP_DATA_DIR ${CIFPP_SHARE_DIR})
 endif()
 
 add_executable(tortoize
@@ -128,16 +137,14 @@ if(USE_RSRC)
 	list(APPEND RESOURCES
 		${PROJECT_SOURCE_DIR}/rsrc/rama-data.bin
 		${PROJECT_SOURCE_DIR}/rsrc/torsion-data.bin
-		${CIFPP_SHARE_DIR}/mmcif_pdbx.dic
-		${CIFPP_SHARE_DIR}/mmcif_ddl.dic
-		${CIFPP_SHARE_DIR}/mmcif_ma.dic)
+		${CIFPP_DATA_DIR}/mmcif_pdbx.dic)
 
 	mrc_target_resources(tortoize ${RESOURCES})
 endif()
 
 target_include_directories(tortoize PRIVATE ${PROJECT_BINARY_DIR})
 
-target_link_libraries(tortoize dssp::dssp cifpp::cifpp mcfp::mcfp)
+target_link_libraries(tortoize dssp::dssp nlohmann_json::nlohmann_json mcfp::mcfp)
 target_compile_definitions(tortoize PUBLIC NOMINMAX=1)
 
 install(TARGETS tortoize
@@ -147,6 +154,11 @@ install(TARGETS tortoize
 if(NOT USE_RSRC)
 	install(FILES ${PROJECT_SOURCE_DIR}/rsrc/rama-data.bin ${PROJECT_SOURCE_DIR}/rsrc/torsion-data.bin
 		DESTINATION ${CIFPP_SHARE_DIR})
+
+	if(TARGET cifpp)
+		install(FILES ${CIFPP_DATA_DIR}/mmcif_pdbx.dic
+			DESTINATION ${CIFPP_SHARE_DIR})
+	endif()
 endif()
 
 if(BUILD_WEBSERVICE)
@@ -161,7 +173,7 @@ if(BUILD_WEBSERVICE)
 		${PROJECT_SOURCE_DIR}/src/tortoize-server-main.cpp
 	)
 
-	target_link_libraries(tortoized dssp::dssp cifpp::cifpp mcfp::mcfp zeep::zeep)
+	target_link_libraries(tortoized dssp::dssp mcfp::mcfp nlohmann_json::nlohmann_json zeep::zeep)
 
 	mrc_target_resources(tortoized ${RESOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/docroot/)
 
