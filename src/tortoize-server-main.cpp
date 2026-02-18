@@ -33,7 +33,7 @@
 #include <zeep/http/rest-controller.hpp>
 #include <zeep/http/server.hpp>
 
-#include <cif++.hpp>
+#include <cif++/cif++.hpp>
 #include <mcfp/mcfp.hpp>
 
 #include <fstream>
