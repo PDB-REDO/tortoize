@@ -371,7 +371,7 @@ class Data
 		, mean_vs_random(d.mean_vs_random)
 		, sd_vs_random(d.sd_vs_random)
 		, binSpacing(d.binSpacing)
-		, counts(move(d.counts))
+		, counts(std::move(d.counts))
 		, dim(d.dim)
 		, d2(d.d2)
 	{
@@ -1078,7 +1078,7 @@ json tortoize_calculate(const fs::path &xyzin)
 	for (auto r : f.front()["atom_site"])
 	{
 		if (not r["pdbx_PDB_model_num"].empty())
-			models.insert(r["pdbx_PDB_model_num"].as<uint32_t>());
+			models.insert(r["pdbx_PDB_model_num"].get<uint32_t>());
 	}
 
 	if (models.empty())

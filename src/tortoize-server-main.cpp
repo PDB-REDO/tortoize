@@ -130,7 +130,7 @@ class tortoize_rest_controller : public zeep::http::rest_controller
 			for (auto r : f.front()["atom_site"])
 			{
 				if (not r["pdbx_PDB_model_num"].empty())
-					models.insert(r["pdbx_PDB_model_num"].as<uint32_t>());
+					models.insert(r["pdbx_PDB_model_num"].get<uint32_t>());
 			}
 
 			if (models.empty())
