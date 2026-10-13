@@ -1,6 +1,6 @@
 import "core-js/stable";
-import "regenerator-runtime/runtime";
-import bsCustomFileInput from 'bs-custom-file-input';
+import 'bootstrap';
+import './pdb-redo-style.scss';
 
 class Tortoize {
 	constructor(form) {
@@ -70,7 +70,5 @@ class Tortoize {
 
 
 window.addEventListener('load', () => {
-	bsCustomFileInput.init();
-
 	new Tortoize();
 });

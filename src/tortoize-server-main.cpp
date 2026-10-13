@@ -26,17 +26,15 @@
 
 #include "revision.hpp"
 #include "tortoize.hpp"
+#include "zeep/http/template-processor.hpp"
 
+#include <cif++/cif++.hpp>
+#include <fstream>
+#include <mcfp/mcfp.hpp>
 #include <zeep/crypto.hpp>
 #include <zeep/http/daemon.hpp>
 #include <zeep/http/html-controller.hpp>
-#include <zeep/http/rest-controller.hpp>
 #include <zeep/http/server.hpp>
-
-#include <cif++/cif++.hpp>
-#include <mcfp/mcfp.hpp>
-
-#include <fstream>
 
 namespace fs = std::filesystem;
 
@@ -56,26 +54,26 @@ class tortoize_html_controller : public zeep::http::html_controller
 {
   public:
 	tortoize_html_controller()
-		: zeep::http::html_controller("tortoize")
+		: zeep::http::html_controller("")
 	{
-		mount("{css,scripts,fonts,images,favicon}/", &tortoize_html_controller::handle_file);
-		mount("{favicon.ico,browserconfig.xml,manifest.json}", &tortoize_html_controller::handle_file);
-		mount("", &tortoize_html_controller::index);
+		map_get_file("{css,scripts,fonts,images,favicon}/");
+		map_get_file("{favicon.ico,browserconfig.xml,manifest.json}");
+		map_get("", &tortoize_html_controller::index);
 	}
 
-	void index(const zeep::http::request &request, const zeep::http::scope &scope, zeep::http::reply &reply)
+	zeep::http::reply index(const zeep::http::scope &scope)
 	{
-		get_template_processor().create_reply_from_template("index", scope, reply);
+		return get_template_processor().create_reply_from_template("index", scope);
 	}
 };
 
 // --------------------------------------------------------------------
 
-class tortoize_rest_controller : public zeep::http::rest_controller
+class tortoize_rest_controller : public zeep::http::controller
 {
   public:
 	tortoize_rest_controller()
-		: zeep::http::rest_controller("")
+		: zeep::http::controller("")
 		, m_tempdir(fs::temp_directory_path() / "tortoize-ws")
 	{
 		fs::create_directories(m_tempdir);
@@ -188,6 +186,9 @@ int start_server(int argc, char *argv[])
 		mcfp::make_option<uint16_t>("port", 10350, "Port to listen to"),
 		mcfp::make_option<std::string>("user,u", "www-data", "User to run the daemon"),
 
+		// mcfp::make_option<std::string>("config", "Config file to use"),
+		mcfp::make_option<std::string>("context", "", "External address"),
+
 		mcfp::make_option("no-daemon,F", "Do not fork into background"));
 
 	config.parse(argc, argv);
@@ -218,18 +219,21 @@ int start_server(int argc, char *argv[])
 	std::string address = config.get<std::string>("address");
 	uint16_t port = config.get<uint16_t>("port");
 
-	zh::daemon server([&]()
+	zh::daemon server([&, context = config.get("context")]()
 		{
 		 auto s = new zeep::http::server();
 
-#if DEBUG
+#if not defined(NDEBUG)
 		 s->set_template_processor(new zeep::http::file_based_html_template_processor("docroot"));
 #else
 		 s->set_template_processor(new zeep::http::rsrc_based_html_template_processor());
 #endif
-		 s->add_controller(new tortoize_rest_controller());
-		 s->add_controller(new tortoize_html_controller());
-		 return s; }, "tortoized");
+
+		s->set_context_path(context);
+
+		s->add_controller(new tortoize_rest_controller());
+		s->add_controller(new tortoize_html_controller());
+		return s; }, "tortoized");
 
 	std::string command = config.operands().front();
 
@@ -240,7 +244,7 @@ int start_server(int argc, char *argv[])
 		if (config.has("no-daemon"))
 			result = server.run_foreground(address, port);
 		else
-			result = server.start(address, port, 2, 2, user);
+			result = server.start(address, port, 2, user);
 		// server.start(vm.count("no-daemon"), address, port, 2, user);
 		// // result = daemon::start(vm.count("no-daemon"), port, user);
 	}

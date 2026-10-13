@@ -162,11 +162,36 @@ if(NOT USE_RSRC)
 endif()
 
 if(BUILD_WEBSERVICE)
-	find_package(zeep 6 REQUIRED)
+	find_package(zeep 8 REQUIRED)
 
 	if(NOT USE_RSRC)
 		message(FATAL_ERROR "tortoize: Web service needs mrc/resources")
 	endif()
+
+    find_program(YARN yarn REQUIRED)
+
+    # Make sure yarn is initialised
+    add_custom_command(
+        OUTPUT ${PROJECT_SOURCE_DIR}/node_modules
+        COMMAND ${YARN}
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+
+    # yarn rules for javascripts
+    set(webpack_input
+        ${PROJECT_SOURCE_DIR}/webapp/index.js
+        ${PROJECT_SOURCE_DIR}/webapp/pdb-redo-style.scss
+        ${PROJECT_SOURCE_DIR}/webpack.config.js)
+
+    set(webpack_output ${PROJECT_SOURCE_DIR}/docroot/scripts/index.js)
+
+    add_custom_command(
+        OUTPUT ${webpack_output}
+        DEPENDS ${webpack_input}
+        COMMAND ${YARN} run $<IF:$<CONFIG:Debug>,build,build-production>
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+
+    add_custom_target(webpack DEPENDS ${PROJECT_SOURCE_DIR}/node_modules
+        ${webpack_output})
 
 	add_executable(tortoized
 		${PROJECT_SOURCE_DIR}/src/tortoize.cpp
@@ -174,6 +199,7 @@ if(BUILD_WEBSERVICE)
 	)
 
 	target_link_libraries(tortoized dssp::dssp cifpp::cifpp mcfp::mcfp zeep::zeep)
+	add_dependencies(tortoized webpack)
 
 	mrc_target_resources(tortoized ${RESOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/docroot/)
 

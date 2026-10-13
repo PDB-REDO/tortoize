@@ -1,0 +1,623 @@
+@use "sass:math";
+
+// (Required) Import Bootstrap
+@import "bootstrap/scss/_functions";
+@import "bootstrap/scss/_variables";
+@import "bootstrap/scss/_mixins";
+
+// @import "~bootstrap-icons/font/bootstrap-icons.css";
+
+.alert {
+	border: 1px solid;
+}
+
+@import "bootstrap/scss/_alert";
+
+$font-family-sans-serif: "Verdana", "Arial", "Helvetica", "sans-serif";
+
+$primary: rgb(100, 100, 100);
+$primary-rgb: 100, 100, 100;
+
+$nav-primary: #FF9933;
+$nav-secondary: #ffecbf;
+$nav-link: #3366cc;
+
+$nav-primary-hover: #d8c7a5;
+
+$dropdown-bg: $nav-secondary;
+$dropdown-link-color: $nav-link;
+$dropdown-link-hover-color: $nav-link;
+$dropdown-link-hover-bg: $nav-primary-hover;
+$dropdown-border-radius: 0;
+
+$pdb-redo-colors: (
+	"primary": $primary,
+	"nav-primary": $nav-primary,
+	"nav-secondary": $nav-secondary,
+);
+
+$navbar-padding-y: 0;
+$nav-link-padding-y: math.div($spacer, 2);
+
+$theme-colors: map-merge($pdb-redo-colors, $theme-colors);
+
+// (Required) Import Bootstrap
+@import "bootstrap/scss/bootstrap";
+
+// Bootstrap icons, we only need :open
+
+@font-face {
+	font-display: block;
+	font-family: "bootstrap-icons";
+	src: url(../node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2) format("woff2"),
+		url(../node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff) format("woff");
+}
+
+.bi::before,
+[class^="bi-"]::before,
+[class*=" bi-"]::before {
+	display: inline-block;
+	font-family: bootstrap-icons !important;
+	font-style: normal;
+	font-weight: normal !important;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	vertical-align: -.125em;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.bi-trash::before {
+	content: "\f5de";
+}
+
+// Rest of the style
+
+@mixin hover-focus() {
+
+	&:hover,
+	&:focus {
+		@content;
+	}
+}
+
+.site {
+	display: flex;
+	min-height: 100vh;
+	height: 100%;
+	flex-direction: column;
+
+	header,
+	footer {
+		flex: none;
+	}
+
+	footer {
+		clear: both;
+		border-top: 1px solid #888;
+		padding: 0.5em;
+		margin-top: 2em;
+		font-size: small;
+		color: #555;
+		white-space: pre;
+	}
+
+	.site-content {
+		flex: 1 0 auto;
+		padding: var(--space) var(--space) 0;
+		width: 100%;
+
+		&::after {
+			content: '\00a0';
+			/* &nbsp; */
+			display: block;
+			margin-top: var(--space);
+			height: 0px;
+			visibility: hidden;
+		}
+	}
+}
+
+// PDB ID
+
+.pdb_id {
+	margin-bottom: 1.5rem;
+}
+
+// for the pdb-redo header
+
+header {
+	min-height: 6em;
+	padding-bottom: 1em;
+
+	img {
+		min-height: calc(6em + 30px);
+		margin: -15px 0;
+		width: auto;
+	}
+
+	div {
+		flex: 1 0 0%;
+	}
+
+	div.my-overflow {
+		overflow: hidden;
+		white-space: nowrap;
+	}
+
+	nav.first {
+		padding: 0.8em !important;
+	}
+
+	.navbar {
+		.navbar-nav {
+			.nav-link {
+				color: $nav-link;
+
+				@include hover-focus() {
+					background-color: $nav-primary-hover;
+				}
+
+				&.active {
+					background-color: lighten($nav-link, 5%);
+					color: white;
+				}
+
+				&.disabled {
+					color: mix($nav-link, $nav-secondary, 50%);
+				}
+			}
+		}
+
+		.navbar-toggler {
+			border-color: rgba($black, .1);
+		}
+
+		.navbar-toggler-icon {
+			background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='#{$navbar-light-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+		}
+	}
+
+	.first {
+		background-color: $nav-primary;
+		color: white;
+
+		a {
+			color: white;
+			text-decoration: none;
+		}
+	}
+
+	.second {
+		background-color: $nav-secondary;
+	}
+
+	a {
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}
+
+@media all and (max-width: 1024px) {
+
+	header {
+		min-height: 4em;
+
+		img {
+			min-height: calc(4em + 30px);
+		}
+
+		nav.first {
+			padding: 0.4em !important;
+		}
+
+		.second {
+			padding: 0.2em;
+		}
+	}
+}
+
+article {
+	margin-top: 1em;
+	margin-bottom: 2em;
+}
+
+article h2 {
+	margin-bottom: 0.5em;
+	font-size: x-large;
+}
+
+a {
+	color: #3366cc;
+	text-decoration: none;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+$nr-of-slides: 12;
+$slide-width: 200px;
+$ticker-tape-width: $nr-of-slides * $slide-width;
+
+.ticker-container {
+	.ticker-tape {
+		height: auto;
+		margin: auto;
+		overflow: hidden;
+		position: relative;
+		width: 100%;
+
+		--tape-width: calc(100%);
+	}
+
+	.ticker-tape:before,
+	.ticker-tape:after {
+		background: linear-gradient(to right, white 0%, rgba(255, 255, 255, 0) 100%);
+		content: "";
+		height: 80px;
+		position: absolute;
+		width: 160px;
+		z-index: 2;
+	}
+
+	.ticker-tape:after {
+		right: 0;
+		top: 0;
+		transform: rotateZ(180deg);
+	}
+
+	.ticker-tape:before {
+		left: 0;
+		top: 0;
+	}
+
+	.slide-track {
+		-webkit-animation: scroll 40s linear infinite;
+		animation: scroll 40s linear infinite;
+		display: flex;
+		width: $ticker-tape-width;
+	}
+
+	div.slide {
+		padding: 0 12px;
+		display: flex;
+		width: 200px;
+		flex-direction: column;
+		justify-content: center;
+
+		span {
+			width: 100%;
+			font-size: small;
+			display: block;
+			font-weight: bold;
+			text-align: center;
+		}
+
+		img {
+			max-width: 100%;
+		}
+	}
+}
+
+/* Animation */
+@-webkit-keyframes scroll {
+	0% {
+		transform: translateX(var(--tape-width));
+	}
+
+	100% {
+		transform: translateX(-$ticker-tape-width);
+	}
+}
+
+@keyframes scroll {
+	0% {
+		transform: translateX(var(--tape-width));
+	}
+
+	100% {
+		transform: translateX(-$ticker-tape-width);
+	}
+}
+
+.error-info {
+	list-style: none;
+}
+
+.nummer {
+	text-align: right;
+}
+
+.error-head-text {
+	font-size: large;
+}
+
+.logo img {
+	margin: -15px 0;
+	height: 2em;
+	background-color: white;
+}
+
+ul.error-info {
+	margin: 0;
+	list-style: none;
+}
+
+a.action {
+	color: #888;
+}
+
+a.action:hover {
+	color: #555;
+}
+
+// pdb-e sliders
+
+.sliders {
+	display: inline-flex;
+	flex-direction: column;
+}
+
+.slider {
+	position: relative;
+	width: 100%;
+}
+
+.slider-label {
+	clear: both;
+	overflow: hidden;
+	white-space: nowrap;
+	font-size: x-small;
+	text-overflow: ellipsis;
+}
+
+.slider-background {
+	margin: 1px;
+	border: 1px solid rgb(204, 204, 204);
+	padding: 0;
+	height: 11px;
+	width: 100%;
+	background-clip: border-box;
+	background-origin: padding-box;
+	background-position-x: 0;
+	background-position-y: 0;
+	background: transparent repeat scroll 0 0;
+	background-size: auto auto;
+	box-sizing: content-box;
+	float: left;
+}
+
+.slider-gradient {
+	background-image:
+		linear-gradient(to right, rgb(255, 0, 0) 0, rgb(255, 255, 255) 50%, rgb(255, 255, 255) 51%, rgb(102, 153, 102) 100%);
+}
+
+.slider-no-data {
+	background: lightgray;
+}
+
+div.slider-position {
+	position: absolute;
+	height: 11px;
+	width: 20%;
+	border: 2px solid black;
+	background-color: rgba(255, 255, 255, 0.7);
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+
+	&.slider-position-0 {
+		left: 0%;
+	}
+
+	&.slider-position-1 {
+		left: 20%;
+	}
+
+	&.slider-position-2 {
+		left: 40%;
+	}
+
+	&.slider-position-3 {
+		left: 60%;
+	}
+
+	&.slider-position-4 {
+		left: 80%;
+	}
+}
+
+.no-list {
+	list-style: none;
+	margin: 0;
+	padding: 1px;
+}
+
+// For the admin page
+
+th.sortable {
+
+	&:hover {
+		text-decoration: underline;
+	}
+
+	&.sorted-asc::after,
+	&.sorted-desc::after {
+		display: inline-block;
+		font-family: bootstrap-icons !important;
+		font-style: normal;
+		font-weight: normal !important;
+		font-variant: normal;
+		text-transform: none;
+		line-height: 1;
+		vertical-align: -.125em;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		padding-left: 0.5em;
+	}
+
+	&.sorted-asc::after {
+		content: "\F574";
+	}
+
+	&.sorted-desc::after {
+		content: "\F57B";
+	}
+}
+
+a.delete-a {
+	color: rgb(207, 60, 60);
+	cursor: pointer;
+}
+
+tr.job-row {
+	cursor: pointer;
+}
+
+// // (Required) Import Bootstrap
+// @import "bootstrap/scss/_functions";
+// @import "bootstrap/scss/_variables";
+// @import "bootstrap/scss/_mixins";
+
+// $font-family-sans-serif: "Verdana", "Arial", "Helvetica", "sans-serif";
+
+// $primary: rgb(100, 100, 100);
+
+// $nav-primary: #FF9933;
+// $nav-secondary: #ffecbf;
+// $nav-link: #3366cc;
+
+// $nav-primary-hover: #d8c7a5;
+
+// $theme-colors: (
+// 	"nav-primary": $nav-primary,
+// 	"nav-secondary": $nav-secondary,
+
+// 	"primary": $primary
+// );
+
+// $navbar-dark-color: $nav-link;
+// $navbar-dark-hover-color: $nav-link;
+// $navbar-dark-active-color: $nav-link;
+// $navbar-dark-disabled-color: rgba($nav-link, .5);
+
+// $navbar-padding-y: 0;
+// $nav-link-padding-y: $spacer / 2;
+
+// // (Required) Import Bootstrap
+// @import "bootstrap/scss/bootstrap";
+
+// .navbar-dark {
+// 	.navbar-nav {
+// 	  .nav-link {
+// 		@include hover-focus() {
+// 			background-color: $nav-primary-hover;
+// 		}
+// 	  }
+// 	}
+// }
+
+// // for the pdb-redo header
+
+// header {
+//     min-height: 6em;
+//     padding-bottom: 1em;
+// }
+
+// .h-left {
+//     float: left;
+//     min-height: 6em;
+//     width: 10em;
+// }
+
+// .h-right {
+//     padding-left: 10em;
+//     width: 100%;
+// }
+
+// .h-left img {
+// 	min-height: calc(6em + 30px);
+// 	margin: -15px 0;
+// 	width: auto;
+// }
+
+// header div.first, header div.second {
+//     /*padding: 0.5em;*/
+//     /*font-size: small;*/
+//     /*margin-left: 6em;*/
+//     padding: 1em !important;
+// 	min-height: 3em;
+// }
+
+// header a {
+//     text-decoration: none;
+// }
+
+// header a:hover {
+//     text-decoration: underline;
+// }
+
+// header div.first {
+//     background-color: $nav-primary;
+//     color: white;
+// }
+
+// header div.second {
+//     background-color: $nav-secondary;
+// }
+
+// header div.second nav {
+//     color: $nav-link;
+// }
+
+// header div.first a {
+//     color: white;
+//     text-decoration: none;
+// }
+
+// header div.second a, .login-links a {
+//     color: $nav-link;
+// }
+
+// header div.second nav {
+//     float: left;
+//     clear: none;
+// }
+
+// header div.second span.user-panel {
+//     float: right;
+// }
+
+// header div.second div.clear {
+//     clear: both;
+// }
+
+// @media all and (max-width: 1024px) {
+
+//     header {
+//         min-height: 4em;
+//     }
+
+//     .h-left {
+//         height: 4em;
+//         width: 8em;
+//     }
+
+//     .h-right {
+//         padding-left: 8em;
+//     }
+
+//     header img {
+//        min-height: calc(4em + 30px);
+//     }
+
+//     header div.first, header div.second {
+//         padding: 0;
+//         height: 2em;
+//     }
+// }
