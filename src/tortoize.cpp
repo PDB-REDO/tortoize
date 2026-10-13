@@ -26,12 +26,15 @@
 
 #include "tortoize.hpp"
 
+#include "cif++/utilities.hpp"
 #include "revision.hpp"
 
 #include <algorithm>
 #include <bit>
+#include <charconv>
 #include <dssp.hpp>
 #include <fstream>
+#include <iomanip>
 #include <utility>
 #include <vector>
 
@@ -585,7 +588,7 @@ void buildDataFile(const fs::path &dir)
 
 	// first read the global mean and sd
 
-	float mean_torsion, sd_torsion, mean_ramachandran, sd_ramachandran;
+	float mean_torsion = 0, sd_torsion = 0, mean_ramachandran = 0, sd_ramachandran = 0;
 
 	std::ifstream in(dir / "zscores_proteins.txt");
 	std::string line;
@@ -817,13 +820,13 @@ void DataTable::load(const char *name, std::vector<Data> &table, float &mean, fl
 	auto size = rfd->tellg();
 	rfd->seekg(0, rfd->beg);
 
-	auto *fv = new float[size / sizeof(float) + 1];
-	rfd->read(reinterpret_cast<char *>(fv), size);
+	std::vector<float> fv(size / sizeof(float) + 1);
+	rfd->read(reinterpret_cast<char *>(fv.data()), size);
 
 	mean = fv[0];
 	sd = fv[1];
 
-	auto *data = reinterpret_cast<StoredData *>(fv + 2);
+	auto *data = reinterpret_cast<StoredData *>(fv.data() + 2);
 
 	if constexpr (std::endian::native == std::endian::big)
 	{
@@ -836,7 +839,7 @@ void DataTable::load(const char *name, std::vector<Data> &table, float &mean, fl
 		++ix;
 
 	size_t n = ix;
-	const uint8_t *bits = reinterpret_cast<const uint8_t *>(fv + 2) + (n + 1) * sizeof(StoredData);
+	const uint8_t *bits = reinterpret_cast<const uint8_t *>(fv.data() + 2) + (n + 1) * sizeof(StoredData);
 
 	for (ix = 0; ix < n; ++ix)
 	{
@@ -911,12 +914,21 @@ json calculateZScores(const cif::mm::structure &structure)
 
 			std::string aa = res.get_compound_id();
 
+			int seqNum;
+			auto seqNumStr = res.get_pdb_seq_num();
+			if (auto r = std::from_chars(seqNumStr.data(), seqNumStr.data() + seqNumStr.length(), seqNum); r.ec == std::errc{})
+			{
+				if (cif::VERBOSE > 0)
+					std::cerr << "Invalid pdb sequence number in residue: " << std::quoted(seqNumStr) << '\n';
+				seqNum = 0;
+			}
+
 			json residue = {
 				{ "asymID", res.get_asym_id() },
 				{ "seqID", res.get_seq_id() },
 				{ "compID", aa },
 				{ "pdb", { { "strandID", res.get_pdb_strand_id() },
-							 { "seqNum", std::stoi(res.get_pdb_seq_num()) },
+							 { "seqNum", seqNum },
 							 { "compID", aa },
 							 { "insCode", res.get_pdb_ins_code() } } }
 			};
@@ -1032,11 +1044,11 @@ json calculateZScores(const cif::mm::structure &structure)
 		}
 	}
 
-	auto ramaVsRand = static_cast<float>(ramaZScoreSum / ramaZScoreCount);
-	auto torsVsRand = static_cast<float>(torsZScoreSum / torsZScoreCount);
+	auto ramaVsRand = ramaZScoreCount ? static_cast<float>(ramaZScoreSum / ramaZScoreCount) : 0;
+	auto torsVsRand = torsZScoreCount ? static_cast<float>(torsZScoreSum / torsZScoreCount) : 0;
 
-	float jackknifeRama = jackknife(ramaZScorePerResidue);
-	float jackknifeTors = jackknife(torsZScorePerResidue);
+	float jackknifeRama = ramaZScorePerResidue.empty() ? 0 : jackknife(ramaZScorePerResidue);
+	float jackknifeTors = torsZScorePerResidue.empty() ? 0 : jackknife(torsZScorePerResidue);
 
 	return {
 		{ "ramachandran-z", ((ramaVsRand - tbl.mean_ramachandran()) / tbl.sd_ramachandran()) },

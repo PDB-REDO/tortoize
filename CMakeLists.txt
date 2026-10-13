@@ -38,6 +38,8 @@ include(CMakePackageConfigHelpers)
 include(GenerateExportHeader)
 include(CTest)
 
+set(CMAKE_CXX_STANDARD 23)
+
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers")
 elseif(MSVC)
@@ -146,7 +148,7 @@ target_link_libraries(tortoize dssp::dssp cifpp::cifpp mcfp::mcfp)
 target_compile_definitions(tortoize PUBLIC NOMINMAX=1)
 
 install(TARGETS tortoize
-	RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+	RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
 )
 
 if(NOT USE_RSRC)
@@ -176,7 +178,7 @@ if(BUILD_WEBSERVICE)
 	mrc_target_resources(tortoized ${RESOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/docroot/)
 
 	install(TARGETS tortoized
-		RUNTIME DESTINATION ${SBIN_INSTALL_DIR}
+		RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_SBINDIR}
 	)
 
 	set(TORTOIZED_EXE "${CMAKE_INSTALL_FULL_SBINDIR}/tortoized")
