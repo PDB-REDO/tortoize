@@ -38,7 +38,7 @@ include(CMakePackageConfigHelpers)
 include(GenerateExportHeader)
 include(CTest)
 
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers")
 elseif(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
@@ -116,6 +116,15 @@ if (NOT TARGET dssp)
 	add_subdirectory(dssp EXCLUDE_FROM_ALL)
 endif()
 
+if(TARGET cifpp)
+	get_target_property(CIFPP_SOURCE_DIR cifpp SOURCE_DIR)
+	get_target_property(CIFPP_SHARE_DIR cifpp CIFPP_DATA_DIR)
+
+	set(CIFPP_DATA_DIR ${CIFPP_SOURCE_DIR}/rsrc)
+else()
+	set(CIFPP_DATA_DIR ${CIFPP_SHARE_DIR})
+endif()
+
 add_executable(tortoize
 	${PROJECT_SOURCE_DIR}/src/tortoize.cpp
 	${PROJECT_SOURCE_DIR}/src/tortoize-main.cpp)
@@ -133,7 +142,8 @@ endif()
 
 target_include_directories(tortoize PRIVATE ${PROJECT_BINARY_DIR})
 
-target_link_libraries(tortoize dssp::dssp mcfp::mcfp cifpp::cifpp)
+target_link_libraries(tortoize dssp::dssp cifpp::cifpp mcfp::mcfp)
+target_compile_definitions(tortoize PUBLIC NOMINMAX=1)
 
 install(TARGETS tortoize
 	RUNTIME DESTINATION ${BIN_INSTALL_DIR}
@@ -142,6 +152,11 @@ install(TARGETS tortoize
 if(NOT USE_RSRC)
 	install(FILES ${PROJECT_SOURCE_DIR}/rsrc/rama-data.bin ${PROJECT_SOURCE_DIR}/rsrc/torsion-data.bin
 		DESTINATION ${CIFPP_SHARE_DIR})
+
+	if(TARGET cifpp)
+		install(FILES ${CIFPP_DATA_DIR}/mmcif_pdbx.dic
+			DESTINATION ${CIFPP_SHARE_DIR})
+	endif()
 endif()
 
 if(BUILD_WEBSERVICE)
@@ -156,7 +171,7 @@ if(BUILD_WEBSERVICE)
 		${PROJECT_SOURCE_DIR}/src/tortoize-server-main.cpp
 	)
 
-	target_link_libraries(tortoized dssp::dssp mcfp::mcfp zeep::zeep)
+	target_link_libraries(tortoized dssp::dssp cifpp::cifpp mcfp::mcfp zeep::zeep)
 
 	mrc_target_resources(tortoized ${RESOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/docroot/)
 

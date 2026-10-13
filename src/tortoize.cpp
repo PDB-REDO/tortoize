@@ -25,11 +25,14 @@
  */
 
 #include "tortoize.hpp"
+
 #include "revision.hpp"
 
+#include <algorithm>
+#include <bit>
 #include <dssp.hpp>
-
 #include <fstream>
+#include <utility>
 #include <vector>
 
 namespace fs = std::filesystem;
@@ -51,7 +54,7 @@ class OBitStream
 	OBitStream(const OBitStream &) = delete;
 	OBitStream &operator=(const OBitStream &) = delete;
 
-	void writebit(bool bit)
+	void writebit(int bit)
 	{
 		if (bit)
 			m_buffer.back() |= 1 << m_bitOffset;
@@ -87,8 +90,8 @@ class OBitStream
 			writebit(1);
 	}
 
-	const uint8_t *data() const { return m_buffer.data(); }
-	size_t size() const { return m_buffer.size(); }
+	[[nodiscard]] const uint8_t *data() const { return m_buffer.data(); }
+	[[nodiscard]] size_t size() const { return m_buffer.size(); }
 
 	friend void WriteArray(OBitStream &bs, const std::vector<uint32_t> &data);
 
@@ -212,7 +215,7 @@ void CompressSimpleArraySelector(OBitStream &inBits, const std::vector<uint32_t>
 
 			int32_t w = width + kSelectors[i].databits;
 
-			if (static_cast<uint32_t>(w) > kMaxWidth)
+			if (std::cmp_greater(w, kMaxWidth))
 				continue;
 
 			bool fits = true;
@@ -235,6 +238,7 @@ void CompressSimpleArraySelector(OBitStream &inBits, const std::vector<uint32_t>
 				case 1:
 					fits = fits and bn[0] <= w;
 					waste += w - bn[0];
+				default:;
 			}
 
 			if (fits == false)
@@ -353,7 +357,7 @@ std::string to_string(SecStrType ss)
 struct StoredData
 {
 	char aa[3];
-	SecStrType ss;
+	SecStrType ss{ SecStrType::other };
 	float mean, mean_vs_random, sd, sd_vs_random, binSpacing;
 	uint32_t offset; // offset into compressed data area
 };
@@ -363,19 +367,7 @@ class Data
 	friend class DataTable;
 
   public:
-	Data(Data &&d)
-		: aa(d.aa)
-		, ss(d.ss)
-		, mean(d.mean)
-		, sd(d.sd)
-		, mean_vs_random(d.mean_vs_random)
-		, sd_vs_random(d.sd_vs_random)
-		, binSpacing(d.binSpacing)
-		, counts(std::move(d.counts))
-		, dim(d.dim)
-		, d2(d.d2)
-	{
-	}
+	Data(Data &&d) = default;
 
 	Data(const Data &) = delete;
 	Data &operator=(const Data &) = delete;
@@ -385,8 +377,8 @@ class Data
 
 	void store(StoredData &data, std::vector<uint8_t> &databits);
 
-	float interpolatedCount(float phi, float a2) const;
-	float zscore(float a1, float a2) const
+	[[nodiscard]] float interpolatedCount(float phi, float a2) const;
+	[[nodiscard]] float zscore(float a1, float a2) const
 	{
 		return (interpolatedCount(a1, a2) - mean) / sd;
 	}
@@ -412,14 +404,14 @@ class Data
 	size_t dim;
 	bool d2;
 
-	float count(size_t a1Ix, size_t a2Ix) const
+	[[nodiscard]] float count(size_t a1Ix, size_t a2Ix) const
 	{
 		a1Ix %= dim;
 		a2Ix %= dim;
 		return static_cast<float>(d2 ? counts.at(a1Ix * dim + a2Ix) : counts.at(a1Ix));
 	}
 
-	size_t index(float a1, float a2 = 0) const
+	[[nodiscard]] size_t index(float a1, float a2 = 0) const
 	{
 		size_t x = 0, y = 0;
 
@@ -434,7 +426,7 @@ class Data
 		return x * static_cast<int>(std::rint(360 / binSpacing)) + y;
 	}
 
-	std::tuple<float, float> angles(size_t index) const
+	[[nodiscard]] std::tuple<float, float> angles(size_t index) const
 	{
 		size_t x = index / dim;
 		size_t y = index % dim;
@@ -511,7 +503,7 @@ Data::Data(bool torsion, const StoredData &data, const uint8_t *databits)
 
 	d2 = not torsion or std::set<std::string>{ "CYS", "SER", "THR", "VAL" }.count(aa) == 0;
 
-	size_t nBins = static_cast<size_t>(360 / binSpacing);
+	auto nBins = static_cast<size_t>(360 / binSpacing);
 	dim = nBins;
 
 	if (d2)
@@ -526,7 +518,7 @@ Data::Data(bool torsion, const StoredData &data, const uint8_t *databits)
 void Data::store(StoredData &data, std::vector<uint8_t> &databits)
 {
 	assert(aa.length() == 3);
-	copy(aa.begin(), aa.end(), data.aa);
+	std::ranges::copy(aa, data.aa);
 	data.ss = ss;
 	data.mean = mean;
 	data.sd = sd;
@@ -548,8 +540,8 @@ float Data::interpolatedCount(float a1, float a2) const
 
 	if (d2)
 	{
-		size_t a1FloorIx = static_cast<size_t>(N * (a1 + 180) / 360);
-		size_t a2FloorIx = static_cast<size_t>(N * (a2 + 180) / 360);
+		auto a1FloorIx = static_cast<size_t>(N * (a1 + 180) / 360);
+		auto a2FloorIx = static_cast<size_t>(N * (a2 + 180) / 360);
 
 		size_t a1CeilIx = (a1FloorIx + 1);
 		size_t a2CeilIx = (a2FloorIx + 1);
@@ -570,7 +562,7 @@ float Data::interpolatedCount(float a1, float a2) const
 	}
 	else
 	{
-		size_t a1FloorIx = static_cast<size_t>(N * (a1 + 180) / 360);
+		auto a1FloorIx = static_cast<size_t>(N * (a1 + 180) / 360);
 		size_t a1CeilIx = (a1FloorIx + 1);
 
 		float a1FloorAngle = (a1FloorIx * 360.0f) / N - 180;
@@ -721,18 +713,18 @@ class DataTable
 		return sInstance;
 	}
 
-	const Data &loadTorsionData(const std::string &aa, SecStrType ss) const;
-	const Data &loadRamachandranData(const std::string &aa, SecStrType ss) const;
+	[[nodiscard]] const Data &loadTorsionData(const std::string &aa, SecStrType ss) const;
+	[[nodiscard]] const Data &loadRamachandranData(const std::string &aa, SecStrType ss) const;
 
-	float mean_torsion() const { return m_mean_torsion; }
-	float sd_torsion() const { return m_sd_torsion; }
-	float mean_ramachandran() const { return m_mean_ramachandran; }
-	float sd_ramachandran() const { return m_sd_ramachandran; }
+	[[nodiscard]] float mean_torsion() const { return m_mean_torsion; }
+	[[nodiscard]] float sd_torsion() const { return m_sd_torsion; }
+	[[nodiscard]] float mean_ramachandran() const { return m_mean_ramachandran; }
+	[[nodiscard]] float sd_ramachandran() const { return m_sd_ramachandran; }
 
-  private:
 	DataTable(const DataTable &) = delete;
 	DataTable &operator=(const DataTable &) = delete;
 
+  private:
 	DataTable();
 
 	void load(const char *name, std::vector<Data> &table, float &mean, float &sd);
@@ -750,7 +742,7 @@ DataTable::DataTable()
 
 const Data &DataTable::loadTorsionData(const std::string &aa, SecStrType ss) const
 {
-	auto i = find_if(m_torsion.begin(), m_torsion.end(), [aa, ss](auto &d)
+	auto i = std::ranges::find_if(m_torsion, [aa, ss](auto &d)
 		{ return d.aa == aa and d.ss == ss; });
 	if (i == m_torsion.end())
 		throw std::runtime_error("Data missing for aa = " + aa + " and ss = '" + static_cast<char>(ss) + '\'');
@@ -765,12 +757,12 @@ const Data &DataTable::loadRamachandranData(const std::string &aa, SecStrType ss
 	switch (ss)
 	{
 		case SecStrType::cis:
-			i = find_if(m_ramachandran.begin(), m_ramachandran.end(), [](auto &d)
+			i = std::ranges::find_if(m_ramachandran, [](auto &d)
 				{ return d.ss == SecStrType::cis and d.aa == "PRO"; });
 			break;
 
 		case SecStrType::prepro:
-			i = find_if(m_ramachandran.begin(), m_ramachandran.end(), [aa](auto &d)
+			i = std::ranges::find_if(m_ramachandran, [aa](auto &d)
 				{
 					bool result = false;
 					if (d.ss == SecStrType::prepro)
@@ -786,7 +778,7 @@ const Data &DataTable::loadRamachandranData(const std::string &aa, SecStrType ss
 			break;
 
 		default:
-			i = find_if(m_ramachandran.begin(), m_ramachandran.end(), [aa, ss](auto &d)
+			i = std::ranges::find_if(m_ramachandran, [aa, ss](auto &d)
 				{ return d.aa == aa and d.ss == ss; });
 			break;
 	}
@@ -802,8 +794,8 @@ void byteswap(T &v)
 {
 	T result;
 
-	char *pv = (char *)&v;
-	char *presult = (char *)&result;
+	char *pv = reinterpret_cast<char *>(&v);
+	char *presult = reinterpret_cast<char *>(&result);
 	int size = sizeof(T);
 
 	for (int i = 0; i < size; i++)
@@ -825,13 +817,13 @@ void DataTable::load(const char *name, std::vector<Data> &table, float &mean, fl
 	auto size = rfd->tellg();
 	rfd->seekg(0, rfd->beg);
 
-	float *fv = new float[size / sizeof(float) + 1];
+	auto *fv = new float[size / sizeof(float) + 1];
 	rfd->read(reinterpret_cast<char *>(fv), size);
-	
+
 	mean = fv[0];
 	sd = fv[1];
 
-	StoredData *data = reinterpret_cast<StoredData *>(fv + 2);
+	auto *data = reinterpret_cast<StoredData *>(fv + 2);
 
 	if constexpr (std::endian::native == std::endian::big)
 	{
@@ -1040,8 +1032,8 @@ json calculateZScores(const cif::mm::structure &structure)
 		}
 	}
 
-	float ramaVsRand = static_cast<float>(ramaZScoreSum / ramaZScoreCount);
-	float torsVsRand = static_cast<float>(torsZScoreSum / torsZScoreCount);
+	auto ramaVsRand = static_cast<float>(ramaZScoreSum / ramaZScoreCount);
+	auto torsVsRand = static_cast<float>(torsZScoreSum / torsZScoreCount);
 
 	float jackknifeRama = jackknife(ramaZScorePerResidue);
 	float jackknifeTors = jackknife(torsZScorePerResidue);
