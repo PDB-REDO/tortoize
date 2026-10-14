@@ -1,4 +1,4 @@
-.TH tortoize 1 "2021-08-31" "version 2.0.2" "User Commands"
+.TH tortoize 1 "2026-10-14" "version 2.0.17" "User Commands"
 .if n .ad l
 .nh
 .SH NAME
@@ -9,23 +9,33 @@ tortoize [OPTION] input [output]
 Tortoize validates protein structure models by checking the
 Ramachandran plot and side-chain rotamer distributions. Quality
 Z-scores are given at the residue level and at the model level
-(ramachandran-z and torsions-z). Higher scores are better. To compare
+(ramachandran-z and torsion-z). Higher scores are better. To compare
 models or to describe the reliability of the model Z-scores jackknife-
 based standard deviations are also reported (ramachandran-jackknife-sd
 and torsion-jackknife-sd).
 .SH OPTIONS
 The input file can be either mmCIF or PDB format and the file may be
-gzip or bzip2 compressed.
+gzip compressed.
 .sp
 The output is a json file, if no file name is specified the output is
 written to \fIstdout\fR.
 .TP
+\fB-h\fR, \fB--help\fR
+Display a help message and exit.
+.TP
+\fB--version\fR
+Print the version and exit.
+.TP
+\fB-v\fR, \fB--verbose\fR
+Increase the verbosity of the diagnostic output.
+.TP
 \fB--dict\fR=<file>
 Specify a dictionary file containing restraints for residues specific to
-this file.
+this file. This option may be specified more than once.
 .TP
 \fB--log\fR=<file>
-Write a log with diagnostic information to this file.
+Write a log with diagnostic information to this file. An output file must
+also be specified when this option is used.
 .SH REFERENCES
 References:
 .TP

@@ -35,6 +35,7 @@
 #include <dssp.hpp>
 #include <fstream>
 #include <iomanip>
+#include <limits>
 #include <utility>
 #include <vector>
 
@@ -1013,7 +1014,7 @@ zeep::el::object calculateZScores(const cif::mm::structure &structure)
 
 			try
 			{
-				float zt = nanf("1");
+				float zt = std::numeric_limits<float>::quiet_NaN();
 
 				auto chiCount = res.nr_of_chis();
 				if (chiCount)
@@ -1049,8 +1050,8 @@ zeep::el::object calculateZScores(const cif::mm::structure &structure)
 	auto ramaVsRand = ramaZScoreCount ? static_cast<float>(ramaZScoreSum / ramaZScoreCount) : 0;
 	auto torsVsRand = torsZScoreCount ? static_cast<float>(torsZScoreSum / torsZScoreCount) : 0;
 
-	float jackknifeRama = ramaZScorePerResidue.empty() ? 0 : jackknife(ramaZScorePerResidue, true);
-	float jackknifeTors = torsZScorePerResidue.empty() ? 0 : jackknife(torsZScorePerResidue, false);
+	float jackknifeRama = ramaZScorePerResidue.size() > 1 ? jackknife(ramaZScorePerResidue, true) : 0;
+	float jackknifeTors = torsZScorePerResidue.size() > 1 ? jackknife(torsZScorePerResidue, false) : 0;
 
 	return {
 		{ "ramachandran-z", ((ramaVsRand - tbl.mean_ramachandran()) / tbl.sd_ramachandran()) },

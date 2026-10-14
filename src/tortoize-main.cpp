@@ -86,7 +86,7 @@ int pr_main(int argc, char *argv[])
 				  << R"(Tortoize validates protein structure models by checking the 
 Ramachandran plot and side-chain rotamer distributions. Quality
 Z-scores are given at the residue level and at the model level 
-(ramachandran-z and torsions-z). Higher scores are better. To compare 
+(ramachandran-z and torsion-z). Higher scores are better. To compare 
 models or to describe the reliability of the model Z-scores jackknife-
 based standard deviations are also reported (ramachandran-jackknife-sd 
 and torsion-jackknife-sd).

@@ -1,6 +1,6 @@
 {
   "name": "tortoize",
-  "version": "2.0.0",
+  "version": "2.0.17",
   "description": "A tool to calculate Ramachandran Z-scores",
   "main": "index.js",
   "repository": "https://pdb-redo.eu/tortoize",

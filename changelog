@@ -1,3 +1,8 @@
+Version 2.0.17
+- Fix PDB sequence number in the output being reset to zero
+- Fix torsion jackknife standard deviation using the Ramachandran statistics
+- Extended the unit test with residue level checks
+
 Version 2.0.16
 - Updated libcifpp
 

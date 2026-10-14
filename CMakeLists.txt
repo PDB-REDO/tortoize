@@ -25,7 +25,7 @@
 cmake_minimum_required(VERSION 3.25)
 
 # set the project name
-project(tortoize VERSION 2.0.16 LANGUAGES CXX)
+project(tortoize VERSION 2.0.17 LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -213,6 +213,8 @@ if(BUILD_WEBSERVICE)
 endif()
 
 # manual
+add_subdirectory(doc)
+
 install(FILES doc/tortoize.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
 # Test code
