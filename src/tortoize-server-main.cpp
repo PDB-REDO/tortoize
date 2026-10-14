@@ -48,35 +48,25 @@ namespace fs = std::filesystem;
 
 // --------------------------------------------------------------------
 
-class tortoize_html_controller : public zeep::http::html_controller
+class tortoize_controller : public zeep::http::html_controller
 {
   public:
-	tortoize_html_controller()
+	tortoize_controller()
 		: zeep::http::html_controller("")
+		, m_tempdir(fs::temp_directory_path() / "tortoize-ws")
 	{
+		fs::create_directories(m_tempdir);
+
+		map_post_request("", &tortoize_controller::calculate, "data", "dict");
+
 		map_get_file("{css,scripts,fonts,images,favicon}/");
 		map_get_file("{favicon.ico,browserconfig.xml,manifest.json}");
-		map_get("", &tortoize_html_controller::index);
+		map_get("", &tortoize_controller::index);
 	}
 
 	zeep::http::reply index(const zeep::http::scope &scope)
 	{
 		return get_template_processor().create_reply_from_template("index", scope);
-	}
-};
-
-// --------------------------------------------------------------------
-
-class tortoize_rest_controller : public zeep::http::controller
-{
-  public:
-	tortoize_rest_controller()
-		: zeep::http::controller("")
-		, m_tempdir(fs::temp_directory_path() / "tortoize-ws")
-	{
-		fs::create_directories(m_tempdir);
-
-		map_post_request("tortoize", &tortoize_rest_controller::calculate, "data", "dict");
 	}
 
 	zeep::el::object calculate(const std::string &file, const std::string &dict)
@@ -232,8 +222,7 @@ int start_server(int argc, char *argv[])
 
 		s->set_context_path(context);
 
-		s->add_controller(new tortoize_rest_controller());
-		s->add_controller(new tortoize_html_controller());
+		s->add_controller(new tortoize_controller());
 		return s; }, "tortoized");
 
 	std::string command = config.operands().front();

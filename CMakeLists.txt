@@ -37,6 +37,7 @@ include(CheckLibraryExists)
 include(CMakePackageConfigHelpers)
 include(GenerateExportHeader)
 include(CTest)
+include(CPM)
 
 set(CMAKE_CXX_STANDARD 23)
 
@@ -109,9 +110,12 @@ set(CMAKE_THREAD_PREFER_PTHREAD)
 set(THREADS_PREFER_PTHREAD_FLAG)
 find_package(Threads)
 
-find_or_fetch_package(mcfp VERSION 1.3.5 GIT_REPOSITORY https://github.com/mhekkel/libmcfp GIT_TAG b6c62a3)
-find_or_fetch_package(cifpp VERSION 9 GIT_REPOSITORY https://github.com/PDB-REDO/libcifpp.git GIT_TAG v9.0.5 VARIABLES "CIFPP_SHARE_DIR")
-find_or_fetch_package(zeep VERSION 8.4.1 GIT_REPOSITORY https://forge.hekkelman.net/maarten/zeep.git GIT_TAG v8.4.1)
+# find_or_fetch_package(mcfp VERSION 1.3.5 GIT_REPOSITORY https://github.com/mhekkel/libmcfp GIT_TAG b6c62a3)
+# find_or_fetch_package(cifpp VERSION 9 GIT_REPOSITORY https://github.com/PDB-REDO/libcifpp.git GIT_TAG v9.0.5 VARIABLES "CIFPP_SHARE_DIR")
+# find_or_fetch_package(zeep VERSION 8.4.1 GIT_REPOSITORY https://forge.hekkelman.net/maarten/zeep.git GIT_TAG v8.4.1)
+find_package(mcfp 2 REQUIRED)
+find_package(cifpp 9 REQUIRED)
+find_package(zeep 8.4.1 REQUIRED)
 
 if (NOT TARGET dssp)
 	add_subdirectory(dssp EXCLUDE_FROM_ALL)
