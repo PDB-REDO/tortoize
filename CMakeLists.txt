@@ -137,7 +137,8 @@ if(USE_RSRC)
 		${PROJECT_SOURCE_DIR}/rsrc/torsion-data.bin
 		${CIFPP_SHARE_DIR}/mmcif_pdbx.dic
 		${CIFPP_SHARE_DIR}/mmcif_ddl.dic
-		${CIFPP_SHARE_DIR}/mmcif_ma.dic)
+		${CIFPP_SHARE_DIR}/mmcif_ma.dic
+		${PROJECT_SOURCE_DIR}/dssp/libdssp/mmcif_pdbx/dssp-extension.dic)
 
 	mrc_target_resources(tortoize ${RESOURCES})
 endif()
@@ -152,7 +153,10 @@ install(TARGETS tortoize
 )
 
 if(NOT USE_RSRC)
-	install(FILES ${PROJECT_SOURCE_DIR}/rsrc/rama-data.bin ${PROJECT_SOURCE_DIR}/rsrc/torsion-data.bin
+	install(FILES
+		${PROJECT_SOURCE_DIR}/rsrc/rama-data.bin
+		${PROJECT_SOURCE_DIR}/rsrc/torsion-data.bin
+		${PROJECT_SOURCE_DIR}/dssp/libdssp/mmcif_pdbx/dssp-extension.dic
 		DESTINATION ${CIFPP_SHARE_DIR})
 
 	if(TARGET cifpp)

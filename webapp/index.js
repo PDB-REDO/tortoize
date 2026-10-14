@@ -28,12 +28,12 @@ class Tortoize {
 				body: fd
 			})
 
-			if (!r.ok)
-				throw `Fetching result failed, ${r.statusText}`;
-
 			const data = await r.json()
 			if (typeof data.error === "string")
-				throw fd.error;
+				throw data.error;
+
+			if (!r.ok)
+				throw `Fetching result failed, ${r.statusText}`;
 
 			if (data.model) {
 				this.process(data.model);

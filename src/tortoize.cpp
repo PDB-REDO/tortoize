@@ -28,6 +28,7 @@
 
 #include "cif++/utilities.hpp"
 #include "revision.hpp"
+#include "zeep/http/status.hpp"
 
 #include <algorithm>
 #include <bit>
@@ -36,6 +37,7 @@
 #include <fstream>
 #include <iomanip>
 #include <limits>
+#include <system_error>
 #include <utility>
 #include <vector>
 
@@ -1047,11 +1049,14 @@ zeep::el::object calculateZScores(const cif::mm::structure &structure)
 		}
 	}
 
+	if (ramaZScoreCount <= 1 and torsZScoreCount <= 1)
+		throw std::system_error(zeep::http::status_type::unprocessable_content, "Is this a protein?");
+
 	auto ramaVsRand = ramaZScoreCount ? static_cast<float>(ramaZScoreSum / ramaZScoreCount) : 0;
 	auto torsVsRand = torsZScoreCount ? static_cast<float>(torsZScoreSum / torsZScoreCount) : 0;
 
-	float jackknifeRama = ramaZScorePerResidue.size() > 1 ? jackknife(ramaZScorePerResidue, true) : 0;
-	float jackknifeTors = torsZScorePerResidue.size() > 1 ? jackknife(torsZScorePerResidue, false) : 0;
+	float jackknifeRama = ramaZScoreCount > 1 ? jackknife(ramaZScorePerResidue, true) : 0;
+	float jackknifeTors = torsZScoreCount > 1 ? jackknife(torsZScorePerResidue, false) : 0;
 
 	return {
 		{ "ramachandran-z", ((ramaVsRand - tbl.mean_ramachandran()) / tbl.sd_ramachandran()) },
