@@ -1,5 +1,4 @@
-<!DOCTYPE html SYSTEM "about:legacy-compat" [
-<!ENTITY plusmn "&#177;">
+<!DOCTYPE html SYSTEM "about:legacy-compat" [ <!ENTITY plusmn "&#177;">
 ]>
 
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:z2="http://www.hekkelman.com/libzeep/m2">
@@ -33,7 +32,7 @@
 			<button type="submit" form="tortoize-form" class="btn btn-primary mb-3">Calculate</button>
 		</form>
 
-		<hr/>
+		<hr />
 
 		<div id="tortoize-result" style="display: none;">
 			<table id='tortoize-table' class="table table">
@@ -48,17 +47,22 @@
 				<tbody></tbody>
 			</table>
 
-			<button type="button" class="btn btn-outline-secondary btn-sm" id="download-btn"><i class="bi bi-download"></i> Download JSON</button>
+			<button type="button" class="btn btn-outline-secondary btn-sm" id="download-btn"><i
+					class="bi bi-download"></i> Download JSON</button>
 		</div>
 
 		<div class="alert alert-danger" role="alert" id="tortoize-alert">
 			The web interface failed to initialize, perhaps Javascript is not working properly?
 		</div>
 
+		<article><strong>Sobolev et al.</strong> <em>A Global Ramachandran Score Identifies Protein
+				Structures with Unlikely Stereochemistry</em>, Structure (2020), DOI: <a
+				href="https://doi.org/10.1016/j.str.2020.08.005">10.1016/j.str.2020.08.005</a></article>
 	</div>
 
-	<footer class="container"><strong>Sobolev et al.</strong> <em>A Global Ramachandran Score Identifies Protein Structures with Unlikely Stereochemistry</em>, Structure (2020), DOI: <a href="https://doi.org/10.1016/j.str.2020.08.005">10.1016/j.str.2020.08.005</a></footer>
+	<footer z2:replace="~{footer::content}"></footer>
+
 
 </body>
-</html>
 
+</html>
