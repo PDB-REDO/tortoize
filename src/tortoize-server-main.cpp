@@ -85,17 +85,18 @@ class tortoize_rest_controller : public zeep::http::controller
 
 		fs::path dictFile;
 
-		if (not dict.empty())
-		{
-			dictFile = m_tempdir / ("dict-" + std::to_string(m_next_dict_nr++));
-			std::ofstream tmpFile(dictFile);
-			tmpFile << dict;
-
-			cif::compound_factory::instance().push_dictionary(dictFile);
-		}
-
 		try
 		{
+			if (not dict.empty())
+			{
+				dictFile = m_tempdir / ("dict-" + std::to_string(m_next_dict_nr++));
+				std::ofstream tmpFile(dictFile);
+				tmpFile << dict;
+				tmpFile.close();
+
+				cif::compound_factory::instance().push_dictionary(dictFile);
+			}
+
 			// --------------------------------------------------------------------
 
 			zeep::el::object data{
@@ -161,7 +162,7 @@ class tortoize_rest_controller : public zeep::http::controller
 	}
 
 	fs::path m_tempdir;
-	size_t m_next_dict_nr = 1;
+	std::atomic<size_t> m_next_dict_nr = 1;
 };
 
 int start_server(int argc, char *argv[])
