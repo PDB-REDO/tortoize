@@ -32,7 +32,7 @@ jobs:
 
     - name: Build & install libmcfp
       run: |
-        cmake -B ${{github.workspace}}/libmcfp/build -S ${{github.workspace}}/libmcfp -DBUILD_DOCUMENTATION=OFF -DBUILD_TESTING=OFF
+        cmake -B ${{github.workspace}}/libmcfp/build -S ${{github.workspace}}/libmcfp -DBUILD_DOCUMENTATION=OFF -DBUILD_TESTING=OFF -G Ninja
         cmake --build ${{github.workspace}}/libmcfp/build
         sudo cmake --install ${{github.workspace}}/libmcfp/build
 
@@ -44,7 +44,7 @@ jobs:
 
     - name: Build & install libcifpp
       run: |
-        cmake -B ${{github.workspace}}/libcifpp/build -S ${{github.workspace}}/libcifpp -DBUILD_DOCUMENTATION=OFF -DBUILD_TESTING=OFF
+        cmake -B ${{github.workspace}}/libcifpp/build -S ${{github.workspace}}/libcifpp -DBUILD_DOCUMENTATION=OFF -DBUILD_TESTING=OFF -G Ninja
         cmake --build ${{github.workspace}}/libcifpp/build
         sudo cmake --install ${{github.workspace}}/libcifpp/build
 
