@@ -38,8 +38,6 @@
 
 namespace fs = std::filesystem;
 
-using json = nlohmann::json;
-
 #ifdef _MSC_VER
 # include <fcntl.h>
 // MSVC stdlib.h definitions
@@ -81,7 +79,7 @@ class tortoize_rest_controller : public zeep::http::controller
 		map_post_request("tortoize", &tortoize_rest_controller::calculate, "data", "dict");
 	}
 
-	json calculate(const std::string &file, const std::string &dict)
+	zeep::el::object calculate(const std::string &file, const std::string &dict)
 	{
 		// First store dictionary, just in case
 
@@ -100,7 +98,7 @@ class tortoize_rest_controller : public zeep::http::controller
 		{
 			// --------------------------------------------------------------------
 
-			json data{
+			zeep::el::object data{
 				{ "software",
 					{ { "name", "tortoize" },
 						{ "version", kVersionNumber },

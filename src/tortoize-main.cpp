@@ -34,8 +34,6 @@
 
 namespace fs = std::filesystem;
 
-using json = nlohmann::json;
-
 #ifdef _MSC_VER
 // MSVC stdlib.h definitions
 # define STDIN_FILENO 0
@@ -154,7 +152,7 @@ References:
 
 	// --------------------------------------------------------------------
 
-	json data = tortoize_calculate(config.operands().front());
+	auto data = tortoize_calculate(config.operands().front());
 
 	if (config.operands().size() == 2)
 	{

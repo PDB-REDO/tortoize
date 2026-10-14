@@ -109,10 +109,9 @@ set(CMAKE_THREAD_PREFER_PTHREAD)
 set(THREADS_PREFER_PTHREAD_FLAG)
 find_package(Threads)
 
-find_package(nlohmann_json REQUIRED)
-
 find_or_fetch_package(mcfp VERSION 1.3.5 GIT_REPOSITORY https://github.com/mhekkel/libmcfp GIT_TAG b6c62a3)
 find_or_fetch_package(cifpp VERSION 9 GIT_REPOSITORY https://github.com/PDB-REDO/libcifpp.git GIT_TAG v9.0.5 VARIABLES "CIFPP_SHARE_DIR")
+find_or_fetch_package(zeep VERSION 8.4.1 GIT_REPOSITORY https://forge.hekkelman.net/maarten/zeep.git GIT_TAG v8.4.1)
 
 if (NOT TARGET dssp)
 	add_subdirectory(dssp EXCLUDE_FROM_ALL)
@@ -144,7 +143,7 @@ endif()
 
 target_include_directories(tortoize PRIVATE ${PROJECT_BINARY_DIR})
 
-target_link_libraries(tortoize dssp::dssp cifpp::cifpp mcfp::mcfp)
+target_link_libraries(tortoize dssp::dssp cifpp::cifpp mcfp::mcfp zeep::zeep)
 target_compile_definitions(tortoize PUBLIC NOMINMAX=1)
 
 install(TARGETS tortoize
@@ -162,8 +161,6 @@ if(NOT USE_RSRC)
 endif()
 
 if(BUILD_WEBSERVICE)
-	find_package(zeep 8 REQUIRED)
-
 	if(NOT USE_RSRC)
 		message(FATAL_ERROR "tortoize: Web service needs mrc/resources")
 	endif()

@@ -27,10 +27,10 @@
 #pragma once
 
 #include <cif++/cif++.hpp>
-#include <nlohmann/json.hpp>
+#include <zeep/el/object.hpp>
 
 void buildDataFile(const std::filesystem::path &dir);
 
-nlohmann::json calculateZScores(const cif::mm::structure &structure);
+zeep::el::object calculateZScores(const cif::mm::structure &structure);
 
-nlohmann::json tortoize_calculate(const std::filesystem::path &xyzin);
+zeep::el::object tortoize_calculate(const std::filesystem::path &xyzin);

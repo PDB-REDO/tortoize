@@ -40,8 +40,6 @@
 
 namespace fs = std::filesystem;
 
-using json = nlohmann::json;
-
 // --------------------------------------------------------------------
 // simple integer compression, based somewhat on MRS code
 
@@ -887,7 +885,7 @@ float jackknife(const std::vector<float> &zScorePerResidue)
 
 // --------------------------------------------------------------------
 
-json calculateZScores(const cif::mm::structure &structure)
+zeep::el::object calculateZScores(const cif::mm::structure &structure)
 {
 	dssp dssp(structure, 3, false);
 	auto &tbl = DataTable::instance();
@@ -897,7 +895,7 @@ json calculateZScores(const cif::mm::structure &structure)
 	double torsZScoreSum = 0;
 	size_t torsZScoreCount = 0;
 
-	json residues;
+	zeep::el::object residues;
 	std::vector<float> ramaZScorePerResidue, torsZScorePerResidue;
 
 	for (auto &poly : structure.polymers())
@@ -923,7 +921,7 @@ json calculateZScores(const cif::mm::structure &structure)
 				seqNum = 0;
 			}
 
-			json residue = {
+			zeep::el::object residue = {
 				{ "asymID", res.get_asym_id() },
 				{ "seqID", res.get_seq_id() },
 				{ "compID", aa },
@@ -1061,9 +1059,9 @@ json calculateZScores(const cif::mm::structure &structure)
 
 // --------------------------------------------------------------------
 
-json tortoize_calculate(const fs::path &xyzin)
+zeep::el::object tortoize_calculate(const fs::path &xyzin)
 {
-	json data{
+	zeep::el::object data{
 		{ "software",
 			{ { "name", "tortoize" },
 				{ "version", kVersionNumber },
