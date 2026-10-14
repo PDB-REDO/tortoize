@@ -35,4 +35,4 @@ sudo cmake --install build
 Usage
 -----
 
-See [manual page](doc/tortoize.pdf) for more info.
+See manual page (`man tortoize`) for more info.

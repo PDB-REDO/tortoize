@@ -84,6 +84,7 @@ class tortoize_rest_controller : public zeep::http::controller
 		// First store dictionary, just in case
 
 		fs::path dictFile;
+		bool pushedDict = false;
 
 		try
 		{
@@ -95,6 +96,7 @@ class tortoize_rest_controller : public zeep::http::controller
 				tmpFile.close();
 
 				cif::compound_factory::instance().push_dictionary(dictFile);
+				pushedDict = true;
 			}
 
 			// --------------------------------------------------------------------
@@ -139,11 +141,10 @@ class tortoize_rest_controller : public zeep::http::controller
 				data["model"][std::to_string(model)] = calculateZScores(structure);
 			}
 
-			if (not dictFile.empty())
-			{
+			if (pushedDict)
 				cif::compound_factory::instance().pop_dictionary();
+			if (not dictFile.empty())
 				fs::remove(dictFile);
-			}
 
 			return data;
 		}
@@ -151,11 +152,10 @@ class tortoize_rest_controller : public zeep::http::controller
 		{
 			std::error_code ec;
 
-			if (not dictFile.empty())
-			{
+			if (pushedDict)
 				cif::compound_factory::instance().pop_dictionary();
+			if (not dictFile.empty())
 				fs::remove(dictFile);
-			}
 
 			throw;
 		}
