@@ -857,22 +857,26 @@ void DataTable::load(const char *name, std::vector<Data> &table, float &mean, fl
 
 // --------------------------------------------------------------------
 
-float jackknife(const std::vector<float> &zScorePerResidue)
+float jackknife(const std::vector<float> &zScorePerResidue, bool rama)
 {
 	// jackknife variance estimate, see: https://en.wikipedia.org/wiki/Jackknife_resampling
 
 	const size_t N = zScorePerResidue.size();
 	double zScoreSum = accumulate(zScorePerResidue.begin(), zScorePerResidue.end(), 0.0);
-	std::vector<double> scores(N);
+	std::vector<double> scores;
+	scores.reserve(N);
 
 	DataTable &tbl = DataTable::instance();
 
+	auto mean = rama ? tbl.mean_ramachandran() : tbl.mean_torsion();
+	auto sd = rama ? tbl.sd_ramachandran() : tbl.sd_torsion();
+
 	double scoreSum = 0;
-	for (size_t i = 0; i < zScorePerResidue.size(); ++i)
+	for (auto zScore : zScorePerResidue)
 	{
-		double score = (zScoreSum - zScorePerResidue[i]) / (N - 1);
-		score = (score - tbl.mean_ramachandran()) / tbl.sd_ramachandran();
-		scores[i] = score;
+		double score = (zScoreSum - zScore) / (N - 1);
+		score = (score - mean) / sd;
+		scores.emplace_back(score);
 		scoreSum += score;
 	}
 
@@ -912,9 +916,9 @@ zeep::el::object calculateZScores(const cif::mm::structure &structure)
 
 			std::string aa = res.get_compound_id();
 
-			int seqNum;
+			int seqNum = 0;
 			auto seqNumStr = res.get_pdb_seq_num();
-			if (auto r = std::from_chars(seqNumStr.data(), seqNumStr.data() + seqNumStr.length(), seqNum); r.ec == std::errc{})
+			if (auto r = std::from_chars(seqNumStr.data(), seqNumStr.data() + seqNumStr.length(), seqNum); r.ec != std::errc{})
 			{
 				if (cif::VERBOSE > 0)
 					std::cerr << "Invalid pdb sequence number in residue: " << std::quoted(seqNumStr) << '\n';
@@ -1045,8 +1049,8 @@ zeep::el::object calculateZScores(const cif::mm::structure &structure)
 	auto ramaVsRand = ramaZScoreCount ? static_cast<float>(ramaZScoreSum / ramaZScoreCount) : 0;
 	auto torsVsRand = torsZScoreCount ? static_cast<float>(torsZScoreSum / torsZScoreCount) : 0;
 
-	float jackknifeRama = ramaZScorePerResidue.empty() ? 0 : jackknife(ramaZScorePerResidue);
-	float jackknifeTors = torsZScorePerResidue.empty() ? 0 : jackknife(torsZScorePerResidue);
+	float jackknifeRama = ramaZScorePerResidue.empty() ? 0 : jackknife(ramaZScorePerResidue, true);
+	float jackknifeTors = torsZScorePerResidue.empty() ? 0 : jackknife(torsZScorePerResidue, false);
 
 	return {
 		{ "ramachandran-z", ((ramaVsRand - tbl.mean_ramachandran()) / tbl.sd_ramachandran()) },
