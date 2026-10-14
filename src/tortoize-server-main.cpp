@@ -143,8 +143,10 @@ class tortoize_rest_controller : public zeep::http::controller
 
 			if (pushedDict)
 				cif::compound_factory::instance().pop_dictionary();
+
+			std::error_code ec;
 			if (not dictFile.empty())
-				fs::remove(dictFile);
+				fs::remove(dictFile, ec);
 
 			return data;
 		}
@@ -155,7 +157,7 @@ class tortoize_rest_controller : public zeep::http::controller
 			if (pushedDict)
 				cif::compound_factory::instance().pop_dictionary();
 			if (not dictFile.empty())
-				fs::remove(dictFile);
+				fs::remove(dictFile, ec);
 
 			throw;
 		}
