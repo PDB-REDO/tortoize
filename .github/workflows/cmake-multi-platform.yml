@@ -29,6 +29,7 @@ jobs:
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_BUILD_TYPE=Release
         -DBUILD_TESTING=ON
+        -G Ninja
         -S ${{ github.workspace }}
         
     - name: Build
