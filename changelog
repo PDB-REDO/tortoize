@@ -1,6 +1,12 @@
 Version 2.0.17
+- New web service, based on libzeep 8
+- Replaced nlohmann::json with libzeep's el::object, so libzeep is required again
+- Now requires boost
+- Updated the manual page, it is now the only documentation
+- Removed the wrong lang="nl" attribute from the web pages
 - Fix PDB sequence number in the output being reset to zero
 - Fix torsion jackknife standard deviation using the Ramachandran statistics
+- Improved thread safety and error handling in the web service
 - Extended the unit test with residue level checks
 
 Version 2.0.16
