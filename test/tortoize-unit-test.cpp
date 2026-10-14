@@ -86,4 +86,47 @@ TEST_CASE("first_test")
 
 	CHECK_THAT(ma["torsion-jackknife-sd"].template get<double>(), Catch::Matchers::WithinRel(mb["torsion-jackknife-sd"].template get<double>(), 0.1));
 	CHECK_THAT(ma["torsion-z"].template get<double>(), Catch::Matchers::WithinRel(mb["torsion-z"].template get<double>(), 0.1));
+
+	// Residue level checks. The identifiers must match exactly, in particular
+	// pdb.seqNum which is parsed from the PDB sequence number string.
+	const zeep::el::object &ra = ma.at("residues");
+	const zeep::el::object &rb = mb.at("residues");
+
+	REQUIRE(ra.size() == rb.size());
+
+	for (std::size_t i = 0; i < rb.size(); ++i)
+	{
+		const zeep::el::object &x = ra.at(i);
+		const zeep::el::object &y = rb.at(i);
+
+		CHECK(x.at("compID").get<std::string>() == y.at("compID").get<std::string>());
+		CHECK(x.at("asymID").get<std::string>() == y.at("asymID").get<std::string>());
+		CHECK(x.at("seqID").get<int>() == y.at("seqID").get<int>());
+		CHECK(x.at("pdb").at("seqNum").get<int>() == y.at("pdb").at("seqNum").get<int>());
+		CHECK(x.at("pdb").at("insCode").get<std::string>() == y.at("pdb").at("insCode").get<std::string>());
+
+		// Z-scores can differ slightly between platforms, so compare them with a
+		// relative tolerance and fall back to an absolute one near zero.
+		const zeep::el::object &xa = x.at("ramachandran");
+		const zeep::el::object &ya = y.at("ramachandran");
+
+		CHECK(xa.at("ss-type").get<std::string>() == ya.at("ss-type").get<std::string>());
+		CHECK_THAT(xa.at("z-score").get<double>(),
+			Catch::Matchers::WithinRel(ya.at("z-score").get<double>(), 0.05) or
+				Catch::Matchers::WithinAbs(ya.at("z-score").get<double>(), 0.001));
+
+		// The torsion entry is only present for residues that have a chi angle.
+		const zeep::el::object &xt = x["torsion"];
+		const zeep::el::object &yt = y["torsion"];
+
+		REQUIRE(xt.is_null() == yt.is_null());
+
+		if (not yt.is_null())
+		{
+			CHECK(xt.at("ss-type").get<std::string>() == yt.at("ss-type").get<std::string>());
+			CHECK_THAT(xt.at("z-score").get<double>(),
+				Catch::Matchers::WithinRel(yt.at("z-score").get<double>(), 0.05) or
+					Catch::Matchers::WithinAbs(yt.at("z-score").get<double>(), 0.001));
+		}
+	}
 }
