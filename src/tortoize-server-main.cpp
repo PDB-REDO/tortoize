@@ -62,6 +62,8 @@ class tortoize_controller : public zeep::http::html_controller
 		map_get_file("{css,scripts,fonts,images,favicon}/");
 		map_get_file("{favicon.ico,browserconfig.xml,manifest.json}");
 		map_get("", &tortoize_controller::index);
+
+		map_get_simple("about", "about");
 	}
 
 	zeep::http::reply index(const zeep::http::scope &scope)

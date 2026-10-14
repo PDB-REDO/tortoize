@@ -35,17 +35,21 @@
 
 		<hr/>
 
-		<table id='tortoize-table' class="table table" style="display: none;">
-			<caption>Calculated scores</caption>
-			<thead>
-				<tr>
-					<th>Model</th>
-					<th>Ramachandran z-score</th>
-					<th>Side-chain z-score</th>
-				</tr>
-			</thead>
-			<tbody></tbody>
-		</table>
+		<div id="tortoize-result" style="display: none;">
+			<table id='tortoize-table' class="table table">
+				<caption>Calculated scores</caption>
+				<thead>
+					<tr>
+						<th>Model</th>
+						<th>Ramachandran z-score</th>
+						<th>Side-chain z-score</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+
+			<button type="button" class="btn btn-outline-secondary btn-sm" id="download-btn"><i class="bi bi-download"></i> Download JSON</button>
+		</div>
 
 		<div class="alert alert-danger" role="alert" id="tortoize-alert">
 			The web interface failed to initialize, perhaps Javascript is not working properly?

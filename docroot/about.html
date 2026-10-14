@@ -1,51 +1,64 @@
-<!DOCTYPE html SYSTEM "about:legacy-compat">
-<html lang="en" xmlns:z="http://www.hekkelman.com/libzeep/m2" xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html SYSTEM "about:legacy-compat" [ <!ENTITY nbsp "&#160;">
+]>
 
-<head z:replace="~{head :: head(~{::title}, ~{}, ~{})}">
-	<title>Tortoize - About</title>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:z2="http://www.hekkelman.com/libzeep/m2" lang="nl">
+
+<head z2:replace="~{head::head(~{::title},~{::head/script})}">
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+	<title>DSSP</title>
 </head>
 
 <body class="site">
-	<header z:replace="header::top('about')"></header>
+	<nav z2:replace="~{menu :: navbar('about')}" />
 
 	<div class="container site-content">
 
-	
-		<h3 class="mt-5">What is Tortoize?</h3>
+		<article>
+			<h3 class="mt-5">What is Tortoize?</h3>
 
-		<p>Tortoize checks the torsion angles in your protein model and gives them a Z-score based on their distribution in high quality models in the <a href="https://pdb-redo.eu">PDB-REDO databank</a>. Higher Z-scores are better. 
-		For each residue, two sets or torsion angles are checked: &phi;/&psi; combinations (the Ramachandran plot) and &chi;<sub>1</sub>/&chi;<sub>2</sub> combinations(the rotamers). The distributions that are use to check torsion 
-		angles are residue en secondary structure (as assigned by <a href="https://pdb-redo.eu/dssp">DSSP</a>) specific. The strength of Tortoize is that assigns global, per-model Z-scores on top of the per-residue scores (the Ramachandran
-		Z-score, or Rama-Z and the rotamer Z-score). These global scores tell you how normal your Ramachandran plot and your rotamer distribution are compared to high-quality structure models. And, unlike per-residue scores, these global 
-		scores are not sensitive to over-enthusiastic use of restraints in model making.</p>
+			<p>Tortoize checks the torsion angles in your protein model and gives them a Z-score based on their
+				distribution in high quality models in the <a href="https://pdb-redo.eu">PDB-REDO databank</a>. Higher
+				Z-scores are better. For each residue, two sets or torsion angles are checked: &phi;/&psi; combinations
+				(the Ramachandran plot) and &chi;<sub>1</sub>/&chi;<sub>2</sub> combinations(the rotamers). The
+				distributions that are use to check torsion angles are residue en secondary structure (as assigned by <a
+					href="https://pdb-redo.eu/dssp">DSSP</a>) specific. The strength of Tortoize is that assigns global,
+				per-model Z-scores on top of the per-residue scores (the Ramachandran Z-score, or Rama-Z and the rotamer
+				Z-score). These global scores tell you how normal your Ramachandran plot and your rotamer distribution
+				are compared to high-quality structure models. And, unlike per-residue scores, these global scores are
+				not sensitive to over-enthusiastic use of restraints in model making.
+			</p>
 
-		<h5 class="mt-5">The Tortoize papers and code</h5>
+			<h5 class="mt-5">The Tortoize papers and code</h5>
 
-		<table class="table table-sm">
+			<table class="table table-sm">
 
-			<tr>
-				<td style="width: 30%;">Tortoize paper</td>
-				<td style="width: 70%;"><a href="https://www.cell.com/structure/fulltext/S0969-2126(20)30287-2" target="_BLANK">https://www.cell.com/structure/fulltext/S0969-2126(20)30287-2</a></td>
-			</tr>
-			<tr>
-                                <td style="width: 30%;">Original algorithm</td>
-                                <td style="width: 70%;"><a href="https://doi.org/10.1093/bioinformatics/13.4.425" target="_BLANK">https://academic.oup.com/bioinformatics/article/13/4/425/274735</a></td>
-                        </tr>
-                        <tr>
-                                <td style="width: 30%;">Our initial implementation</td>
-                                <td style="width: 70%;"><a href="https://doi.org/10.1107/S2052252518010552" target="_BLANK">https://journals.iucr.org/m/issues/2018/05/00/jt5027/</a></td>
-                        </tr>
-			<tr>
-				<td>The Tortoize code</td>
-				<td><a href="https://github.com/PDB-REDO/tortoize" target="_BLANK">https://github.com/PDB-REDO/tortoize</a></td>
-			</tr>
-		</table>
-
-
+				<tr>
+					<td style="width: 30%;">Tortoize paper</td>
+					<td style="width: 70%;"><a href="https://www.cell.com/structure/fulltext/S0969-2126(20)30287-2"
+							target="_BLANK">https://www.cell.com/structure/fulltext/S0969-2126(20)30287-2</a></td>
+				</tr>
+				<tr>
+					<td style="width: 30%;">Original algorithm</td>
+					<td style="width: 70%;"><a href="https://doi.org/10.1093/bioinformatics/13.4.425"
+							target="_BLANK">https://academic.oup.com/bioinformatics/article/13/4/425/274735</a></td>
+				</tr>
+				<tr>
+					<td style="width: 30%;">Our initial implementation</td>
+					<td style="width: 70%;"><a href="https://doi.org/10.1107/S2052252518010552"
+							target="_BLANK">https://journals.iucr.org/m/issues/2018/05/00/jt5027/</a></td>
+				</tr>
+				<tr>
+					<td>The Tortoize code</td>
+					<td><a href="https://github.com/PDB-REDO/tortoize"
+							target="_BLANK">https://github.com/PDB-REDO/tortoize</a></td>
+				</tr>
+			</table>
+		</article>
 	</div>
 
-	<footer z:replace="~{footer::content}"></footer>
-
+	<footer z2:replace="~{footer::content}"></footer>
 </body>
 
 </html>

@@ -5,6 +5,7 @@ import './pdb-redo-style.scss';
 class Tortoize {
 	constructor(form) {
 		this.form = document.forms['tortoize-form'];
+		this.resultDiv = document.getElementById('tortoize-result');
 		this.table = document.getElementById('tortoize-table');
 		this.alert = document.getElementById('tortoize-alert');
 		this.form.addEventListener('submit', (evt) => this.handleSubmit(evt));
@@ -12,36 +13,54 @@ class Tortoize {
 		this.alert.classList.add('invisible');
 	}
 
-	handleSubmit(event) {
+	async handleSubmit(event) {
 		if (event)
 			event.preventDefault();
-		
-		const data = new FormData(this.form);
-		this.table.style.display = 'none';
-		this.alert.classList.add('invisible');
 
-		let wasOK;
-		fetch('tortoize', {
-			credentials: 'include',
-			method: 'post',
-			body: data
-		}).then(r => {
-			wasOK = r.ok;
-			return r.json();
-		}).then(r => {
-			// console.log(r);
-			if (r.model)
-				this.process(r.model);
-			else if (r.error)
-				throw r.error;
+		try {
+			const fd = new FormData(this.form);
+			this.resultDiv.style.display = 'none';
+			this.alert.classList.add('invisible');
+
+			const r = await fetch(this.form.action, {
+				credentials: 'include',
+				method: 'post',
+				body: fd
+			})
+
+			if (!r.ok)
+				throw `Fetching result failed, ${r.statusText}`;
+
+			const data = await r.json()
+			if (typeof data.error === "string")
+				throw fd.error;
+
+			if (data.model) {
+				this.process(data.model);
+
+				const downloadBtn = document.getElementById("download-btn");
+				downloadBtn.addEventListener("click", (e) => {
+					//convert JSON data to URI data scheme.
+					const url = "data:application/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+
+					const link = document.createElement("a");
+					link.href = url;
+					link.download = "tortoize-result.json";
+					document.body.appendChild(link);
+					link.click();
+					document.body.removeChild(link);
+				});
+			}
 			else
 				throw 'Reply does not contain data';
-		}).catch(err => {
+		}
+
+		catch (err) {
 			console.log(err);
-			
+
 			this.alert.textContent = `Could not calculate rama z-score: ${err}`;
 			this.alert.classList.remove('invisible');
-		});
+		}
 	}
 
 	process(model) {
@@ -54,8 +73,7 @@ class Tortoize {
 			tdid.textContent = id;
 			row.appendChild(tdid);
 
-			for (const f of ['ramachandran', 'torsion'])
-			{
+			for (const f of ['ramachandran', 'torsion']) {
 				const td = document.createElement('td');
 				td.textContent = (+data[`${f}-z`]).toFixed(2) + " ± " + (+data[`${f}-jackknife-sd`]).toFixed(2);
 				row.appendChild(td);
@@ -64,7 +82,8 @@ class Tortoize {
 			tbody.appendChild(row);
 		}
 
-		this.table.style.display = 'unset';
+
+		this.resultDiv.style.display = 'unset';
 	}
 }
 
