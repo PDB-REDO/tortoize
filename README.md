@@ -13,13 +13,13 @@ The easiest way to install tortoize is by installing [CCP4](https://www.ccp4.ac.
 It is possible to install tortoize on Linux without having CCP4. In that case you will have install some dependencies first. On Debian this boils down to:
 
 ```console
-sudo apt-get update && sudo apt-get install libcatch2-dev libeigen3-dev
+sudo apt-get update && sudo apt-get install libcatch2-dev libeigen3-dev libboost-dev
 ```
 
 And on Ubuntu, slightly different:
 
 ```console
-sudo apt-get update && sudo apt-get install catch2 libeigen3-dev
+sudo apt-get update && sudo apt-get install catch2 libeigen3-dev libboost-dev
 ```
 
 After that, building and installing should be as simple as:
