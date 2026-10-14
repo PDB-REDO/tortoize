@@ -24,6 +24,30 @@ jobs:
       run: >
         sudo apt-get update && sudo apt-get install catch2 libeigen3-dev libboost-dev
 
+    - name: Checkout libmcfp
+      uses: actions/checkout@v4
+      with:
+        repository: mhekkel/libmcfp
+        path: libmcfp
+
+    - name: Build & install libmcfp
+      run: |
+        cmake -B ${{github.workspace}}/libmcfp/build -S ${{github.workspace}}/libmcfp -DBUILD_DOCUMENTATION=OFF -DBUILD_TESTING=OFF
+        cmake --build ${{github.workspace}}/libmcfp/build
+        sudo cmake --install ${{github.workspace}}/libmcfp/build
+
+    - name: Checkout libcifpp
+      uses: actions/checkout@v4
+      with:
+        repository: pdb-redo/libcifpp
+        path: libcifpp
+
+    - name: Build & install libcifpp
+      run: |
+        cmake -B ${{github.workspace}}/libcifpp/build -S ${{github.workspace}}/libcifpp -DBUILD_DOCUMENTATION=OFF -DBUILD_TESTING=OFF
+        cmake --build ${{github.workspace}}/libcifpp/build
+        sudo cmake --install ${{github.workspace}}/libcifpp/build
+
     - name: Configure CMake
       run: >
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
