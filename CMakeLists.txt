@@ -213,8 +213,6 @@ if(BUILD_WEBSERVICE)
 endif()
 
 # manual
-add_subdirectory(doc)
-
 install(FILES doc/tortoize.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
 # Test code
