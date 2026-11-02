@@ -112,7 +112,7 @@ find_package(Threads)
 
 find_or_fetch_package(mcfp VERSION 2.1.1 GIT_REPOSITORY https://github.com/mhekkel/libmcfp GIT_TAG v2.1.1)
 find_or_fetch_package(cifpp VERSION 9 GIT_REPOSITORY https://github.com/PDB-REDO/libcifpp.git GIT_TAG v9.0.5 VARIABLES "CIFPP_SHARE_DIR")
-find_or_fetch_package(zeep VERSION 8.4.1 GIT_REPOSITORY https://forge.hekkelman.net/maarten/zeep.git GIT_TAG v8.4.1)
+find_or_fetch_package(zeep VERSION 8.4.1 GIT_REPOSITORY https://codeberg.org/mlhekkelman/zeep.git GIT_TAG v8.4.1)
 
 if (NOT TARGET dssp)
 	add_subdirectory(dssp EXCLUDE_FROM_ALL)
