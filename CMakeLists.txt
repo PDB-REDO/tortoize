@@ -110,7 +110,7 @@ set(CMAKE_THREAD_PREFER_PTHREAD)
 set(THREADS_PREFER_PTHREAD_FLAG)
 find_package(Threads)
 
-find_or_fetch_package(mcfp VERSION 2.1.1 GIT_REPOSITORY https://github.com/mhekkel/libmcfp GIT_TAG v2.1.1)
+find_or_fetch_package(mcfp VERSION 2.1.1 GIT_REPOSITORY https://codeberg.org/mlhekkelman/mcfp GIT_TAG v2.1.1)
 find_or_fetch_package(cifpp VERSION 9 GIT_REPOSITORY https://github.com/PDB-REDO/libcifpp.git GIT_TAG v9.0.5 VARIABLES "CIFPP_SHARE_DIR")
 find_or_fetch_package(zeep VERSION 8.4.1 GIT_REPOSITORY https://codeberg.org/mlhekkelman/zeep.git GIT_TAG v8.4.1)
 
